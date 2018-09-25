@@ -434,6 +434,7 @@
 	      ([?\C-y] . [C-v])
 	      ([?\M-w] . [C-c])
 	      ([?\M-<] . [home])
+	      ;; todo ([?\M-o] . [C-x o])
 	      ([?\M->] . [C-end])))
 
       (global-set-key (kbd "<mouse-12>") (lambda () (interactive)
