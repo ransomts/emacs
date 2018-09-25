@@ -1,44 +1,57 @@
 * Add load path
 
+  Here we start off with some black magic. Lexical bindings let me use a higher order functions when elisp's dynamic bindings don't. 
   #+BEGIN_SRC emacs-lisp
-    (let ((default-directory  "~/.emacs.d/packages/"))
-	    (normal-top-level-add-subdirs-to-load-path))
+    ;; -*- lexical-binding: t -*-
+  #+END_SRC
 
+  Just a couple of functions to help sort what machine and network the config is being loaded on. So long as the emacs version is >24 I think this should be sufficient to use filter packages and settings between setups.
+  #+BEGIN_SRC emacs-lisp
     (defun running-on-hosts (hosts)
-	    (member
-	     (car (split-string ; split the hostname on '.' for complex hostnames
-		     (car (split-string ; remove trailing newline from `hostname`
-		     (shell-command-to-string "hostname") "\n")) "\\."))
-	     hosts))
+      (member
+       (car (split-string ; split the hostname on '.' for complex hostnames
+	     (car (split-string ; remove trailing newline from `hostname`
+		   (shell-command-to-string "hostname") "\n")) "\\."))
+       hosts))
 
     (defun running-on-wireless (essids)
       (member (shell-command-to-string "iwgetid --raw") essids))
+  #+END_SRC
 
-    ;; (running-on-hosts '("joseki" "atari"))
+  One last bootstrap, gotta load up use-package for good load times. This also adds any directories that might not be available through the usual methods like dired+.
+  #+BEGIN_SRC emacs-lisp
+    (let ((default-directory  "~/.emacs.d/packages/"))
+      (normal-top-level-add-subdirs-to-load-path))
 
     (require 'use-package)
   #+END_SRC
 
-* theme
+* Theme
 
+  I really like themes that have light and dark modes. The material theme fits that and has been my theme of choice for a few years.
   #+BEGIN_SRC emacs-lisp
 (use-package material-theme
+  :if (not (running-on-hosts '("login001")))
   :ensure t
   :config
   (load-theme 'material t))
   #+END_SRC
 
-#+BEGIN_SRC emacs-lisp
-  (use-package theme-changer
-    :ensure t
-    :init
-    (setq calendar-latitude 34.67
-	  calendar-location-name "Clemson, SC"
-	  calendar-longitude -82.84)
-    :config (change-theme 'material-light 'material))
-#+END_SRC
+  Switch between the light and dark modes on sunrise and sunset. Lets me know what the sun is doing even when I spend all day inside :)
+  #+BEGIN_SRC emacs-lisp
+    (use-package theme-changer
+      :if (not (running-on-hosts '("login001")))
+      :ensure t
+      :init
+      (setq calendar-latitude 34.67
+	    calendar-location-name "Clemson, SC"
+	    calendar-longitude -82.84)
+      :config (change-theme 'material-light 'material))
+  #+END_SRC
 
 * helm
+
+  Helm is really a game changer for emacs. More over, it's the helm extensions that can really turn something tedious to easy.
   #+BEGIN_SRC emacs-lisp
     (use-package helm
       :ensure t
@@ -51,27 +64,32 @@
   #+END_SRC
 
 ** tramp
+
+   Reads in [[file:~/.ssh/config][my ssh config]] and connects me without needing to remember the trmp syntax.
    #+BEGIN_SRC emacs-lisp
 (use-package helm-tramp
+    :if (not (running-on-hosts '("login001")))
     :ensure t
-    :after (helm)
-)
+    :after (helm))
    #+END_SRC
 
-   #+RESULTS:
-   : t
-
 ** bbdb
+
+   This seems to be the most accepted way to manage contact info with emacs. It works well with mail and gnus though so it's okay with me.
    #+BEGIN_SRC emacs-lisp
   (use-package helm-bbdb
+    :if (not (running-on-hosts '("login001")))
     :ensure t
     :after (helm)
     :bind (("<f5>" . #'helm-bbdb)))
    #+END_SRC
 
-** dictionary
+** TODO dictionary
+
+   Every computer used for writing should have a dictionary available by keystroke.
    #+BEGIN_SRC emacs-lisp
   (use-package helm-dictionary
+        :if (not (running-on-hosts '("login001")))
 	:ensure t
 	:after (helm)
 	:bind (("<f8>" . #'helm-dictionary))
@@ -102,6 +120,8 @@
 
 * custom functions
 ** transpose windows
+
+   Transposing is surprisingly not a built in function. Here's something that lets me move the current buffer around in the frame.
    #+BEGIN_SRC emacs-lisp
       (defun transpose-windows (arg)
         "Transpose the buffers shown in two windows."
@@ -118,6 +138,8 @@
       (global-set-key (kbd "C-x t") #'transpose-windows)
    #+END_SRC                                                                 
 ** toggle frame split
+
+   Likewise switching from vertical to horizantal (and back). Really should be built it.
    #+BEGIN_SRC emacs-lisp
 	  (defun toggle-frame-split ()
 		"If the frame is split vertically, split it horizontally or vice versa.
@@ -135,6 +157,8 @@
    #+END_SRC
 
 * magit
+
+  Great way to interact with git. Not much config needed, just a global keybinding to pop open the status.
   #+BEGIN_SRC emacs-lisp
 	(use-package magit
 		:ensure t
@@ -142,6 +166,8 @@
   #+END_SRC
 
 * gnus
+
+  I use gnus mostly as an rss reader, but have the email there too if I want to fire off a quick note.
   #+BEGIN_SRC emacs-lisp
     (use-package gnus
       :bind ("C-M-g" . #'gnus)
@@ -151,7 +177,7 @@
        gnus-directory "~/.emacs.d/gnus"))
   #+END_SRC
 
-** scan daemon
+** TODO scan daemon
    #+BEGIN_SRC emacs-lisp
    ;; (use-package gnus-demon
    ;;   :ensure t
@@ -163,17 +189,21 @@
 
 * pdf
   #+BEGIN_SRC emacs-lisp
-	(use-package pdf-tools
-	  :ensure t
-	  :if (not (string= nil (getenv "DESKTOP_SESSION")))
-	  :load-path "site-lisp/pdf-tools/lisp"
-	  :magic ("%PDF" . pdf-view-mode)
-	  :config
-	  (pdf-tools-install)
-	  (setq pdf-misc-print-programm "/usr/bin/gtklp"))
+    (use-package pdf-tools
+      :ensure t
+      :if (not (or (string= nil (getenv "DESKTOP_SESSION")) 
+		   (running-on-hosts '("login001"))))
+      :load-path "site-lisp/pdf-tools/lisp"
+      :magic ("%PDF" . pdf-view-mode)
+      :config
+      (pdf-tools-install)
+      (setq pdf-misc-print-programm "/usr/bin/gtklp"))
   #+END_SRC
 
-* dashboard
+* TODO dashboard
+
+  This dashboard pairs really well with exwm but has been a bit of a pain to set up.
+  For now I'm still choosing an org-mode scratch buffer but this is a todo.
   #+BEGIN_SRC emacs-lisp
     (use-package projectile
       :ensure t)
@@ -190,8 +220,6 @@
 			      (agenda . 5)
 			      (registers . 5))))
   #+END_SRC
-
-  #+RESULTS:
 
 * org
   #+BEGIN_SRC emacs-lisp
@@ -325,6 +353,7 @@
 * emms
   #+BEGIN_SRC emacs-lisp
 	(use-package emms
+	  :if (running-on-hosts '("joseki" "tengen"))
 	  :ensure t
 	  :config
 	  (setq
@@ -374,6 +403,8 @@
   #+END_SRC
 
 * slime
+
+  Everybody who wants to dive into lisp should use slime. Even if just for learning differences between the lisps, slime is the way to go for lisp dev.
   #+BEGIN_SRC emacs-lisp
   (use-package slime
 	:ensure t
@@ -392,14 +423,160 @@
 	 fill-column 80))
   #+END_SRC
 
+* smart mode line
+  #+BEGIN_SRC emacs-lisp
+    (use-package smart-mode-line
+      :ensure t
+      :init 
+      (setq sml/theme 'respectful
+	    sml/no-confirm-load-theme t)
+      :config (sml/setup))
+  #+END_SRC
+
+* exwm
+
+  #+BEGIN_SRC emacs-lisp
+    (defun launch-program (command)
+      (interactive (list (read-shell-command "$ ")))
+      (start-process-shell-command command nil command))
+
+    (defun lock-screen ()
+      (interactive)
+      (shell-command "/usr/local/bin/lock.sh"))
+
+    (use-package xelb 
+      :if (string= "exwm" (getenv "DESKTOP_SESSION"))
+      :ensure t)
+
+    (use-package exwm
+      :if (string= "exwm" (getenv "DESKTOP_SESSION"))
+      :ensure t
+      :after (xelb)
+      :bind
+      (("s-x" . #'launch-program)
+       ("s-l" . #'lock-screen)
+       ("s-w" . #'exwm-workplace-switch)
+       ("s-r" . #'exwm-reset)
+       ("C-x C-c" . #'save-buffers-kill-emacs))
+      :config
+      (setq exwm-input-simulation-keys
+	    '(([?\C-b] . [left])
+	      ([?\C-f] . [right])
+	      ([?\C-p] . [up])
+	      ([?\C-n] . [down])
+	      ([?\C-a] . [home])
+	      ([?\C-e] . [end])
+	      ([?\M-v] . [prior])
+	      ([?\C-v] . [next])
+	      ([?\C-d] . [delete])
+	      ([?\C-h] . [backspace])
+	      ([?\C-m] . [return])
+	      ([?\C-i] . [tab])
+	      ([?\C-g] . [escape])
+	      ([?\M-g] . [f5])
+	      ([?\C-s] . [C-f])
+	      ([?\C-y] . [C-v])
+	      ([?\M-w] . [C-c])
+	      ([?\M-<] . [home])
+	      ([?\M->] . [C-end])))
+
+      (global-set-key (kbd "<mouse-12>") (lambda () (interactive)
+					   (exwm-input--fake-key 26)))
+
+      (dolist (k '(
+		   ("s-<return>" . "urxvtc")
+		   ("s-p" . "nemo")
+		   ("s-d" . "discord")
+		   ("s-t" . "transmission-remote-gtk")
+		   ("s-s" . "slack")
+		   ("s-<tab>" . "google-chrome-stable")
+		   ("<C-M-escape>" . "gnome-system-monitor")
+		   ("s-m" . "pavucontrol")
+		   ("s-<down>" . "amixer sset Master 5%-")
+		   ("s-<up>" . "amixer set Master unmute; amixer sset Master 5%+")
+		   ("<XF86MonBrightnessUp>" . "light -A 10")
+		   ("<XF86MonBrightnessDown>" . "light -U 10")
+		   ("<XF86AudioMute>"."amixer set Master toggle")
+		   ("<XF86AudioLowerVolume>" . "amixer sset Master 5%-")
+		   ("<XF86AudioRaiseVolume>" . "amixer set Master unmute; amixer sset Master 5%+")))
+	(let ((f (lambda () (interactive)
+		   (save-window-excursion
+		     (start-process-shell-command "" nil (cdr k))))))
+	  (exwm-input-set-key (kbd (car k)) f)))
+
+      (require 'exwm-systemtray)
+      (exwm-systemtray-enable)
+
+      (add-hook 'exwm-floating-setup-hook #'exwm-layout-hide-mode-line)
+      (add-hook 'exwm-floating-exit-hook #'exwm-layout-show-mode-line)
+
+      (add-hook 'exwm-update-title-hook 
+		(lambda () (exwm-workspace-rename-buffer exwm-title)))
+
+      (setq exwm-workspace-number 10
+	    exwm-workspace-show-all-buffers t
+	    exwm-layout-show-all-buffers t)
+
+      (dotimes (i 10)
+	(exwm-input-set-key (kbd (format "s-%d" i))
+			    `(lambda ()
+			       (interactive)
+			       (exwm-workspace-switch-create ,i))))
+
+      (push ?\C-q exwm-input-prefix-keys)
+      (define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
+
+      (exwm-enable))
+  #+END_SRC
+
+** Autostart programs
+
+   I use this config across several machines, depending which machine and what network it's connected to I want different autostart applications.
+*** Machine Specific
+
+    #+BEGIN_SRC emacs-lisp :noweb yes
+      (when (running-on-hosts '("joseki"))
+	(display-battery-mode t)
+	(start-process "" nil "xrdb" "-merge" "/home/tsranso/.config/urxvt/conf")
+	(start-process "wifi applet" nil "nm-applet")
+	(start-process "redshift" nil "redshift-gtk")
+
+	(when (running-on-wireless '("Torus Shaped Earth\n"))
+				   (start-process "discord" nil "discord")
+				   (start-process "transmission"
+						  nil "transmission-daemon")))
+
+      (when (running-on-hosts '("206"))
+	(start-process "bluetooth applet" nil "blueman-applet")
+	(start-process "slack" nil "slack"))
+
+      (when (running-on-hosts '("joseki" "206"))
+	(unless (file-exists-p "~/.config/mpd/pid")			 
+	  (start-process "music player daemon" nil "mpd")))
+    #+END_SRC
+
+*** Every Time
+
+    But here are the simpler auto-start applications.
+    #+BEGIN_SRC emacs-lisp
+      (start-process "unclutter" nil "unclutter")
+      ;; (start-process "thunar daemon" nil "thunar" "--daemon")
+      (start-process "urxvt daemon" nil "urxvtd" "-f" "-q" "-o")
+      ;; (start-process "syncthing" nil "syncthing")
+      (start-process "xautolock" nil
+		     "xautolock"
+		     "-time 10"
+		     "-locker lock.sh")
+    #+END_SRC
+
 * emacs
 ** asynchronous
-Gotta use the few async operations we have
-#+BEGIN_SRC emacs-lisp
+   Gotta use the few async operations we have
+   #+BEGIN_SRC emacs-lisp
 (autoload 'dired-async-mode "dired-async.el" nil t)
 (dired-async-mode 1)
 (async-bytecomp-package-mode 1)
-#+END_SRC
+   #+END_SRC
 
 ** time and date
    #+BEGIN_SRC emacs-lisp
@@ -419,6 +596,7 @@ Gotta use the few async operations we have
   ;;       line-number-mode t
   ;;       column-number-mode t)
 
+  (setq gud-tooltip-echo-area t)
   (fringe-mode 1)
   (tool-bar-mode 0)
   (menu-bar-mode 0)
@@ -473,7 +651,7 @@ Gotta use the few async operations we have
    #+END_SRC
 
 ** file backup info
-#+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
 (setq
    backup-by-copying t      ; don't clobber symlinks
    backup-directory-alist
@@ -484,7 +662,7 @@ Gotta use the few async operations we have
    version-control t)       ; use versioned backups
 
 (recentf-mode 1)
-#+END_SRC
+   #+END_SRC
 
 ** misc
    #+BEGIN_SRC emacs-lisp
@@ -504,159 +682,4 @@ Gotta use the few async operations we have
 							 ;tramp-histfile-override "/dev/null" nil (tramp)
 					 )
    #+END_SRC
-
-* smart mode line
-  #+BEGIN_SRC emacs-lisp
-    (use-package smart-mode-line
-      :ensure t
-      :init 
-      (setq sml/theme 'respectful
-	    sml/no-confirm-load-theme t)
-      :config (sml/setup))
-  #+END_SRC
-
-* exwm
-
-  #+BEGIN_SRC emacs-lisp
-    (defun launch-program (command)
-	    (interactive (list (read-shell-command "$ ")))
-	    (start-process-shell-command command nil command))
-
-    (defun lock-screen ()
-	    (interactive)
-	    (shell-command "/usr/local/bin/lock.sh"))
-
-    (use-package xelb :ensure t)
-    (use-package exwm
-	    :ensure t
-	    :if (string= "exwm" (getenv "DESKTOP_SESSION"))
-	    :after (xelb)
-	    :bind
-	    (("s-x" . #'launch-program)
-	     ("s-l" . #'lock-screen)
-	     ("s-w" . #'exwm-workplace-switch)
-	     ("s-r" . #'exwm-reset)
-	     ("C-x C-c" . #'save-buffers-kill-emacs))
-	    :config
-	    (setq exwm-input-simulation-keys
-	    '(([?\C-b] . [left])
-		    ([?\C-f] . [right])
-		    ([?\C-p] . [up])
-		    ([?\C-n] . [down])
-		    ([?\C-a] . [home])
-		    ([?\C-e] . [end])
-		    ([?\M-v] . [prior])
-		    ([?\C-v] . [next])
-		    ([?\C-d] . [delete])
-		    ([?\C-h] . [backspace])
-		    ([?\C-m] . [return])
-		    ([?\C-i] . [tab])
-		    ([?\C-g] . [escape])
-		    ([?\M-g] . [f5])
-		    ([?\C-s] . [C-f])
-		    ([?\C-y] . [C-v])
-		    ([?\M-w] . [C-c])
-		    ([?\M-<] . [home])
-		    ([?\M->] . [C-end])))
-
-	    (global-set-key (kbd "<mouse-12>") (lambda () (interactive)
-							     (message "my closure")
-							     (exwm-input--fake-key 26)))
-	    (require 'exwm-systemtray)
-	    (exwm-systemtray-enable)
-
-	    (add-hook 'exwm-floating-setup-hook #'exwm-layout-hide-mode-line)
-	    (add-hook 'exwm-floating-exit-hook #'exwm-layout-show-mode-line)
-
-	    (add-hook 'exwm-update-title-hook
-			    (lambda ()
-				    (when (or (string-match "Firefox" exwm-class-name)
-			    (string-match "Chromium" exwm-class-name)
-			    (string-match "Google-chrome" exwm-class-name))
-		    (exwm-workspace-rename-buffer exwm-title))))
-
-	    (setq exwm-workspace-number 10
-	    exwm-workspace-show-all-buffers t
-	    exwm-layout-show-all-buffers t)
-
-	    (dotimes (i 10)
-		    (exwm-input-set-key (kbd (format "s-%d" i))
-			    `(lambda ()
-				     (interactive)
-				     (exwm-workspace-switch-create ,i))))
-
-	    (setq lexical-binding t)
-	    (dolist (k '(
-				     ("s-<return>" . "urxvtc")
-				     ("s-p" . "nemo")
-				     ("s-d" . "discord")
-				     ("s-t" . "transmission-remote-gtk")
-				     ("s-s" . "slack")
-				     ("s-<tab>" . "google-chrome-stable")
-				     ("<C-M-escape>" . "gnome-system-monitor")
-				     ("s-m" . "pavucontrol")
-				     ("s-<down>" . "amixer sset Master 5%-")
-				     ("s-<up>" . "amixer set Master unmute; amixer sset Master 5%+")
-				     ("<XF86MonBrightnessUp>" . "light -A 10")
-				     ("<XF86MonBrightnessDown>" . "light -U 10")
-				     ("<XF86AudioMute>"."amixer set Master toggle")
-				     ("<XF86AudioLowerVolume>" . "amixer sset Master 5%-")
-				     ("<XF86AudioRaiseVolume>" . "amixer set Master unmute; amixer sset Master 5%+")))
-		    ;; need a closure here to grab the element pair
-		    (let ((f (lambda () (interactive)
-				     (save-window-excursion
-		     (start-process-shell-command "" nil (cdr k))))))
-			    (exwm-input-set-key (kbd (car k)) f)))
-
-	    ;; The following example demonstrates how to set a key binding only available
-	    ;; in line mode. It's simply done by first push the prefix key to
-	    ;; `exwm-input-prefix-keys' and then add the key sequence to `exwm-mode-map'.
-	    ;; The example shorten 'C-c q' to 'C-q'.
-	    (push ?\C-q exwm-input-prefix-keys)
-	    (define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
-
-	    (exwm-enable)
-	    )
-  #+END_SRC
-
-  #+RESULTS:
-  : save-buffers-kill-emacs
-
-** Autostart programs
-   I use this config across several machines, depending which machine and what network it's connected to I want different autostart applications.
-*** Machine Specific
-
-    #+BEGIN_SRC emacs-lisp :noweb yes
-      (when (running-on-hosts '("joseki"))
-	(display-battery-mode t)
-	(start-process "wifi applet" nil "nm-applet")
-	(start-process "redshift" nil "redshift-gtk")
-
-	(when (running-on-wireless '("Torus Shaped Earth"))
-				   (start-process "discord" nil "discord")
-				   (start-process "transmission"
-						  nil "transmission-daemon")))
-
-      (when (running-on-hosts '("206"))
-	(start-process "bluetooth applet" nil "blueman-applet")
-	(start-process "slack" nil "slack"))
-
-      (when (running-on-hosts '("joseki" "206"))
-	(unless (file-exists-p "~/.config/mpd/pid")			 
-	  (start-process "music player daemon" nil "mpd")))
-    #+END_SRC
-
-*** Every Time
-    But here are the simpler auto-start applications.
-    #+BEGIN_SRC emacs-lisp
-      ;; ;; here are my autostart programs
-      (start-process "unclutter" nil "unclutter")
-      ;; (start-process "thunar daemon" nil "thunar" "--daemon")
-      (start-process "urxvt daemon" nil "urxvtd" "-f" "-q" "-o")
-      ;; (start-process "syncthing" nil "syncthing")
-      (start-process "xautolock" nil
-		     "xautolock"
-		     "-time 10"
-		     "-locker lock.sh")
-    #+END_SRC
 

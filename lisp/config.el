@@ -1,12 +1,14 @@
+;; -*- lexical-binding: t -*-
+
 (let ((default-directory  "~/.emacs.d/packages/"))
-	(normal-top-level-add-subdirs-to-load-path))
+  (normal-top-level-add-subdirs-to-load-path))
 
 (defun running-on-hosts (hosts)
-	(member
-	 (car (split-string ; split the hostname on '.' for complex hostnames
-		 (car (split-string ; remove trailing newline from `hostname`
-		 (shell-command-to-string "hostname") "\n")) "\\."))
-	 hosts))
+  (member
+   (car (split-string ; split the hostname on '.' for complex hostnames
+	 (car (split-string ; remove trailing newline from `hostname`
+	       (shell-command-to-string "hostname") "\n")) "\\."))
+   hosts))
 
 (defun running-on-wireless (essids)
   (member (shell-command-to-string "iwgetid --raw") essids))
@@ -400,111 +402,106 @@ Assumes that the frame is only split into two."
   :config (sml/setup))
 
 (defun launch-program (command)
-	(interactive (list (read-shell-command "$ ")))
-	(start-process-shell-command command nil command))
+  (interactive (list (read-shell-command "$ ")))
+  (start-process-shell-command command nil command))
 
 (defun lock-screen ()
-	(interactive)
-	(shell-command "/usr/local/bin/lock.sh"))
+  (interactive)
+  (shell-command "/usr/local/bin/lock.sh"))
 
 (use-package xelb :ensure t)
 (use-package exwm
-	:ensure t
-	:if (string= "exwm" (getenv "DESKTOP_SESSION"))
-	:after (xelb)
-	:bind
-	(("s-x" . #'launch-program)
-	 ("s-l" . #'lock-screen)
-	 ("s-w" . #'exwm-workplace-switch)
-	 ("s-r" . #'exwm-reset)
-	 ("C-x C-c" . #'save-buffers-kill-emacs))
-	:config
-	(setq exwm-input-simulation-keys
+  :ensure t
+  :if (string= "exwm" (getenv "DESKTOP_SESSION"))
+  :after (xelb)
+  :bind
+  (("s-x" . #'launch-program)
+   ("s-l" . #'lock-screen)
+   ("s-w" . #'exwm-workplace-switch)
+   ("s-r" . #'exwm-reset)
+   ("C-x C-c" . #'save-buffers-kill-emacs))
+  :config
+  (setq exwm-input-simulation-keys
 	'(([?\C-b] . [left])
-		([?\C-f] . [right])
-		([?\C-p] . [up])
-		([?\C-n] . [down])
-		([?\C-a] . [home])
-		([?\C-e] . [end])
-		([?\M-v] . [prior])
-		([?\C-v] . [next])
-		([?\C-d] . [delete])
-		([?\C-h] . [backspace])
-		([?\C-m] . [return])
-		([?\C-i] . [tab])
-		([?\C-g] . [escape])
-		([?\M-g] . [f5])
-		([?\C-s] . [C-f])
-		([?\C-y] . [C-v])
-		([?\M-w] . [C-c])
-		([?\M-<] . [home])
-		([?\M->] . [C-end])))
+	  ([?\C-f] . [right])
+	  ([?\C-p] . [up])
+	  ([?\C-n] . [down])
+	  ([?\C-a] . [home])
+	  ([?\C-e] . [end])
+	  ([?\M-v] . [prior])
+	  ([?\C-v] . [next])
+	  ([?\C-d] . [delete])
+	  ([?\C-h] . [backspace])
+	  ([?\C-m] . [return])
+	  ([?\C-i] . [tab])
+	  ([?\C-g] . [escape])
+	  ([?\M-g] . [f5])
+	  ([?\C-s] . [C-f])
+	  ([?\C-y] . [C-v])
+	  ([?\M-w] . [C-c])
+	  ([?\M-<] . [home])
+	  ([?\M->] . [C-end])))
 
-	(global-set-key (kbd "<mouse-12>") (lambda () (interactive)
-							 (message "my closure")
-							 (exwm-input--fake-key 26)))
-	(require 'exwm-systemtray)
-	(exwm-systemtray-enable)
+  (global-set-key (kbd "<mouse-12>") (lambda () (interactive)
+				       (message "my closure")
+				       (exwm-input--fake-key 26)))
+  (require 'exwm-systemtray)
+  (exwm-systemtray-enable)
 
-	(add-hook 'exwm-floating-setup-hook #'exwm-layout-hide-mode-line)
-	(add-hook 'exwm-floating-exit-hook #'exwm-layout-show-mode-line)
+  (add-hook 'exwm-floating-setup-hook #'exwm-layout-hide-mode-line)
+  (add-hook 'exwm-floating-exit-hook #'exwm-layout-show-mode-line)
 
-	(add-hook 'exwm-update-title-hook
-			(lambda ()
-				(when (or (string-match "Firefox" exwm-class-name)
-			(string-match "Chromium" exwm-class-name)
-			(string-match "Google-chrome" exwm-class-name))
-		(exwm-workspace-rename-buffer exwm-title))))
+  (add-hook 'exwm-update-title-hook 
+	    (lambda () (exwm-workspace-rename-buffer exwm-title)))
 
-	(setq exwm-workspace-number 10
+  (setq exwm-workspace-number 10
 	exwm-workspace-show-all-buffers t
 	exwm-layout-show-all-buffers t)
 
-	(dotimes (i 10)
-		(exwm-input-set-key (kbd (format "s-%d" i))
+  (dotimes (i 10)
+    (exwm-input-set-key (kbd (format "s-%d" i))
 			`(lambda ()
-				 (interactive)
-				 (exwm-workspace-switch-create ,i))))
+			   (interactive)
+			   (exwm-workspace-switch-create ,i))))
 
-	(setq lexical-binding t)
-	(dolist (k '(
-				 ("s-<return>" . "urxvtc")
-				 ("s-p" . "nemo")
-				 ("s-d" . "discord")
-				 ("s-t" . "transmission-remote-gtk")
-				 ("s-s" . "slack")
-				 ("s-<tab>" . "google-chrome-stable")
-				 ("<C-M-escape>" . "gnome-system-monitor")
-				 ("s-m" . "pavucontrol")
-				 ("s-<down>" . "amixer sset Master 5%-")
-				 ("s-<up>" . "amixer set Master unmute; amixer sset Master 5%+")
-				 ("<XF86MonBrightnessUp>" . "light -A 10")
-				 ("<XF86MonBrightnessDown>" . "light -U 10")
-				 ("<XF86AudioMute>"."amixer set Master toggle")
-				 ("<XF86AudioLowerVolume>" . "amixer sset Master 5%-")
-				 ("<XF86AudioRaiseVolume>" . "amixer set Master unmute; amixer sset Master 5%+")))
-		;; need a closure here to grab the element pair
-		(let ((f (lambda () (interactive)
-				 (save-window-excursion
+  (dolist (k '(
+	       ("s-<return>" . "urxvtc")
+	       ("s-p" . "nemo")
+	       ("s-d" . "discord")
+	       ("s-t" . "transmission-remote-gtk")
+	       ("s-s" . "slack")
+	       ("s-<tab>" . "google-chrome-stable")
+	       ("<C-M-escape>" . "gnome-system-monitor")
+	       ("s-m" . "pavucontrol")
+	       ("s-<down>" . "amixer sset Master 5%-")
+	       ("s-<up>" . "amixer set Master unmute; amixer sset Master 5%+")
+	       ("<XF86MonBrightnessUp>" . "light -A 10")
+	       ("<XF86MonBrightnessDown>" . "light -U 10")
+	       ("<XF86AudioMute>"."amixer set Master toggle")
+	       ("<XF86AudioLowerVolume>" . "amixer sset Master 5%-")
+	       ("<XF86AudioRaiseVolume>" . "amixer set Master unmute; amixer sset Master 5%+")))
+    ;; need a closure here to grab the element pair
+    (let ((f (lambda () (interactive)
+	       (save-window-excursion
 		 (start-process-shell-command "" nil (cdr k))))))
-			(exwm-input-set-key (kbd (car k)) f)))
+      (exwm-input-set-key (kbd (car k)) f)))
 
-	;; The following example demonstrates how to set a key binding only available
-	;; in line mode. It's simply done by first push the prefix key to
-	;; `exwm-input-prefix-keys' and then add the key sequence to `exwm-mode-map'.
-	;; The example shorten 'C-c q' to 'C-q'.
-	(push ?\C-q exwm-input-prefix-keys)
-	(define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
+  ;; The following example demonstrates how to set a key binding only available
+  ;; in line mode. It's simply done by first push the prefix key to
+  ;; `exwm-input-prefix-keys' and then add the key sequence to `exwm-mode-map'.
+  ;; The example shorten 'C-c q' to 'C-q'.
+  (push ?\C-q exwm-input-prefix-keys)
+  (define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
 
-	(exwm-enable)
-	)
+  (exwm-enable))
 
 (when (running-on-hosts '("joseki"))
   (display-battery-mode t)
+  (start-process "" nil "xrdb" "-merge" "/home/tsranso/.config/urxvt/conf")
   (start-process "wifi applet" nil "nm-applet")
   (start-process "redshift" nil "redshift-gtk")
 
-  (when (running-on-wireless '("Torus Shaped Earth"))
+  (when (running-on-wireless '("Torus Shaped Earth\n"))
 			     (start-process "discord" nil "discord")
 			     (start-process "transmission"
 					    nil "transmission-daemon")))
