@@ -389,6 +389,12 @@
 	:config (sml/setup))
     #+END_SRC
 
+*** gnuplot
+
+#+BEGIN_SRC emacs-lisp
+  (use-package gnuplot :ensure t)
+#+END_SRC
+
 * exwm
 
   #+BEGIN_SRC emacs-lisp

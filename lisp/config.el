@@ -1,8 +1,5 @@
 ;; -*- lexical-binding: t -*-
 
-(let ((default-directory  "~/.emacs.d/packages/"))
-  (normal-top-level-add-subdirs-to-load-path))
-
 (defun running-on-hosts (hosts)
   (member
    (car (split-string ; split the hostname on '.' for complex hostnames
@@ -13,98 +10,10 @@
 (defun running-on-wireless (essids)
   (member (shell-command-to-string "iwgetid --raw") essids))
 
-;; (running-on-hosts '("joseki" "atari"))
+(let ((default-directory  "~/.emacs.d/packages/"))
+  (normal-top-level-add-subdirs-to-load-path))
 
 (require 'use-package)
-
-(use-package material-theme
-  :ensure t
-  :config
-  (load-theme 'material t))
-
-(use-package theme-changer
-  :ensure t
-  :init
-  (setq calendar-latitude 34.67
-	calendar-location-name "Clemson, SC"
-	calendar-longitude -82.84)
-  :config (change-theme 'material-light 'material))
-
-(use-package helm
-  :ensure t
-  :bind (("M-x" . #'helm-M-x)
-	 ("C-x b" . #'helm-buffers-list)
-	 ("C-x f" . #'helm-find-files)
-	 ("C-x C-f" . #'helm-find-files))
-  :config
-  (helm-mode t))
-
-(use-package helm-tramp
-    :ensure t
-    :after (helm)
-)
-
-(use-package helm-bbdb
-  :ensure t
-  :after (helm)
-  :bind (("<f5>" . #'helm-bbdb)))
-
-(use-package helm-dictionary
-      :ensure t
-      :after (helm)
-      :bind (("<f8>" . #'helm-dictionary))
-      :config
-      (setq
-       helm-dictionary-browser-function 'browse-url-firefox
-       helm-dictionary-database "/usr/share/dict/words"
-       helm-dictionary-online-dicts
-       '(("wiktionary" . "http://en.wiktionary.org/wiki/%s")
-	 ("Oxford English Dictionary" . "www.oed.com/search?searchType=dictionary&q=%s")
-	 ("Merriam-Webster" . "https://www.merriam-webster.com/dictionary/%s"))
-       helm-dictionary-use-full-frame nil))
-
-(global-set-key (kbd "M-o")     #'other-window)
-(global-set-key (kbd "M-h")     #'backward-kill-word)                   
-(global-set-key (kbd "C-x k")   #'kill-this-buffer)                     
-(global-set-key (kbd "C-x C-k") #'kill-this-buffer)                     
-(global-set-key (kbd "C-h")     #'delete-backward-char)                 
-(global-set-key (kbd "C-x 2")                                           
-		(lambda ()                                              
-		  (interactive)                                         
-		  (split-window-vertically)                             
-		  (other-window 1)))
-
-(defun transpose-windows (arg)
-  "Transpose the buffers shown in two windows."
-  (interactive "p")
-  (let ((selector (if (>= arg 0) 'next-window 'previous-window)))
-    (while (/= arg 0)
-      (let ((this-win (window-buffer))
-            (next-win (window-buffer (funcall selector))))
-        (set-window-buffer (selected-window) next-win)
-        (set-window-buffer (funcall selector) this-win)
-        (select-window (funcall selector)))
-      (setq arg (if (plusp arg) (1- arg) (1+ arg))))))
-
-(global-set-key (kbd "C-x t") #'transpose-windows)
-
-(defun toggle-frame-split ()
-      "If the frame is split vertically, split it horizontally or vice versa.
-Assumes that the frame is only split into two."
-      (interactive)
-      (unless (= (length (window-list)) 2) (error "Can only toggle a frame split in two"))
-      (let ((split-vertically-p (window-combined-p)))
-	(delete-window) ; closes current window
-	(if split-vertically-p
-		(split-window-horizontally)
-	      (split-window-vertically))
-	(switch-to-buffer nil)))
-
-(global-set-key (kbd "C-x |") 'toggle-frame-split)
-
-(use-package magit
-	:ensure t
-	:bind ("C-x g" . #'magit-status))
 
 (use-package gnus
   :bind ("C-M-g" . #'gnus)
@@ -119,30 +28,6 @@ Assumes that the frame is only split into two."
  ;;   (gnus-demon-add-handler #'gnus-demon-scan-news 2 nil)
  ;;   (message "from hook")
 ;;   )
-
-(use-package pdf-tools
-  :ensure t
-  :if (not (string= nil (getenv "DESKTOP_SESSION")))
-  :load-path "site-lisp/pdf-tools/lisp"
-  :magic ("%PDF" . pdf-view-mode)
-  :config
-  (pdf-tools-install)
-  (setq pdf-misc-print-programm "/usr/bin/gtklp"))
-
-(use-package projectile
-  :ensure t)
-(use-package page-break-lines
-  :ensure t)
-(use-package dashboard
-  :ensure t
-  :after (projectile page-line-breaks)
-  :config
-  (dashboard-setup-startup-hook)
-  (setq dashboard-items '((recents  . 5)
-			  (bookmarks . 5)
-			  (projects . 5)
-			  (agenda . 5)
-			  (registers . 5))))
 
 (use-package org
 	:config
@@ -244,11 +129,101 @@ Assumes that the frame is only split into two."
        '(autojoin button completion dcc fill irccontrols keep-place
 	 list log match menu move-to-prompt netsplit networks
 	 noncommands notifications readonly ring services sound
-	 stamp track ercn)
+	 stamp track)
        erc-nick "Timzi"
        erc-prompt "<Timzi>"
-       erc-sound-mode t
-       ))
+       erc-sound-mode t))
+
+(use-package dired+
+  :bind (:map dired-mode-map
+	      (("M-h" . #'dired-omit-mode)
+	       ("u" . #'dired-up-directory)))
+  :config
+  (setq
+   dired-listing-switches "-alh --no-group"
+   dired-no-confirm '(byte-compile copy delete)
+   dired-omit-files "^\\..*~?$"
+   dired-recursive-copies 'always
+   dired-recursive-deletes 'always))
+
+(use-package material-theme
+  :if (not (running-on-hosts '("login001")))
+  :ensure t
+  :config
+  (load-theme 'material t))
+
+(use-package theme-changer
+  :if (not (running-on-hosts '("login001")))
+  :ensure t
+  :init
+  (setq calendar-latitude 34.67
+	calendar-location-name "Clemson, SC"
+	calendar-longitude -82.84)
+  :config (change-theme 'material-light 'material))
+
+(use-package helm
+  :ensure t
+  :bind (("M-x" . #'helm-M-x)
+	 ("C-x b" . #'helm-buffers-list)
+	 ("C-x f" . #'helm-find-files)
+	 ("C-x C-f" . #'helm-find-files))
+  :config
+  (helm-mode t))
+
+(use-package helm-tramp
+    :if (not (running-on-hosts '("login001")))
+    :ensure t
+    :after (helm))
+
+(use-package helm-bbdb
+  :if (not (running-on-hosts '("login001")))
+  :ensure t
+  :after (helm)
+  :bind (("<f5>" . #'helm-bbdb)))
+
+(use-package helm-dictionary
+      :if (not (running-on-hosts '("login001")))
+      :ensure t
+      :after (helm)
+      :bind (("<f8>" . #'helm-dictionary))
+      :config
+      (setq
+       helm-dictionary-browser-function 'browse-url-firefox
+       helm-dictionary-database "/usr/share/dict/words"
+       helm-dictionary-online-dicts
+       '(("wiktionary" . "http://en.wiktionary.org/wiki/%s")
+	 ("Oxford English Dictionary" . "www.oed.com/search?searchType=dictionary&q=%s")
+	 ("Merriam-Webster" . "https://www.merriam-webster.com/dictionary/%s"))
+       helm-dictionary-use-full-frame nil))
+
+(use-package magit
+	:ensure t
+	:bind ("C-x g" . #'magit-status))
+
+(use-package pdf-tools
+  :ensure t
+  :if (not (or (string= nil (getenv "DESKTOP_SESSION")) 
+	       (running-on-hosts '("login001"))))
+  :load-path "site-lisp/pdf-tools/lisp"
+  :magic ("%PDF" . pdf-view-mode)
+  :config
+  (pdf-tools-install)
+  (setq pdf-misc-print-programm "/usr/bin/gtklp"))
+
+(use-package projectile
+  :ensure t)
+(use-package page-break-lines
+  :ensure t)
+(use-package dashboard
+  :ensure t
+  :after (projectile page-line-breaks)
+  :config
+  (dashboard-setup-startup-hook)
+  (setq dashboard-items '((recents  . 5)
+			  (bookmarks . 5)
+			  (projects . 5)
+			  (agenda . 5)
+			  (registers . 5))))
 
 (use-package transmission
       :ensure t
@@ -262,6 +237,7 @@ Assumes that the frame is only split into two."
 	 transmission-peers-mode)))
 
 (use-package emms
+  :if (running-on-hosts '("joseki" "tengen"))
   :ensure t
   :config
   (setq
@@ -291,18 +267,6 @@ Assumes that the frame is only split into two."
 	      (string-to-int
 	       (replace-regexp-in-string "[() -]" "" phone-number))))))
 
-(use-package dired+
-  :bind (:map dired-mode-map
-	      (("M-h" . #'dired-omit-mode)
-	       ("u" . #'dired-up-directory)))
-  :config
-  (setq
-   dired-listing-switches "-alh --no-group"
-   dired-no-confirm '(byte-compile copy delete)
-   dired-omit-files "^\\..*~?$"
-   dired-recursive-copies 'always
-   dired-recursive-deletes 'always))
-
 (use-package slime
       :ensure t
       :config
@@ -311,10 +275,207 @@ Assumes that the frame is only split into two."
 
 (use-package fill-column-indicator
   :ensure t
-      :config
-      (setq
-       fci-rule-column 80
-       fill-column 80))
+  :config
+  (setq
+   fci-rule-column 80
+   fill-column 80))
+
+(use-package smart-mode-line
+  :ensure t
+  :init 
+  (setq sml/theme 'respectful
+	sml/no-confirm-load-theme t)
+  :config (sml/setup))
+
+(defun launch-program (command)
+  (interactive (list (read-shell-command "$ ")))
+  (start-process-shell-command command nil command))
+
+(defun lock-screen ()
+  (interactive)
+  (shell-command "/usr/local/bin/lock.sh"))
+
+(use-package xelb 
+  :if (string= "exwm" (getenv "DESKTOP_SESSION"))
+  :ensure t)
+
+(use-package exwm
+  :if (string= "exwm" (getenv "DESKTOP_SESSION"))
+  :ensure t
+  :after (xelb)
+  :bind
+  (("s-x" . #'launch-program)
+   ("s-l" . #'lock-screen)
+   ("s-w" . #'exwm-workplace-switch)
+   ("s-r" . #'exwm-reset)
+   ("C-x C-c" . #'save-buffers-kill-emacs))
+  :config
+  (setq exwm-input-simulation-keys
+	'(([?\C-b] . [left])
+	  ([?\C-f] . [right])
+	  ([?\C-p] . [up])
+	  ([?\C-n] . [down])
+	  ([?\C-a] . [home])
+	  ([?\C-e] . [end])
+	  ([?\M-v] . [prior])
+	  ([?\C-v] . [next])
+	  ([?\C-d] . [delete])
+	  ([?\C-h] . [backspace])
+	  ([?\C-m] . [return])
+	  ([?\C-i] . [tab])
+	  ([?\C-g] . [escape])
+	  ([?\M-g] . [f5])
+	  ([?\C-s] . [C-f])
+	  ([?\C-y] . [C-v])
+	  ([?\M-w] . [C-c])
+	  ([?\M-<] . [home])
+	  ;; todo ([?\M-o] . [C-x o])
+	  ([?\M->] . [C-end])))
+
+  (global-set-key (kbd "<mouse-12>") (lambda () (interactive)
+				       (exwm-input--fake-key 26)))
+
+  (dolist (k '(
+	       ("s-<return>" . "urxvtc")
+	       ("s-p" . "nemo")
+	       ("s-d" . "discord")
+	       ("s-t" . "transmission-remote-gtk")
+	       ("s-s" . "slack")
+	       ("s-<tab>" . "google-chrome-stable")
+	       ("<C-M-escape>" . "gnome-system-monitor")
+	       ("s-m" . "pavucontrol")
+	       ("s-<down>" . "amixer sset Master 5%-")
+	       ("s-<up>" . "amixer set Master unmute; amixer sset Master 5%+")
+	       ("<XF86MonBrightnessUp>" . "light -A 10")
+	       ("<XF86MonBrightnessDown>" . "light -U 10")
+	       ("<XF86AudioMute>"."amixer set Master toggle")
+	       ("<XF86AudioLowerVolume>" . "amixer sset Master 5%-")
+	       ("<XF86AudioRaiseVolume>" . "amixer set Master unmute; amixer sset Master 5%+")))
+    (let ((f (lambda () (interactive)
+	       (save-window-excursion
+		 (start-process-shell-command "" nil (cdr k))))))
+      (exwm-input-set-key (kbd (car k)) f)))
+
+  (require 'exwm-systemtray)
+  (exwm-systemtray-enable)
+
+  (add-hook 'exwm-floating-setup-hook #'exwm-layout-hide-mode-line)
+  (add-hook 'exwm-floating-exit-hook #'exwm-layout-show-mode-line)
+
+  (add-hook 'exwm-update-title-hook 
+	    (lambda () (exwm-workspace-rename-buffer exwm-title)))
+
+  (setq exwm-workspace-number 10
+	exwm-workspace-show-all-buffers t
+	exwm-layout-show-all-buffers t)
+
+  (dotimes (i 10)
+    (exwm-input-set-key (kbd (format "s-%d" i))
+			`(lambda ()
+			   (interactive)
+			   (exwm-workspace-switch-create ,i))))
+
+  (push ?\C-q exwm-input-prefix-keys)
+  (define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
+
+  (require 'exwm-randr)
+  (pcase (shell-command-to-string "hostname")
+    ("tengen\n"
+     (progn
+       (message "setting randr outputs for tengen")
+       (setq exwm-randr-workspace-output-plist
+	     '(0 "DP-2" 9 "DP-2" 8 "DP-2" 7 "DP-2" 6 "DP-2"
+		 1 "HDMI-3" 2 "HDMI-3" 3 "HDMI-3" 4 "HDMI-3" 5 "HDMI-3"))
+       (add-hook 'exwm-randr-screen-change-hook
+		 (lambda ()
+		   (start-process-shell-command
+		    "xrandr" nil
+		    (concat "xrandr "
+			    "--output DP-2 --mode 1600x900 --pos 1920x180 "
+			    "--output HDMI-3 --mode 1920x1080 --pos 0x0 "))))))
+    ("206\n"
+     (progn
+       (message "setting randr outputs for 206")
+       (setq exwm-randr-workspace-output-plist
+	     '(0 "DP2" 9 "DP2" 8 "DP2" 7 "DP2" 6 "DP2"
+		 1 "DP1" 2 "DP1" 3 "DP1" 4 "DP1" 5 "DP1"))
+       (add-hook 'exwm-randr-screen-change-hook
+		 (lambda ()
+		   (start-process-shell-command
+		    "xrandr" nil
+		    (concat "xrandr "
+			    "--output DP2 --mode 1920x1080 --pos 1920x0 "
+			    "--output DP1 --primary --mode 1920x1080 --pos 0x0")))))))
+
+			    (exwm-randr-enable)
+  (exwm-enable))
+
+(when (running-on-hosts '("joseki"))
+  (display-battery-mode t)
+  (start-process "" nil "xrdb" "-merge" "/home/tsranso/.config/urxvt/conf")
+  (start-process "wifi applet" nil "nm-applet")
+  (start-process "redshift" nil "redshift-gtk")
+
+  (when (running-on-wireless '("Torus Shaped Earth\n"))
+			     (start-process "discord" nil "discord")
+			     (start-process "transmission"
+					    nil "transmission-daemon")))
+
+(when (running-on-hosts '("206"))
+  (start-process "bluetooth applet" nil "blueman-applet")
+  (start-process "slack" nil "slack"))
+
+(when (running-on-hosts '("joseki" "206"))
+  (unless (file-exists-p "~/.config/mpd/pid")			 
+    (start-process "music player daemon" nil "mpd")))
+
+(start-process "unclutter" nil "unclutter")
+;; (start-process "thunar daemon" nil "thunar" "--daemon")
+(start-process "urxvt daemon" nil "urxvtd" "-f" "-q" "-o")
+;; (start-process "syncthing" nil "syncthing")
+(start-process "xautolock" nil
+	       "xautolock"
+	       "-time 10"
+	       "-locker lock.sh")
+
+(global-set-key (kbd "M-o")     #'other-window)
+(global-set-key (kbd "M-h")     #'backward-kill-word)                   
+(global-set-key (kbd "C-x k")   #'kill-this-buffer)                     
+(global-set-key (kbd "C-x C-k") #'kill-this-buffer)                     
+(global-set-key (kbd "C-h")     #'delete-backward-char)                 
+(global-set-key (kbd "C-x 2")                                           
+		(lambda ()                                              
+		  (interactive)                                         
+		  (split-window-vertically)                             
+		  (other-window 1)))
+
+(defun transpose-windows (arg)
+  "Transpose the buffers shown in two windows."
+  (interactive "p")
+  (let ((selector (if (>= arg 0) 'next-window 'previous-window)))
+    (while (/= arg 0)
+      (let ((this-win (window-buffer))
+            (next-win (window-buffer (funcall selector))))
+        (set-window-buffer (selected-window) next-win)
+        (set-window-buffer (funcall selector) this-win)
+        (select-window (funcall selector)))
+      (setq arg (if (plusp arg) (1- arg) (1+ arg))))))
+
+(global-set-key (kbd "C-x t") #'transpose-windows)
+
+(defun toggle-frame-split ()
+      "If the frame is split vertically, split it horizontally or vice versa.
+Assumes that the frame is only split into two."
+      (interactive)
+      (unless (= (length (window-list)) 2) (error "Can only toggle a frame split in two"))
+      (let ((split-vertically-p (window-combined-p)))
+	(delete-window) ; closes current window
+	(if split-vertically-p
+		(split-window-horizontally)
+	      (split-window-vertically))
+	(switch-to-buffer nil)))
+
+(global-set-key (kbd "C-x |") 'toggle-frame-split)
 
 (autoload 'dired-async-mode "dired-async.el" nil t)
 (dired-async-mode 1)
@@ -333,6 +494,7 @@ Assumes that the frame is only split into two."
 ;;       line-number-mode t
 ;;       column-number-mode t)
 
+(setq gud-tooltip-echo-area t)
 (fringe-mode 1)
 (tool-bar-mode 0)
 (menu-bar-mode 0)
@@ -393,133 +555,3 @@ Assumes that the frame is only split into two."
 			message-directory "~/.emacs.d/Mail/"
 					;tramp-histfile-override "/dev/null" nil (tramp)
 			)
-
-(use-package smart-mode-line
-  :ensure t
-  :init 
-  (setq sml/theme 'respectful
-	sml/no-confirm-load-theme t)
-  :config (sml/setup))
-
-(defun launch-program (command)
-  (interactive (list (read-shell-command "$ ")))
-  (start-process-shell-command command nil command))
-
-(defun lock-screen ()
-  (interactive)
-  (shell-command "/usr/local/bin/lock.sh"))
-
-(use-package xelb :ensure t)
-(use-package exwm
-  :ensure t
-  :if (string= "exwm" (getenv "DESKTOP_SESSION"))
-  :after (xelb)
-  :bind
-  (("s-x" . #'launch-program)
-   ("s-l" . #'lock-screen)
-   ("s-w" . #'exwm-workplace-switch)
-   ("s-r" . #'exwm-reset)
-   ("C-x C-c" . #'save-buffers-kill-emacs))
-  :config
-  (setq exwm-input-simulation-keys
-	'(([?\C-b] . [left])
-	  ([?\C-f] . [right])
-	  ([?\C-p] . [up])
-	  ([?\C-n] . [down])
-	  ([?\C-a] . [home])
-	  ([?\C-e] . [end])
-	  ([?\M-v] . [prior])
-	  ([?\C-v] . [next])
-	  ([?\C-d] . [delete])
-	  ([?\C-h] . [backspace])
-	  ([?\C-m] . [return])
-	  ([?\C-i] . [tab])
-	  ([?\C-g] . [escape])
-	  ([?\M-g] . [f5])
-	  ([?\C-s] . [C-f])
-	  ([?\C-y] . [C-v])
-	  ([?\M-w] . [C-c])
-	  ([?\M-<] . [home])
-	  ([?\M->] . [C-end])))
-
-  (global-set-key (kbd "<mouse-12>") (lambda () (interactive)
-				       (message "my closure")
-				       (exwm-input--fake-key 26)))
-  (require 'exwm-systemtray)
-  (exwm-systemtray-enable)
-
-  (add-hook 'exwm-floating-setup-hook #'exwm-layout-hide-mode-line)
-  (add-hook 'exwm-floating-exit-hook #'exwm-layout-show-mode-line)
-
-  (add-hook 'exwm-update-title-hook 
-	    (lambda () (exwm-workspace-rename-buffer exwm-title)))
-
-  (setq exwm-workspace-number 10
-	exwm-workspace-show-all-buffers t
-	exwm-layout-show-all-buffers t)
-
-  (dotimes (i 10)
-    (exwm-input-set-key (kbd (format "s-%d" i))
-			`(lambda ()
-			   (interactive)
-			   (exwm-workspace-switch-create ,i))))
-
-  (dolist (k '(
-	       ("s-<return>" . "urxvtc")
-	       ("s-p" . "nemo")
-	       ("s-d" . "discord")
-	       ("s-t" . "transmission-remote-gtk")
-	       ("s-s" . "slack")
-	       ("s-<tab>" . "google-chrome-stable")
-	       ("<C-M-escape>" . "gnome-system-monitor")
-	       ("s-m" . "pavucontrol")
-	       ("s-<down>" . "amixer sset Master 5%-")
-	       ("s-<up>" . "amixer set Master unmute; amixer sset Master 5%+")
-	       ("<XF86MonBrightnessUp>" . "light -A 10")
-	       ("<XF86MonBrightnessDown>" . "light -U 10")
-	       ("<XF86AudioMute>"."amixer set Master toggle")
-	       ("<XF86AudioLowerVolume>" . "amixer sset Master 5%-")
-	       ("<XF86AudioRaiseVolume>" . "amixer set Master unmute; amixer sset Master 5%+")))
-    ;; need a closure here to grab the element pair
-    (let ((f (lambda () (interactive)
-	       (save-window-excursion
-		 (start-process-shell-command "" nil (cdr k))))))
-      (exwm-input-set-key (kbd (car k)) f)))
-
-  ;; The following example demonstrates how to set a key binding only available
-  ;; in line mode. It's simply done by first push the prefix key to
-  ;; `exwm-input-prefix-keys' and then add the key sequence to `exwm-mode-map'.
-  ;; The example shorten 'C-c q' to 'C-q'.
-  (push ?\C-q exwm-input-prefix-keys)
-  (define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
-
-  (exwm-enable))
-
-(when (running-on-hosts '("joseki"))
-  (display-battery-mode t)
-  (start-process "" nil "xrdb" "-merge" "/home/tsranso/.config/urxvt/conf")
-  (start-process "wifi applet" nil "nm-applet")
-  (start-process "redshift" nil "redshift-gtk")
-
-  (when (running-on-wireless '("Torus Shaped Earth\n"))
-			     (start-process "discord" nil "discord")
-			     (start-process "transmission"
-					    nil "transmission-daemon")))
-
-(when (running-on-hosts '("206"))
-  (start-process "bluetooth applet" nil "blueman-applet")
-  (start-process "slack" nil "slack"))
-
-(when (running-on-hosts '("joseki" "206"))
-  (unless (file-exists-p "~/.config/mpd/pid")			 
-    (start-process "music player daemon" nil "mpd")))
-
-;; ;; here are my autostart programs
-(start-process "unclutter" nil "unclutter")
-;; (start-process "thunar daemon" nil "thunar" "--daemon")
-(start-process "urxvt daemon" nil "urxvtd" "-f" "-q" "-o")
-;; (start-process "syncthing" nil "syncthing")
-(start-process "xautolock" nil
-	       "xautolock"
-	       "-time 10"
-	       "-locker lock.sh")
