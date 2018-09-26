@@ -287,6 +287,8 @@
 	sml/no-confirm-load-theme t)
   :config (sml/setup))
 
+(use-package gnuplot :ensure t)
+
 (defun launch-program (command)
   (interactive (list (read-shell-command "$ ")))
   (start-process-shell-command command nil command))
@@ -379,35 +381,31 @@
   (define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
 
   (require 'exwm-randr)
-  (pcase (shell-command-to-string "hostname")
-    ("tengen\n"
-     (progn
-       (message "setting randr outputs for tengen")
-       (setq exwm-randr-workspace-output-plist
-	     '(0 "DP-2" 9 "DP-2" 8 "DP-2" 7 "DP-2" 6 "DP-2"
-		 1 "HDMI-3" 2 "HDMI-3" 3 "HDMI-3" 4 "HDMI-3" 5 "HDMI-3"))
-       (add-hook 'exwm-randr-screen-change-hook
-		 (lambda ()
-		   (start-process-shell-command
-		    "xrandr" nil
-		    (concat "xrandr "
-			    "--output DP-2 --mode 1600x900 --pos 1920x180 "
-			    "--output HDMI-3 --mode 1920x1080 --pos 0x0 "))))))
-    ("206\n"
-     (progn
-       (message "setting randr outputs for 206")
-       (setq exwm-randr-workspace-output-plist
-	     '(0 "DP2" 9 "DP2" 8 "DP2" 7 "DP2" 6 "DP2"
-		 1 "DP1" 2 "DP1" 3 "DP1" 4 "DP1" 5 "DP1"))
-       (add-hook 'exwm-randr-screen-change-hook
-		 (lambda ()
-		   (start-process-shell-command
-		    "xrandr" nil
-		    (concat "xrandr "
-			    "--output DP2 --mode 1920x1080 --pos 1920x0 "
-			    "--output DP1 --primary --mode 1920x1080 --pos 0x0")))))))
+  (when (running-on-hosts '("tengen"))
+    (setq exwm-randr-workspace-output-plist
+	  '(0 "DP-2" 9 "DP-2" 8 "DP-2" 7 "DP-2" 6 "DP-2"
+	      1 "HDMI-3" 2 "HDMI-3" 3 "HDMI-3" 4 "HDMI-3" 5 "HDMI-3"))
+    (add-hook 'exwm-randr-screen-change-hook
+	      (lambda ()
+		(start-process-shell-command
+		 "xrandr" nil
+		 (concat "xrandr "
+			 "--output DP-2 --mode 1600x900 --pos 1920x180 "
+			 "--output HDMI-3 --mode 1920x1080 --pos 0x0 ")))))
 
-			    (exwm-randr-enable)
+  (when (running-on-hosts '("206"))
+    (setq exwm-randr-workspace-output-plist
+	  '(0 "DP-2" 9 "DP-2" 8 "DP-2" 7 "DP-2" 6 "DP-2"
+	      1 "DP-1" 2 "DP-1" 3 "DP-1" 4 "DP-1" 5 "DP-1"))
+    (add-hook 'exwm-randr-screen-change-hook
+	      (lambda ()
+		(start-process-shell-command
+		 "xrandr" nil
+		 (concat "xrandr "
+			 "--output DP-2 --mode 1920x1080 --pos 1920x0 "
+			 "--output DP-1 --primary --mode 1920x1080 --pos 0x0")))))
+
+  (exwm-randr-enable)
   (exwm-enable))
 
 (when (running-on-hosts '("joseki"))
@@ -417,9 +415,9 @@
   (start-process "redshift" nil "redshift-gtk")
 
   (when (running-on-wireless '("Torus Shaped Earth\n"))
-			     (start-process "discord" nil "discord")
-			     (start-process "transmission"
-					    nil "transmission-daemon")))
+    (start-process "discord" nil "discord")
+    (start-process "transmission"
+		   nil "transmission-daemon")))
 
 (when (running-on-hosts '("206"))
   (start-process "bluetooth applet" nil "blueman-applet")
@@ -429,14 +427,16 @@
   (unless (file-exists-p "~/.config/mpd/pid")			 
     (start-process "music player daemon" nil "mpd")))
 
-(start-process "unclutter" nil "unclutter")
-;; (start-process "thunar daemon" nil "thunar" "--daemon")
-(start-process "urxvt daemon" nil "urxvtd" "-f" "-q" "-o")
-;; (start-process "syncthing" nil "syncthing")
-(start-process "xautolock" nil
-	       "xautolock"
-	       "-time 10"
-	       "-locker lock.sh")
+(when (not (running-on-hosts '("atari" "login001")))
+	   (start-process "urxvt daemon" nil "urxvtd" "-f" "-q" "-o")
+	   (start-process "syncthing" nil "syncthing")
+	   (start-process "xautolock" nil
+			  "xautolock"
+			  "-time 10"
+			  "-locker lock.sh"))
+
+(when (not (running-on-hosts '("login001")))
+  (start-process "unclutter" nil "unclutter"))
 
 (global-set-key (kbd "M-o")     #'other-window)
 (global-set-key (kbd "M-h")     #'backward-kill-word)                   
@@ -487,14 +487,12 @@ Assumes that the frame is only split into two."
 
 (display-time-mode t)
 
-;; (setq menu-bar-mode nil
-;;       tool-bar-mode nil
-;;       tooltip-use-echo-area t
+;; (setq 
 ;;       use-dialog-box nil
 ;;       line-number-mode t
 ;;       column-number-mode t)
 
-(setq gud-tooltip-echo-area t)
+(tooltip-mode 0)
 (fringe-mode 1)
 (tool-bar-mode 0)
 (menu-bar-mode 0)
