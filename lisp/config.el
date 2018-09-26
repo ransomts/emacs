@@ -146,6 +146,8 @@
    dired-recursive-copies 'always
    dired-recursive-deletes 'always))
 
+(use-package dad-joke :ensure t)
+
 (use-package material-theme
   :if (not (running-on-hosts '("login001")))
   :ensure t
@@ -348,6 +350,7 @@
 	       ("s-m" . "pavucontrol")
 	       ("s-<down>" . "amixer sset Master 5%-")
 	       ("s-<up>" . "amixer set Master unmute; amixer sset Master 5%+")
+	       ("<print>" . "scrot")
 	       ("<XF86MonBrightnessUp>" . "light -A 10")
 	       ("<XF86MonBrightnessDown>" . "light -U 10")
 	       ("<XF86AudioMute>"."amixer set Master toggle")

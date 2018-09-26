@@ -464,6 +464,7 @@
 		   ("s-m" . "pavucontrol")
 		   ("s-<down>" . "amixer sset Master 5%-")
 		   ("s-<up>" . "amixer set Master unmute; amixer sset Master 5%+")
+		   ("<print>" . "scrot")
 		   ("<XF86MonBrightnessUp>" . "light -A 10")
 		   ("<XF86MonBrightnessDown>" . "light -U 10")
 		   ("<XF86AudioMute>"."amixer set Master toggle")
@@ -542,7 +543,8 @@
 
       (when (running-on-hosts '("206"))
 	(start-process "bluetooth applet" nil "blueman-applet")
-	(start-process "slack" nil "slack"))
+	(start-process "redshift" nil "redshift-gtk"))
+
 
       (when (running-on-hosts '("joseki" "206"))
 	(unless (file-exists-p "~/.config/mpd/pid")			 
