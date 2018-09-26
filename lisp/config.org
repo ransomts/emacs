@@ -631,14 +631,12 @@
 
 ** window behavior
    #+BEGIN_SRC emacs-lisp
-  ;; (setq menu-bar-mode nil
-  ;;       tool-bar-mode nil
-  ;;       tooltip-use-echo-area t
+  ;; (setq 
   ;;       use-dialog-box nil
   ;;       line-number-mode t
   ;;       column-number-mode t)
 
-  (setq gud-tooltip-echo-area t)
+  (tooltip-mode 0)
   (fringe-mode 1)
   (tool-bar-mode 0)
   (menu-bar-mode 0)
