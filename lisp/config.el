@@ -291,6 +291,122 @@
 
 (use-package gnuplot :ensure t)
 
+(global-set-key (kbd "M-o")     #'other-window)
+(global-set-key (kbd "M-h")     #'backward-kill-word)                   
+(global-set-key (kbd "C-x k")   #'kill-this-buffer)                     
+(global-set-key (kbd "C-x C-k") #'kill-this-buffer)                     
+(global-set-key (kbd "C-h")     #'delete-backward-char)                 
+(global-set-key (kbd "C-x 2")                                           
+		(lambda ()                                              
+		  (interactive)                                         
+		  (split-window-vertically)                             
+		  (other-window 1)))
+
+(defun transpose-windows (arg)
+  "Transpose the buffers shown in two windows."
+  (interactive "p")
+  (let ((selector (if (>= arg 0) 'next-window 'previous-window)))
+    (while (/= arg 0)
+      (let ((this-win (window-buffer))
+            (next-win (window-buffer (funcall selector))))
+        (set-window-buffer (selected-window) next-win)
+        (set-window-buffer (funcall selector) this-win)
+        (select-window (funcall selector)))
+      (setq arg (if (plusp arg) (1- arg) (1+ arg))))))
+
+(global-set-key (kbd "C-x t") #'transpose-windows)
+
+(defun toggle-frame-split ()
+      "If the frame is split vertically, split it horizontally or vice versa.
+Assumes that the frame is only split into two."
+      (interactive)
+      (unless (= (length (window-list)) 2) (error "Can only toggle a frame split in two"))
+      (let ((split-vertically-p (window-combined-p)))
+	(delete-window) ; closes current window
+	(if split-vertically-p
+		(split-window-horizontally)
+	      (split-window-vertically))
+	(switch-to-buffer nil)))
+
+(global-set-key (kbd "C-x |") 'toggle-frame-split)
+
+(autoload 'dired-async-mode "dired-async.el" nil t)
+(dired-async-mode 1)
+(async-bytecomp-package-mode 1)
+
+(setq calendar-mark-diary-entries-flag t
+      display-time-24hr-format t
+      display-time-default-load-average nil)
+
+(display-time-mode t)
+
+;; (setq 
+;;       use-dialog-box nil
+;;       line-number-mode t
+;;       column-number-mode t)
+
+(tooltip-mode 0)
+(fringe-mode 1)
+(tool-bar-mode 0)
+(menu-bar-mode 0)
+(scroll-bar-mode 0)
+
+(setq x-stretch-cursor t
+      sentence-end-double-space nil
+      tab-width 4)
+
+(show-paren-mode t)
+
+(setq delete-by-moving-to-trash t
+	      trash-directory "/home/tsranso/.local/share/Trash/files/")
+
+(setq 
+   ;initial-buffer-choice (lambda nil (get-buffer "*dashboard*"))
+   initial-buffer-choice (lambda nil (get-buffer "*scratch*"))
+   initial-major-mode 'org-mode
+   initial-scratch-message (concat (format-time-string "%Y-%m-%d")
+"
+
+"))
+
+(setq proced-auto-update-flag t
+	      proced-auto-update-interval 2
+	      proced-filter 'user)
+
+(setq browse-url-browser-function 'browse-url-firefox
+	      browse-url-firefox-arguments '("-new-window")
+	      browse-url-firefox-startup-arguments nil)
+
+(setq doc-view-continuous t
+	      doc-view-resolution 300)
+
+(setq
+   backup-by-copying t      ; don't clobber symlinks
+   backup-directory-alist
+    '(("." . "/var/emacs/"))    ; don't litter my fs tree
+   delete-old-versions t
+   kept-new-versions 6
+   kept-old-versions 2
+   version-control t)       ; use versioned backups
+
+(recentf-mode 1)
+
+(global-set-key (kbd "<f6>")    #'calc)
+(global-set-key (kbd "<f7>")    #'calendar)
+(global-set-key (kbd "C-x e")   #'eshell)
+(global-set-key (kbd "C-c C-c") #'compile)
+(global-set-key (kbd "C-c r")   #'revert-buffer)
+
+
+(setq TeX-view-program-selection '((output-pdf "PDF Tools"))
+			async-bytecomp-package-mode t
+			gdb-many-windows t
+			large-file-warning-threshold 500000000
+			send-mail-function 'smtpmail-send-it
+			message-directory "~/.emacs.d/Mail/"
+					;tramp-histfile-override "/dev/null" nil (tramp)
+			)
+
 (defun launch-program (command)
   (interactive (list (read-shell-command "$ ")))
   (start-process-shell-command command nil command))
@@ -424,7 +540,8 @@
 
 (when (running-on-hosts '("206"))
   (start-process "bluetooth applet" nil "blueman-applet")
-  (start-process "slack" nil "slack"))
+  (start-process "redshift" nil "redshift-gtk"))
+
 
 (when (running-on-hosts '("joseki" "206"))
   (unless (file-exists-p "~/.config/mpd/pid")			 
@@ -440,119 +557,3 @@
 
 (when (not (running-on-hosts '("login001")))
   (start-process "unclutter" nil "unclutter"))
-
-(global-set-key (kbd "M-o")     #'other-window)
-(global-set-key (kbd "M-h")     #'backward-kill-word)                   
-(global-set-key (kbd "C-x k")   #'kill-this-buffer)                     
-(global-set-key (kbd "C-x C-k") #'kill-this-buffer)                     
-(global-set-key (kbd "C-h")     #'delete-backward-char)                 
-(global-set-key (kbd "C-x 2")                                           
-		(lambda ()                                              
-		  (interactive)                                         
-		  (split-window-vertically)                             
-		  (other-window 1)))
-
-(defun transpose-windows (arg)
-  "Transpose the buffers shown in two windows."
-  (interactive "p")
-  (let ((selector (if (>= arg 0) 'next-window 'previous-window)))
-    (while (/= arg 0)
-      (let ((this-win (window-buffer))
-            (next-win (window-buffer (funcall selector))))
-        (set-window-buffer (selected-window) next-win)
-        (set-window-buffer (funcall selector) this-win)
-        (select-window (funcall selector)))
-      (setq arg (if (plusp arg) (1- arg) (1+ arg))))))
-
-(global-set-key (kbd "C-x t") #'transpose-windows)
-
-(defun toggle-frame-split ()
-      "If the frame is split vertically, split it horizontally or vice versa.
-Assumes that the frame is only split into two."
-      (interactive)
-      (unless (= (length (window-list)) 2) (error "Can only toggle a frame split in two"))
-      (let ((split-vertically-p (window-combined-p)))
-	(delete-window) ; closes current window
-	(if split-vertically-p
-		(split-window-horizontally)
-	      (split-window-vertically))
-	(switch-to-buffer nil)))
-
-(global-set-key (kbd "C-x |") 'toggle-frame-split)
-
-(autoload 'dired-async-mode "dired-async.el" nil t)
-(dired-async-mode 1)
-(async-bytecomp-package-mode 1)
-
-(setq calendar-mark-diary-entries-flag t
-      display-time-24hr-format t
-      display-time-default-load-average nil)
-
-(display-time-mode t)
-
-;; (setq 
-;;       use-dialog-box nil
-;;       line-number-mode t
-;;       column-number-mode t)
-
-(tooltip-mode 0)
-(fringe-mode 1)
-(tool-bar-mode 0)
-(menu-bar-mode 0)
-(scroll-bar-mode 0)
-
-(setq x-stretch-cursor t
-      sentence-end-double-space nil
-      tab-width 4)
-
-(show-paren-mode t)
-
-(setq delete-by-moving-to-trash t
-	      trash-directory "/home/tsranso/.local/share/Trash/files/")
-
-(setq 
-   ;initial-buffer-choice (lambda nil (get-buffer "*dashboard*"))
-   initial-buffer-choice (lambda nil (get-buffer "*scratch*"))
-   initial-major-mode 'org-mode
-   initial-scratch-message (concat (format-time-string "%Y-%m-%d")
-"
-
-"))
-
-(setq proced-auto-update-flag t
-	      proced-auto-update-interval 2
-	      proced-filter 'user)
-
-(setq browse-url-browser-function 'browse-url-firefox
-	      browse-url-firefox-arguments '("-new-window")
-	      browse-url-firefox-startup-arguments nil)
-
-(setq doc-view-continuous t
-	      doc-view-resolution 300)
-
-(setq
-   backup-by-copying t      ; don't clobber symlinks
-   backup-directory-alist
-    '(("." . "/var/emacs/"))    ; don't litter my fs tree
-   delete-old-versions t
-   kept-new-versions 6
-   kept-old-versions 2
-   version-control t)       ; use versioned backups
-
-(recentf-mode 1)
-
-(global-set-key (kbd "<f6>")    #'calc)
-(global-set-key (kbd "<f7>")    #'calendar)
-(global-set-key (kbd "C-x e")   #'eshell)
-(global-set-key (kbd "C-c C-c") #'compile)
-(global-set-key (kbd "C-c r")   #'revert-buffer)
-
-
-(setq TeX-view-program-selection '((output-pdf "PDF Tools"))
-			async-bytecomp-package-mode t
-			gdb-many-windows t
-			large-file-warning-threshold 500000000
-			send-mail-function 'smtpmail-send-it
-			message-directory "~/.emacs.d/Mail/"
-					;tramp-histfile-override "/dev/null" nil (tramp)
-			)
