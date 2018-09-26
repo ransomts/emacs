@@ -9,7 +9,7 @@
  '(package-enable-at-startup nil)
  '(package-selected-packages
    (quote
-    (gnuplot theme-changer smart-mode-line magit org-bullets exwm xelb page-breaks-line slime transmission pdf-tools material-theme helm-tramp helm-dictionary helm-bbdb emms dashboard)))
+    (dad-joke gnuplot theme-changer smart-mode-line magit org-bullets exwm xelb page-breaks-line slime transmission pdf-tools material-theme helm-tramp helm-dictionary helm-bbdb emms dashboard)))
  '(tooltip-mode nil))
  
 (custom-set-faces

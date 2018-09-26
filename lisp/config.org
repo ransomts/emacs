@@ -186,6 +186,13 @@
 
 ** External
 
+*** Dad-joke
+
+    This is top tier package-age here.
+    #+BEGIN_SRC emacs-lisp
+  (use-package dad-joke :ensure t)
+    #+END_SRC
+
 *** Theme
 
     I really like themes that have light and dark modes. The material theme fits that and has been my theme of choice for a few years.
