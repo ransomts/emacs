@@ -483,6 +483,32 @@
       (push ?\C-q exwm-input-prefix-keys)
       (define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
 
+      (require 'exwm-randr)
+      (when (running-on-host '("tengen"))
+	(setq exwm-randr-workspace-output-plist
+	      '(0 "DP-2" 9 "DP-2" 8 "DP-2" 7 "DP-2" 6 "DP-2"
+		  1 "HDMI-3" 2 "HDMI-3" 3 "HDMI-3" 4 "HDMI-3" 5 "HDMI-3"))
+	(add-hook 'exwm-randr-screen-change-hook
+		  (lambda ()
+		    (start-process-shell-command
+		     "xrandr" nil
+		     (concat "xrandr "
+			     "--output DP-2 --mode 1600x900 --pos 1920x180 "
+			     "--output HDMI-3 --mode 1920x1080 --pos 0x0 ")))))
+
+      (when (running-on-host '("206"))
+	(setq exwm-randr-workspace-output-plist
+	      '(0 "DP2" 9 "DP2" 8 "DP2" 7 "DP2" 6 "DP2"
+		  1 "DP1" 2 "DP1" 3 "DP1" 4 "DP1" 5 "DP1"))
+	(add-hook 'exwm-randr-screen-change-hook
+		  (lambda ()
+		    (start-process-shell-command
+		     "xrandr" nil
+		     (concat "xrandr "
+			     "--output DP2 --mode 1920x1080 --pos 1920x0 "
+			     "--output DP1 --primary --mode 1920x1080 --pos 0x0")))))
+
+      (exwm-randr-enable)
       (exwm-enable))
   #+END_SRC
 
