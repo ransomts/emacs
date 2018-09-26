@@ -521,8 +521,6 @@
 ** Autostart programs
 
    I use this config across several machines, depending which machine and what network it's connected to I want different autostart applications.
-*** Machine Specific
-
     #+BEGIN_SRC emacs-lisp :noweb yes
       (when (running-on-hosts '("joseki"))
 	(display-battery-mode t)
@@ -531,9 +529,9 @@
 	(start-process "redshift" nil "redshift-gtk")
 
 	(when (running-on-wireless '("Torus Shaped Earth\n"))
-				   (start-process "discord" nil "discord")
-				   (start-process "transmission"
-						  nil "transmission-daemon")))
+	  (start-process "discord" nil "discord")
+	  (start-process "transmission"
+			 nil "transmission-daemon")))
 
       (when (running-on-hosts '("206"))
 	(start-process "bluetooth applet" nil "blueman-applet")
@@ -542,23 +540,24 @@
       (when (running-on-hosts '("joseki" "206"))
 	(unless (file-exists-p "~/.config/mpd/pid")			 
 	  (start-process "music player daemon" nil "mpd")))
-    #+END_SRC
 
-*** Every Time
+      (when (not (running-on-hosts '("atari" "login001"))
+		 (start-process "urxvt daemon" nil "urxvtd" "-f" "-q" "-o")
+		 (start-process "syncthing" nil "syncthing")
+		 (start-process "xautolock" nil
+				"xautolock"
+				"-time 10"
+				"-locker lock.sh")))
 
-    But here are the simpler auto-start applications.
-    #+BEGIN_SRC emacs-lisp
-      (start-process "unclutter" nil "unclutter")
-      ;; (start-process "thunar daemon" nil "thunar" "--daemon")
-      (start-process "urxvt daemon" nil "urxvtd" "-f" "-q" "-o")
-      ;; (start-process "syncthing" nil "syncthing")
-      (start-process "xautolock" nil
-		     "xautolock"
-		     "-time 10"
-		     "-locker lock.sh")
+      (when (not (running-on-hosts '("login001")))
+	(start-process "unclutter" nil "unclutter"))
+
+
     #+END_SRC
 
 * Moving around
+
+  Here are just about my only modifications to ordinary bindings. Mostly just convienience and intution things.
   #+BEGIN_SRC emacs-lisp
     (global-set-key (kbd "M-o")     #'other-window)
     (global-set-key (kbd "M-h")     #'backward-kill-word)                   
