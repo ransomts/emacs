@@ -1,11 +1,10 @@
-
 ;; -*- lexical-binding: t -*-
 
 (defun running-on-hosts (hosts)
   (member
    (car (split-string ; split the hostname on '.' for complex hostnames
-         (car (split-string ; remove trailing newline from `hostname`
-               (shell-command-to-string "hostname") "\n")) "\\."))
+	 (car (split-string ; remove trailing newline from `hostname`
+	       (shell-command-to-string "hostname") "\n")) "\\."))
    hosts))
 
 (defun running-on-wireless (essids)
@@ -31,83 +30,83 @@
 ;;   )
 
 (use-package org
-        :config
-        (setq diary-file "~/.emacs.d/org/schedule.org"
-        org-agenda-files
-        '("~/.emacs.d/org/fun/code-ideas.org"
-                "~/.emacs.d/org/fun/music.org"
-                "~/.emacs.d/org/scratch.org"
-                "~/.emacs.d/org/research.org"
-                "~/.emacs.d/org/schedule.org"
-                "~/.emacs.d/org/todo.org")
-        org-agenda-use-time-grid nil
-        org-archive-location "~/.emacs.d/org/archive.org::* From %s"
-        org-babel-load-languages
-        '((emacs-lisp . t)
-                (awk . t)
-                (ditaa . t)
-                (lisp . t)
-                (haskell . t)
-                (C . t)
-                (gnuplot . t)
-                (python . t)
-                (shell . t)
-                (sqlite . t)
-                (java . t))
-        org-capture-after-finalize-hook nil
-        org-capture-templates '(("t" "Todo" entry
-                                 (file+headline "~/.emacs.d/org/todo.org" "Tasks")
-                                 "* TODO %?
-                                        Entered on %T
-                                         %i
-                                         %a")
-                                ("e" "Event" entry
-                                 (file "~/.emacs.d/org/schedule.org")
-                                 "* %?
-                                        Date %^t")
-                                ("b" "Fix Bug" checkitem
-                                 (file+headline "~/.emacs.d/org/todo.org" "Bugs")
-                                 "[ ] %?
-                                        %A
-                                        Entered on %T")
-                                ("n" "General notes" entry
-                                 (file+headline "~/.emacs.d/org/scratch.org" "Notes")
-                                 "* Note %?
-                                         %T
-                                        "))
-        org-clock-sound t
-        org-confirm-babel-evaluate nil
-        org-datetree-add-timestamp 'inactive
-        org-default-notes-file "~/.emacs.d/org/todo.org"
-        org-directory "~/.emacs.d/org"
-        org-gcal-client-secret "UwfWeXumob8oMLGTBs2D6D5j"
-        org-gcal-dir "~/.emacs.d/org/org-gcal/"
-        org-hide-leading-stars t
-        org-highlight-latex-and-related '(latex)
-        org-journal-dir "~/.emacs.d/org/journal"
-        org-log-done 'time
-        org-outline-path-complete-in-steps nil
-        org-preview-latex-image-directory "~/.emacs.d/ltxpng/"
-        org-refile-targets '((org-agenda-files :maxlevel . 2))
-        org-refile-use-outline-path 'file
-        org-startup-with-latex-preview t
-        org-todo-keyword-faces
-        '(("SOON"
-                 :foreground "blue"
-                 :background "sky blue"
-                 :weight bold)
-                ("DONE"
-                 :foreground "darkseagreen4"
-                 :background "darkseagreen2"
-                 :weight bold))
-        org-todo-keywords '((sequence "TODO" "SOON" "DONE")))
-        :bind
-        (
-         ("C-c a" . #'org-agenda)
-         ("C-c c" . #'org-capture)
-         (:map org-mode-map
-         (("C-c r" . #'org-archive-subtree)
-                ("C-c C-r" . #'org-archive-subtree)))))
+	:config
+	(setq diary-file "~/.emacs.d/org/schedule.org"
+	org-agenda-files
+	'("~/.emacs.d/org/fun/code-ideas.org"
+		"~/.emacs.d/org/fun/music.org"
+		"~/.emacs.d/org/scratch.org"
+		"~/.emacs.d/org/research.org"
+		"~/.emacs.d/org/schedule.org"
+		"~/.emacs.d/org/todo.org")
+	org-agenda-use-time-grid nil
+	org-archive-location "~/.emacs.d/org/archive.org::* From %s"
+	org-babel-load-languages
+	'((emacs-lisp . t)
+		(awk . t)
+		(ditaa . t)
+		(lisp . t)
+		(haskell . t)
+		(C . t)
+		(gnuplot . t)
+		(python . t)
+		(shell . t)
+		(sqlite . t)
+		(java . t))
+	org-capture-after-finalize-hook nil
+	org-capture-templates '(("t" "Todo" entry
+				 (file+headline "~/.emacs.d/org/todo.org" "Tasks")
+				 "* TODO %?
+					Entered on %T
+					 %i
+					 %a")
+				("e" "Event" entry
+				 (file "~/.emacs.d/org/schedule.org")
+				 "* %?
+					Date %^t")
+				("b" "Fix Bug" checkitem
+				 (file+headline "~/.emacs.d/org/todo.org" "Bugs")
+				 "[ ] %?
+					%A
+					Entered on %T")
+				("n" "General notes" entry
+				 (file+headline "~/.emacs.d/org/scratch.org" "Notes")
+				 "* Note %?
+					 %T
+					"))
+	org-clock-sound t
+	org-confirm-babel-evaluate nil
+	org-datetree-add-timestamp 'inactive
+	org-default-notes-file "~/.emacs.d/org/todo.org"
+	org-directory "~/.emacs.d/org"
+	org-gcal-client-secret "UwfWeXumob8oMLGTBs2D6D5j"
+	org-gcal-dir "~/.emacs.d/org/org-gcal/"
+	org-hide-leading-stars t
+	org-highlight-latex-and-related '(latex)
+	org-journal-dir "~/.emacs.d/org/journal"
+	org-log-done 'time
+	org-outline-path-complete-in-steps nil
+	org-preview-latex-image-directory "~/.emacs.d/ltxpng/"
+	org-refile-targets '((org-agenda-files :maxlevel . 2))
+	org-refile-use-outline-path 'file
+	org-startup-with-latex-preview t
+	org-todo-keyword-faces
+	'(("SOON"
+		 :foreground "blue"
+		 :background "sky blue"
+		 :weight bold)
+		("DONE"
+		 :foreground "darkseagreen4"
+		 :background "darkseagreen2"
+		 :weight bold))
+	org-todo-keywords '((sequence "TODO" "SOON" "DONE")))
+	:bind
+	(
+	 ("C-c a" . #'org-agenda)
+	 ("C-c c" . #'org-capture)
+	 (:map org-mode-map
+	 (("C-c r" . #'org-archive-subtree)
+		("C-c C-r" . #'org-archive-subtree)))))
 
 (use-package org-bullets
   :ensure t
@@ -128,17 +127,17 @@
        erc-log-write-after-send t
        erc-modules
        '(autojoin button completion dcc fill irccontrols keep-place
-         list log match menu move-to-prompt netsplit networks
-         noncommands notifications readonly ring services sound
-         stamp track)
+	 list log match menu move-to-prompt netsplit networks
+	 noncommands notifications readonly ring services sound
+	 stamp track)
        erc-nick "Timzi"
        erc-prompt "<Timzi>"
        erc-sound-mode t))
 
 (use-package dired+
   :bind (:map dired-mode-map
-              (("M-h" . #'dired-omit-mode)
-               ("u" . #'dired-up-directory)))
+	      (("M-h" . #'dired-omit-mode)
+	       ("u" . #'dired-up-directory)))
   :config
   (setq
    dired-listing-switches "-alh --no-group"
@@ -160,8 +159,8 @@
   :ensure t
   :init
   (setq calendar-latitude 34.67
-        calendar-location-name "Clemson, SC"
-        calendar-longitude -82.84)
+	calendar-location-name "Clemson, SC"
+	calendar-longitude -82.84)
   :config (change-theme 'material-light 'material))
 
 (when (>= (string-to-number emacs-version) 24.4)
@@ -211,7 +210,7 @@
 (use-package pdf-tools
   :ensure t
   :unless (or (string= nil (getenv "DESKTOP_SESSION")) 
-               (running-on-hosts '("login001")))
+	       (running-on-hosts '("login001")))
   :load-path "site-lisp/pdf-tools/lisp"
   :magic ("%PDF" . pdf-view-mode)
   :config
@@ -259,8 +258,8 @@
    emms-cache-modified-function 'emms-cache-dirty
    emms-cache-set-function 'emms-cache-set
    emms-info-functions '(emms-info-mediainfo
-                                                 emms-info-mpd emms-info-cueinfo
-                                                 emms-info-ogginfo)
+						 emms-info-mpd emms-info-cueinfo
+						 emms-info-ogginfo)
    emms-mode-line-cycle t
    emms-mode-line-mode-line-function 'emms-mode-line-cycle-mode-line-function
    emms-player-mpd-music-directory "/home/tsranso/Music"
@@ -272,7 +271,7 @@
 
 (use-package bbdb
   :ensure t
-  :config 
+  :config
   (setq
    bbdb-dial-function
    (lambda
@@ -300,7 +299,7 @@
   :ensure t
   :init 
   (setq sml/theme 'respectful
-        sml/no-confirm-load-theme t)
+	sml/no-confirm-load-theme t)
   :config (sml/setup))
 
 (use-package gnuplot :ensure t)
@@ -311,10 +310,10 @@
 (global-set-key (kbd "C-x C-k") #'kill-this-buffer)                     
 (global-set-key (kbd "C-h")     #'delete-backward-char)                 
 (global-set-key (kbd "C-x 2")                                           
-                (lambda ()                                              
-                  (interactive)                                         
-                  (split-window-vertically)                             
-                  (other-window 1)))
+		(lambda ()                                              
+		  (interactive)                                         
+		  (split-window-vertically)                             
+		  (other-window 1)))
 
 (defun transpose-windows (arg)
   "Transpose the buffers shown in two windows."
@@ -336,11 +335,11 @@ Assumes that the frame is only split into two."
       (interactive)
       (unless (= (length (window-list)) 2) (error "Can only toggle a frame split in two"))
       (let ((split-vertically-p (window-combined-p)))
-        (delete-window) ; closes current window
-        (if split-vertically-p
-                (split-window-horizontally)
-              (split-window-vertically))
-        (switch-to-buffer nil)))
+	(delete-window) ; closes current window
+	(if split-vertically-p
+		(split-window-horizontally)
+	      (split-window-vertically))
+	(switch-to-buffer nil)))
 
 (global-set-key (kbd "C-x |") 'toggle-frame-split)
 
@@ -374,7 +373,7 @@ Assumes that the frame is only split into two."
 (show-paren-mode t)
 
 (setq delete-by-moving-to-trash t
-              trash-directory "/home/tsranso/.local/share/Trash/files/")
+	      trash-directory "/home/tsranso/.local/share/Trash/files/")
 
 (setq 
    ;initial-buffer-choice (lambda nil (get-buffer "*dashboard*"))
@@ -386,15 +385,15 @@ Assumes that the frame is only split into two."
 "))
 
 (setq proced-auto-update-flag t
-              proced-auto-update-interval 2
-              proced-filter 'user)
+	      proced-auto-update-interval 2
+	      proced-filter 'user)
 
 (setq browse-url-browser-function 'browse-url-firefox
-              browse-url-firefox-arguments '("-new-window")
-              browse-url-firefox-startup-arguments nil)
+	      browse-url-firefox-arguments '("-new-window")
+	      browse-url-firefox-startup-arguments nil)
 
 (setq doc-view-continuous t
-              doc-view-resolution 300)
+	      doc-view-resolution 300)
 
 (setq
    backup-by-copying t      ; don't clobber symlinks
@@ -415,13 +414,13 @@ Assumes that the frame is only split into two."
 
 
 (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
-                        async-bytecomp-package-mode t
-                        gdb-many-windows t
-                        large-file-warning-threshold 500000000
-                        send-mail-function 'smtpmail-send-it
-                        message-directory "~/.emacs.d/Mail/"
-                                        ;tramp-histfile-override "/dev/null" nil (tramp)
-                        )
+			async-bytecomp-package-mode t
+			gdb-many-windows t
+			large-file-warning-threshold 500000000
+			send-mail-function 'smtpmail-send-it
+			message-directory "~/.emacs.d/Mail/"
+					;tramp-histfile-override "/dev/null" nil (tramp)
+			)
 
 (defun launch-program (command)
   (interactive (list (read-shell-command "$ ")))
@@ -554,7 +553,7 @@ Assumes that the frame is only split into two."
   (when (running-on-wireless '("Torus Shaped Earth\n"))
     (start-process "discord" nil "discord")
     (start-process "transmission"
-                   nil "transmission-daemon")))
+		   nil "transmission-daemon")))
 
 (when (running-on-hosts '("206"))
   (start-process "bluetooth applet" nil "blueman-applet")
@@ -566,12 +565,12 @@ Assumes that the frame is only split into two."
     (start-process "music player daemon" nil "mpd")))
 
 (when (not (running-on-hosts '("atari" "login001")))
-           (start-process "urxvt daemon" nil "urxvtd" "-f" "-q" "-o")
-           (start-process "syncthing" nil "syncthing")
-           (start-process "xautolock" nil
-                          "xautolock"
-                          "-time 10"
-                          "-locker lock.sh"))
+	   (start-process "urxvt daemon" nil "urxvtd" "-f" "-q" "-o")
+	   (start-process "syncthing" nil "syncthing")
+	   (start-process "xautolock" nil
+			  "xautolock"
+			  "-time 10"
+			  "-locker lock.sh"))
 
 (when (not (running-on-hosts '("login001")))
   (start-process "unclutter" nil "unclutter"))
