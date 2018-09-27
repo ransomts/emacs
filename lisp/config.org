@@ -198,7 +198,7 @@
     I really like themes that have light and dark modes. The material theme fits that and has been my theme of choice for a few years.
     #+BEGIN_SRC emacs-lisp
   (use-package material-theme
-    :if (not (running-on-hosts '("login001")))
+    :unless (running-on-hosts '("login001"))
     :ensure t
     :config
     (load-theme 'material t))
@@ -207,7 +207,7 @@
     Switch between the light and dark modes on sunrise and sunset. Lets me know what the sun is doing even when I spend all day inside :)
     #+BEGIN_SRC emacs-lisp
       (use-package theme-changer
-	:if (not (running-on-hosts '("login001")))
+	:unless (running-on-hosts '("login001"))
 	:ensure t
 	:init
 	(setq calendar-latitude 34.67
@@ -220,72 +220,77 @@
 
     Helm is really a game changer for emacs. More over, it's the helm extensions that can really turn something tedious to easy.
     #+BEGIN_SRC emacs-lisp
-      (use-package helm
-	:ensure t
-	:bind (("M-x" . #'helm-M-x)
-	       ("C-x b" . #'helm-buffers-list)
-	       ("C-x f" . #'helm-find-files)
-	       ("C-x C-f" . #'helm-find-files))
-	:config
-	(helm-mode t))
+      (when (>= (string-to-number emacs-version) 24.4)
+        (use-package helm
+          :ensure t
+          :bind (("M-x" . #'helm-M-x)
+                 ("C-x b" . #'helm-buffers-list)
+                 ("C-x f" . #'helm-find-files)
+                 ("C-x C-f" . #'helm-find-files))
+          :config
+          (helm-mode t)))
     #+END_SRC
 
 **** tramp
 
      Reads in [[file:~/.ssh/config][my ssh config]] and connects me without needing to remember the trmp syntax.
      #+BEGIN_SRC emacs-lisp
-  (use-package helm-tramp
-      :if (not (running-on-hosts '("login001")))
-      :ensure t
-      :after (helm))
+       (when (>= (string-to-number emacs-version) 24.4)
+         (use-package helm-tramp
+           :unless (running-on-hosts '("login001"))
+           :ensure t
+           :requires helm))
      #+END_SRC
 
 **** bbdb
 
      This seems to be the most accepted way to manage contact info with emacs. It works well with mail and gnus though so it's okay with me.
      #+BEGIN_SRC emacs-lisp
-    (use-package helm-bbdb
-      :if (not (running-on-hosts '("login001")))
-      :ensure t
-      :after (helm)
-      :bind (("<f5>" . #'helm-bbdb)))
+       (when (>= (string-to-number emacs-version) 24.4)
+         (use-package helm-bbdb
+           :unless (running-on-hosts '("login001"))
+           :ensure t
+           :requires helm
+           :bind (("<f5>" . #'helm-bbdb))))
      #+END_SRC
 
 **** TODO dictionary
 
      Every computer used for writing should have a dictionary available by keystroke.
      #+BEGIN_SRC emacs-lisp
-    (use-package helm-dictionary
-          :if (not (running-on-hosts '("login001")))
-	  :ensure t
-	  :after (helm)
-	  :bind (("<f8>" . #'helm-dictionary))
-	  :config
-	  (setq
-	   helm-dictionary-browser-function 'browse-url-firefox
-	   helm-dictionary-database "/usr/share/dict/words"
-	   helm-dictionary-online-dicts
-	   '(("wiktionary" . "http://en.wiktionary.org/wiki/%s")
-	     ("Oxford English Dictionary" . "www.oed.com/search?searchType=dictionary&q=%s")
-	     ("Merriam-Webster" . "https://www.merriam-webster.com/dictionary/%s"))
-	   helm-dictionary-use-full-frame nil))
+       (when (>= (string-to-number emacs-version) 24.4)
+         (use-package helm-dictionary
+           :unless (running-on-hosts '("login001"))
+           :requires helm
+           :ensure t
+           :bind (("<f8>" . #'helm-dictionary))
+           :config
+           (setq
+            helm-dictionary-browser-function 'browse-url-firefox
+            helm-dictionary-database "/usr/share/dict/words"
+            helm-dictionary-online-dicts
+            '(("wiktionary" . "http://en.wiktionary.org/wiki/%s")
+              ("Oxford English Dictionary" . "www.oed.com/search?searchType=dictionary&q=%s")
+              ("Merriam-Webster" . "https://www.merriam-webster.com/dictionary/%s"))
+            helm-dictionary-use-full-frame nil)))
      #+END_SRC
 
 *** magit
 
     Great way to interact with git. Not much config needed, just a global keybinding to pop open the status.
     #+BEGIN_SRC emacs-lisp
-	  (use-package magit
-		  :ensure t
-		  :bind ("C-x g" . #'magit-status))
+      (when (>= (string-to-number emacs-version) 25.1)
+      (use-package magit
+        :ensure t
+        :bind ("C-x g" . #'magit-status)))
     #+END_SRC
 
 *** pdf
     #+BEGIN_SRC emacs-lisp
       (use-package pdf-tools
 	:ensure t
-	:if (not (or (string= nil (getenv "DESKTOP_SESSION")) 
-		     (running-on-hosts '("login001"))))
+	:unless (or (string= nil (getenv "DESKTOP_SESSION")) 
+		     (running-on-hosts '("login001")))
 	:load-path "site-lisp/pdf-tools/lisp"
 	:magic ("%PDF" . pdf-view-mode)
 	:config
@@ -299,33 +304,39 @@
     For now I'm still choosing an org-mode scratch buffer but this is a todo.
     #+BEGIN_SRC emacs-lisp
       (use-package projectile
-	:ensure t)
+        :disabled
+        :if (>= (string-to-number emacs-version) 24.4)
+        :ensure t)
       (use-package page-break-lines
-	:ensure t)
+        :disabled
+        :if (>= (string-to-number emacs-version) 24.4)
+        :ensure t)
       (use-package dashboard
-	:ensure t
-	:after (projectile page-line-breaks)
-	:config
-	(dashboard-setup-startup-hook)
-	(setq dashboard-items '((recents  . 5)
-				(bookmarks . 5)
-				(projects . 5)
-				(agenda . 5)
-				(registers . 5))))
+        :disabled
+        :ensure t
+        :after (projectile page-line-breaks)
+        :config
+        (dashboard-setup-startup-hook)
+        (setq dashboard-items '((recents  . 5)
+                                (bookmarks . 5)
+                                (projects . 5)
+                                (agenda . 5)
+                                (registers . 5))))
     #+END_SRC
 
 *** transmission
     #+BEGIN_SRC emacs-lisp
+      (when (>= (string-to-number emacs-version) 24.4)
       (use-package transmission
-	    :ensure t
-	    :if (running-on-hosts '("joseki" "tengen"))
-	    :config
-	    (setq
-	     transmission-refresh-modes
-	     '(transmission-mode
-	       transmission-files-mode
-	       transmission-info-mode
-	       transmission-peers-mode)))
+        :ensure t
+        :if (running-on-hosts '("joseki" "tengen"))
+        :config
+        (setq
+         transmission-refresh-modes
+         '(transmission-mode
+           transmission-files-mode
+           transmission-info-mode
+           transmission-peers-mode))))
     #+END_SRC
 
 *** emms
@@ -352,17 +363,19 @@
     #+END_SRC
 
 *** bbdb
+
     #+BEGIN_SRC emacs-lisp
-    (use-package bbdb
-	  :config ()
-	  (setq
-	   bbdb-dial-function
-	   (lambda
-	     (phone-number)
-	     (kdeconnect-send-sms
-		  (read-string "Enter message: ")
-		  (string-to-int
-		   (replace-regexp-in-string "[() -]" "" phone-number))))))
+      (use-package bbdb
+        :ensure t
+        :config
+        (setq
+         bbdb-dial-function
+         (lambda
+           (phone-number)
+           (kdeconnect-send-sms
+            (read-string "Enter message: ")
+            (string-to-int
+             (replace-regexp-in-string "[() -]" "" phone-number))))))
     #+END_SRC
 
 *** slime
@@ -378,12 +391,13 @@
 
 *** fill column indicator
     #+BEGIN_SRC emacs-lisp
-      (use-package fill-column-indicator
-	:ensure t
-	:config
-	(setq
-	 fci-rule-column 80
-	 fill-column 80))
+      (when (>= (string-to-number emacs-version) 25)
+        (use-package fill-column-indicator
+          :ensure t
+          :config
+          (setq
+           fci-rule-column 80
+           fill-column 80)))
     #+END_SRC
 
 *** smart mode line
@@ -461,9 +475,11 @@
 ** asynchronous
    Gotta use the few async operations we have
    #+BEGIN_SRC emacs-lisp
-(autoload 'dired-async-mode "dired-async.el" nil t)
-(dired-async-mode 1)
-(async-bytecomp-package-mode 1)
+     (use-package async
+       :ensure t
+       :config
+       (dired-async-mode 1)
+       (async-bytecomp-package-mode 1))
    #+END_SRC
 
 ** time and date
@@ -582,117 +598,119 @@
       (interactive)
       (shell-command "/usr/local/bin/lock.sh"))
 
-    (use-package xelb
-      :if (string= "exwm" (getenv "DESKTOP_SESSION"))
-      :ensure t)
+    (when (>= (string-to-number emacs-version) 24.4)
+      (use-package xelb
+        :if (string= "exwm" (getenv "DESKTOP_SESSION"))
+        :ensure t))
 
-    (use-package exwm
-      :if (string= "exwm" (getenv "DESKTOP_SESSION"))
-      :ensure t
-      :after (xelb)
-      :bind
-      (("s-x" . #'launch-program)
-       ("s-l" . #'lock-screen)
-       ("s-w" . #'exwm-workplace-switch)
-       ("s-r" . #'exwm-reset)
-       ("C-x C-c" . #'save-buffers-kill-emacs))
-      :config
-      (setq exwm-input-simulation-keys
-	    '(([?\C-b] . [left])
-	      ([?\C-f] . [right])
-	      ([?\C-p] . [up])
-	      ([?\C-n] . [down])
-	      ([?\C-a] . [home])
-	      ([?\C-e] . [end])
-	      ([?\M-v] . [prior])
-	      ([?\C-v] . [next])
-	      ([?\C-d] . [delete])
-	      ([?\C-h] . [backspace])
-	      ([?\C-m] . [return])
-	      ([?\C-i] . [tab])
-	      ([?\C-g] . [escape])
-	      ([?\M-g] . [f5])
-	      ([?\C-s] . [C-f])
-	      ([?\C-y] . [C-v])
-	      ([?\M-w] . [C-c])
-	      ([?\M-<] . [home])
-	      ;; todo ([?\M-o] . [C-x o])
-	      ([?\M->] . [C-end])))
+    (when (>= (string-to-number emacs-version) 24.4)
+      (use-package exwm
+        :if (string= "exwm" (getenv "DESKTOP_SESSION"))
+        :ensure t
+        :after (xelb)
+        :bind
+        (("s-x" . #'launch-program)
+         ("s-l" . #'lock-screen)
+         ("s-w" . #'exwm-workplace-switch)
+         ("s-r" . #'exwm-reset)
+         ("C-x C-c" . #'save-buffers-kill-emacs))
+        :config
+        (setq exwm-input-simulation-keys
+              '(([?\C-b] . [left])
+                ([?\C-f] . [right])
+                ([?\C-p] . [up])
+                ([?\C-n] . [down])
+                ([?\C-a] . [home])
+                ([?\C-e] . [end])
+                ([?\M-v] . [prior])
+                ([?\C-v] . [next])
+                ([?\C-d] . [delete])
+                ([?\C-h] . [backspace])
+                ([?\C-m] . [return])
+                ([?\C-i] . [tab])
+                ([?\C-g] . [escape])
+                ([?\M-g] . [f5])
+                ([?\C-s] . [C-f])
+                ([?\C-y] . [C-v])
+                ([?\M-w] . [C-c])
+                ([?\M-<] . [home])
+                ;; todo ([?\M-o] . [C-x o])
+                ([?\M->] . [C-end])))
 
-      (global-set-key (kbd "<mouse-12>") (lambda () (interactive)
-					   (exwm-input--fake-key 26)))
+        (global-set-key (kbd "<mouse-12>") (lambda () (interactive)
+                                             (exwm-input--fake-key 26)))
 
-      (dolist (k '(
-		   ("s-<return>" . "urxvtc")
-		   ("s-p" . "nemo")
-		   ("s-d" . "discord")
-		   ("s-t" . "transmission-remote-gtk")
-		   ("s-s" . "slack")
-		   ("s-<tab>" . "google-chrome-stable")
-		   ("<C-M-escape>" . "gnome-system-monitor")
-		   ("s-m" . "pavucontrol")
-		   ("s-<down>" . "amixer sset Master 5%-")
-		   ("s-<up>" . "amixer set Master unmute; amixer sset Master 5%+")
-		   ("<print>" . "scrot")
-		   ("<XF86MonBrightnessUp>" . "light -A 10")
-		   ("<XF86MonBrightnessDown>" . "light -U 10")
-		   ("<XF86AudioMute>"."amixer set Master toggle")
-		   ("<XF86AudioLowerVolume>" . "amixer sset Master 5%-")
-		   ("<XF86AudioRaiseVolume>" . "amixer set Master unmute; amixer sset Master 5%+")))
-	(let ((f (lambda () (interactive)
-		   (save-window-excursion
-		     (start-process-shell-command "" nil (cdr k))))))
-	  (exwm-input-set-key (kbd (car k)) f)))
+        (dolist (k '(
+                     ("s-<return>" . "urxvtc")
+                     ("s-p" . "nemo")
+                     ("s-d" . "discord")
+                     ("s-t" . "transmission-remote-gtk")
+                     ("s-s" . "slack")
+                     ("s-<tab>" . "google-chrome-stable")
+                     ("<C-M-escape>" . "gnome-system-monitor")
+                     ("s-m" . "pavucontrol")
+                     ("s-<down>" . "amixer sset Master 5%-")
+                     ("s-<up>" . "amixer set Master unmute; amixer sset Master 5%+")
+                     ("<print>" . "scrot")
+                     ("<XF86MonBrightnessUp>" . "light -A 10")
+                     ("<XF86MonBrightnessDown>" . "light -U 10")
+                     ("<XF86AudioMute>"."amixer set Master toggle")
+                     ("<XF86AudioLowerVolume>" . "amixer sset Master 5%-")
+                     ("<XF86AudioRaiseVolume>" . "amixer set Master unmute; amixer sset Master 5%+")))
+          (let ((f (lambda () (interactive)
+                     (save-window-excursion
+                       (start-process-shell-command "" nil (cdr k))))))
+            (exwm-input-set-key (kbd (car k)) f)))
 
-      (require 'exwm-systemtray)
-      (exwm-systemtray-enable)
+        (require 'exwm-systemtray)
+        (exwm-systemtray-enable)
 
-      (add-hook 'exwm-floating-setup-hook #'exwm-layout-hide-mode-line)
-      (add-hook 'exwm-floating-exit-hook #'exwm-layout-show-mode-line)
+        (add-hook 'exwm-floating-setup-hook #'exwm-layout-hide-mode-line)
+        (add-hook 'exwm-floating-exit-hook #'exwm-layout-show-mode-line)
 
-      (add-hook 'exwm-update-title-hook
-		(lambda () (exwm-workspace-rename-buffer exwm-title)))
+        (add-hook 'exwm-update-title-hook
+                  (lambda () (exwm-workspace-rename-buffer exwm-title)))
 
-      (setq exwm-workspace-number 10
-	    exwm-workspace-show-all-buffers t
-	    exwm-layout-show-all-buffers t)
+        (setq exwm-workspace-number 10
+              exwm-workspace-show-all-buffers t
+              exwm-layout-show-all-buffers t)
 
-      (dotimes (i 10)
-	(exwm-input-set-key (kbd (format "s-%d" i))
-			    `(lambda ()
-			       (interactive)
-			       (exwm-workspace-switch-create ,i))))
+        (dotimes (i 10)
+          (exwm-input-set-key (kbd (format "s-%d" i))
+                              `(lambda ()
+                                 (interactive)
+                                 (exwm-workspace-switch-create ,i))))
 
-      (push ?\C-q exwm-input-prefix-keys)
-      (define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
+        (push ?\C-q exwm-input-prefix-keys)
+        (define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
 
-      (require 'exwm-randr)
-      (when (running-on-hosts '("tengen"))
-	(setq exwm-randr-workspace-output-plist
-	      '(0 "DP-2" 9 "DP-2" 8 "DP-2" 7 "DP-2" 6 "DP-2"
-		  1 "HDMI-3" 2 "HDMI-3" 3 "HDMI-3" 4 "HDMI-3" 5 "HDMI-3"))
-	(add-hook 'exwm-randr-screen-change-hook
-		  (lambda ()
-		    (start-process-shell-command
-		     "xrandr" nil
-		     (concat "xrandr "
-			     "--output DP-2 --mode 1600x900 --pos 1920x180 "
-			     "--output HDMI-3 --mode 1920x1080 --pos 0x0 ")))))
+        (require 'exwm-randr)
+        (when (running-on-hosts '("tengen"))
+          (setq exwm-randr-workspace-output-plist
+                '(0 "DP-2" 9 "DP-2" 8 "DP-2" 7 "DP-2" 6 "DP-2"
+                    1 "HDMI-3" 2 "HDMI-3" 3 "HDMI-3" 4 "HDMI-3" 5 "HDMI-3"))
+          (add-hook 'exwm-randr-screen-change-hook
+                    (lambda ()
+                      (start-process-shell-command
+                       "xrandr" nil
+                       (concat "xrandr "
+                               "--output DP-2 --mode 1600x900 --pos 1920x180 "
+                               "--output HDMI-3 --mode 1920x1080 --pos 0x0 ")))))
 
-      (when (running-on-hosts '("206"))
-	(setq exwm-randr-workspace-output-plist
-	      '(0 "DP-2" 9 "DP-2" 8 "DP-2" 7 "DP-2" 6 "DP-2"
-		  1 "DP-1" 2 "DP-1" 3 "DP-1" 4 "DP-1" 5 "DP-1"))
-	(add-hook 'exwm-randr-screen-change-hook
-		  (lambda ()
-		    (start-process-shell-command
-		     "xrandr" nil
-		     (concat "xrandr "
-			     "--output DP-2 --mode 1920x1080 --pos 1920x0 "
-			     "--output DP-1 --primary --mode 1920x1080 --pos 0x0")))))
+        (when (running-on-hosts '("206"))
+          (setq exwm-randr-workspace-output-plist
+                '(0 "DP-2" 9 "DP-2" 8 "DP-2" 7 "DP-2" 6 "DP-2"
+                    1 "DP-1" 2 "DP-1" 3 "DP-1" 4 "DP-1" 5 "DP-1"))
+          (add-hook 'exwm-randr-screen-change-hook
+                    (lambda ()
+                      (start-process-shell-command
+                       "xrandr" nil
+                       (concat "xrandr "
+                               "--output DP-2 --mode 1920x1080 --pos 1920x0 "
+                               "--output DP-1 --primary --mode 1920x1080 --pos 0x0")))))
 
-      (exwm-randr-enable)
-      (exwm-enable))
+        (exwm-randr-enable)
+        (exwm-enable)))
   #+END_SRC
 
 ** Autostart programs

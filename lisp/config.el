@@ -1,10 +1,11 @@
+
 ;; -*- lexical-binding: t -*-
 
 (defun running-on-hosts (hosts)
   (member
    (car (split-string ; split the hostname on '.' for complex hostnames
-	 (car (split-string ; remove trailing newline from `hostname`
-	       (shell-command-to-string "hostname") "\n")) "\\."))
+         (car (split-string ; remove trailing newline from `hostname`
+               (shell-command-to-string "hostname") "\n")) "\\."))
    hosts))
 
 (defun running-on-wireless (essids)
@@ -30,83 +31,83 @@
 ;;   )
 
 (use-package org
-	:config
-	(setq diary-file "~/.emacs.d/org/schedule.org"
-	org-agenda-files
-	'("~/.emacs.d/org/fun/code-ideas.org"
-		"~/.emacs.d/org/fun/music.org"
-		"~/.emacs.d/org/scratch.org"
-		"~/.emacs.d/org/research.org"
-		"~/.emacs.d/org/schedule.org"
-		"~/.emacs.d/org/todo.org")
-	org-agenda-use-time-grid nil
-	org-archive-location "~/.emacs.d/org/archive.org::* From %s"
-	org-babel-load-languages
-	'((emacs-lisp . t)
-		(awk . t)
-		(ditaa . t)
-		(lisp . t)
-		(haskell . t)
-		(C . t)
-		(gnuplot . t)
-		(python . t)
-		(shell . t)
-		(sqlite . t)
-		(java . t))
-	org-capture-after-finalize-hook nil
-	org-capture-templates '(("t" "Todo" entry
-				 (file+headline "~/.emacs.d/org/todo.org" "Tasks")
-				 "* TODO %?
-					Entered on %T
-					 %i
-					 %a")
-				("e" "Event" entry
-				 (file "~/.emacs.d/org/schedule.org")
-				 "* %?
-					Date %^t")
-				("b" "Fix Bug" checkitem
-				 (file+headline "~/.emacs.d/org/todo.org" "Bugs")
-				 "[ ] %?
-					%A
-					Entered on %T")
-				("n" "General notes" entry
-				 (file+headline "~/.emacs.d/org/scratch.org" "Notes")
-				 "* Note %?
-					 %T
-					"))
-	org-clock-sound t
-	org-confirm-babel-evaluate nil
-	org-datetree-add-timestamp 'inactive
-	org-default-notes-file "~/.emacs.d/org/todo.org"
-	org-directory "~/.emacs.d/org"
-	org-gcal-client-secret "UwfWeXumob8oMLGTBs2D6D5j"
-	org-gcal-dir "~/.emacs.d/org/org-gcal/"
-	org-hide-leading-stars t
-	org-highlight-latex-and-related '(latex)
-	org-journal-dir "~/.emacs.d/org/journal"
-	org-log-done 'time
-	org-outline-path-complete-in-steps nil
-	org-preview-latex-image-directory "~/.emacs.d/ltxpng/"
-	org-refile-targets '((org-agenda-files :maxlevel . 2))
-	org-refile-use-outline-path 'file
-	org-startup-with-latex-preview t
-	org-todo-keyword-faces
-	'(("SOON"
-		 :foreground "blue"
-		 :background "sky blue"
-		 :weight bold)
-		("DONE"
-		 :foreground "darkseagreen4"
-		 :background "darkseagreen2"
-		 :weight bold))
-	org-todo-keywords '((sequence "TODO" "SOON" "DONE")))
-	:bind
-	(
-	 ("C-c a" . #'org-agenda)
-	 ("C-c c" . #'org-capture)
-	 (:map org-mode-map
-	 (("C-c r" . #'org-archive-subtree)
-		("C-c C-r" . #'org-archive-subtree)))))
+        :config
+        (setq diary-file "~/.emacs.d/org/schedule.org"
+        org-agenda-files
+        '("~/.emacs.d/org/fun/code-ideas.org"
+                "~/.emacs.d/org/fun/music.org"
+                "~/.emacs.d/org/scratch.org"
+                "~/.emacs.d/org/research.org"
+                "~/.emacs.d/org/schedule.org"
+                "~/.emacs.d/org/todo.org")
+        org-agenda-use-time-grid nil
+        org-archive-location "~/.emacs.d/org/archive.org::* From %s"
+        org-babel-load-languages
+        '((emacs-lisp . t)
+                (awk . t)
+                (ditaa . t)
+                (lisp . t)
+                (haskell . t)
+                (C . t)
+                (gnuplot . t)
+                (python . t)
+                (shell . t)
+                (sqlite . t)
+                (java . t))
+        org-capture-after-finalize-hook nil
+        org-capture-templates '(("t" "Todo" entry
+                                 (file+headline "~/.emacs.d/org/todo.org" "Tasks")
+                                 "* TODO %?
+                                        Entered on %T
+                                         %i
+                                         %a")
+                                ("e" "Event" entry
+                                 (file "~/.emacs.d/org/schedule.org")
+                                 "* %?
+                                        Date %^t")
+                                ("b" "Fix Bug" checkitem
+                                 (file+headline "~/.emacs.d/org/todo.org" "Bugs")
+                                 "[ ] %?
+                                        %A
+                                        Entered on %T")
+                                ("n" "General notes" entry
+                                 (file+headline "~/.emacs.d/org/scratch.org" "Notes")
+                                 "* Note %?
+                                         %T
+                                        "))
+        org-clock-sound t
+        org-confirm-babel-evaluate nil
+        org-datetree-add-timestamp 'inactive
+        org-default-notes-file "~/.emacs.d/org/todo.org"
+        org-directory "~/.emacs.d/org"
+        org-gcal-client-secret "UwfWeXumob8oMLGTBs2D6D5j"
+        org-gcal-dir "~/.emacs.d/org/org-gcal/"
+        org-hide-leading-stars t
+        org-highlight-latex-and-related '(latex)
+        org-journal-dir "~/.emacs.d/org/journal"
+        org-log-done 'time
+        org-outline-path-complete-in-steps nil
+        org-preview-latex-image-directory "~/.emacs.d/ltxpng/"
+        org-refile-targets '((org-agenda-files :maxlevel . 2))
+        org-refile-use-outline-path 'file
+        org-startup-with-latex-preview t
+        org-todo-keyword-faces
+        '(("SOON"
+                 :foreground "blue"
+                 :background "sky blue"
+                 :weight bold)
+                ("DONE"
+                 :foreground "darkseagreen4"
+                 :background "darkseagreen2"
+                 :weight bold))
+        org-todo-keywords '((sequence "TODO" "SOON" "DONE")))
+        :bind
+        (
+         ("C-c a" . #'org-agenda)
+         ("C-c c" . #'org-capture)
+         (:map org-mode-map
+         (("C-c r" . #'org-archive-subtree)
+                ("C-c C-r" . #'org-archive-subtree)))))
 
 (use-package org-bullets
   :ensure t
@@ -127,17 +128,17 @@
        erc-log-write-after-send t
        erc-modules
        '(autojoin button completion dcc fill irccontrols keep-place
-	 list log match menu move-to-prompt netsplit networks
-	 noncommands notifications readonly ring services sound
-	 stamp track)
+         list log match menu move-to-prompt netsplit networks
+         noncommands notifications readonly ring services sound
+         stamp track)
        erc-nick "Timzi"
        erc-prompt "<Timzi>"
        erc-sound-mode t))
 
 (use-package dired+
   :bind (:map dired-mode-map
-	      (("M-h" . #'dired-omit-mode)
-	       ("u" . #'dired-up-directory)))
+              (("M-h" . #'dired-omit-mode)
+               ("u" . #'dired-up-directory)))
   :config
   (setq
    dired-listing-switches "-alh --no-group"
@@ -149,63 +150,68 @@
 (use-package dad-joke :ensure t)
 
 (use-package material-theme
-  :if (not (running-on-hosts '("login001")))
+  :unless (running-on-hosts '("login001"))
   :ensure t
   :config
   (load-theme 'material t))
 
 (use-package theme-changer
-  :if (not (running-on-hosts '("login001")))
+  :unless (running-on-hosts '("login001"))
   :ensure t
   :init
   (setq calendar-latitude 34.67
-	calendar-location-name "Clemson, SC"
-	calendar-longitude -82.84)
+        calendar-location-name "Clemson, SC"
+        calendar-longitude -82.84)
   :config (change-theme 'material-light 'material))
 
-(use-package helm
-  :ensure t
-  :bind (("M-x" . #'helm-M-x)
-	 ("C-x b" . #'helm-buffers-list)
-	 ("C-x f" . #'helm-find-files)
-	 ("C-x C-f" . #'helm-find-files))
-  :config
-  (helm-mode t))
-
-(use-package helm-tramp
-    :if (not (running-on-hosts '("login001")))
+(when (>= (string-to-number emacs-version) 24.4)
+  (use-package helm
     :ensure t
-    :after (helm))
+    :bind (("M-x" . #'helm-M-x)
+           ("C-x b" . #'helm-buffers-list)
+           ("C-x f" . #'helm-find-files)
+           ("C-x C-f" . #'helm-find-files))
+    :config
+    (helm-mode t)))
 
-(use-package helm-bbdb
-  :if (not (running-on-hosts '("login001")))
-  :ensure t
-  :after (helm)
-  :bind (("<f5>" . #'helm-bbdb)))
+(when (>= (string-to-number emacs-version) 24.4)
+  (use-package helm-tramp
+    :unless (running-on-hosts '("login001"))
+    :ensure t
+    :requires helm))
 
-(use-package helm-dictionary
-      :if (not (running-on-hosts '("login001")))
-      :ensure t
-      :after (helm)
-      :bind (("<f8>" . #'helm-dictionary))
-      :config
-      (setq
-       helm-dictionary-browser-function 'browse-url-firefox
-       helm-dictionary-database "/usr/share/dict/words"
-       helm-dictionary-online-dicts
-       '(("wiktionary" . "http://en.wiktionary.org/wiki/%s")
-	 ("Oxford English Dictionary" . "www.oed.com/search?searchType=dictionary&q=%s")
-	 ("Merriam-Webster" . "https://www.merriam-webster.com/dictionary/%s"))
-       helm-dictionary-use-full-frame nil))
+(when (>= (string-to-number emacs-version) 24.4)
+  (use-package helm-bbdb
+    :unless (running-on-hosts '("login001"))
+    :ensure t
+    :requires helm
+    :bind (("<f5>" . #'helm-bbdb))))
 
+(when (>= (string-to-number emacs-version) 24.4)
+  (use-package helm-dictionary
+    :unless (running-on-hosts '("login001"))
+    :requires helm
+    :ensure t
+    :bind (("<f8>" . #'helm-dictionary))
+    :config
+    (setq
+     helm-dictionary-browser-function 'browse-url-firefox
+     helm-dictionary-database "/usr/share/dict/words"
+     helm-dictionary-online-dicts
+     '(("wiktionary" . "http://en.wiktionary.org/wiki/%s")
+       ("Oxford English Dictionary" . "www.oed.com/search?searchType=dictionary&q=%s")
+       ("Merriam-Webster" . "https://www.merriam-webster.com/dictionary/%s"))
+     helm-dictionary-use-full-frame nil)))
+
+(when (>= (string-to-number emacs-version) 25.1)
 (use-package magit
-	:ensure t
-	:bind ("C-x g" . #'magit-status))
+  :ensure t
+  :bind ("C-x g" . #'magit-status)))
 
 (use-package pdf-tools
   :ensure t
-  :if (not (or (string= nil (getenv "DESKTOP_SESSION")) 
-	       (running-on-hosts '("login001"))))
+  :unless (or (string= nil (getenv "DESKTOP_SESSION")) 
+               (running-on-hosts '("login001")))
   :load-path "site-lisp/pdf-tools/lisp"
   :magic ("%PDF" . pdf-view-mode)
   :config
@@ -213,30 +219,36 @@
   (setq pdf-misc-print-programm "/usr/bin/gtklp"))
 
 (use-package projectile
+  :disabled
+  :if (>= (string-to-number emacs-version) 24.4)
   :ensure t)
 (use-package page-break-lines
+  :disabled
+  :if (>= (string-to-number emacs-version) 24.4)
   :ensure t)
 (use-package dashboard
+  :disabled
   :ensure t
   :after (projectile page-line-breaks)
   :config
   (dashboard-setup-startup-hook)
   (setq dashboard-items '((recents  . 5)
-			  (bookmarks . 5)
-			  (projects . 5)
-			  (agenda . 5)
-			  (registers . 5))))
+                          (bookmarks . 5)
+                          (projects . 5)
+                          (agenda . 5)
+                          (registers . 5))))
 
+(when (>= (string-to-number emacs-version) 24.4)
 (use-package transmission
-      :ensure t
-      :if (running-on-hosts '("joseki" "tengen"))
-      :config
-      (setq
-       transmission-refresh-modes
-       '(transmission-mode
-	 transmission-files-mode
-	 transmission-info-mode
-	 transmission-peers-mode)))
+  :ensure t
+  :if (running-on-hosts '("joseki" "tengen"))
+  :config
+  (setq
+   transmission-refresh-modes
+   '(transmission-mode
+     transmission-files-mode
+     transmission-info-mode
+     transmission-peers-mode))))
 
 (use-package emms
   :if (running-on-hosts '("joseki" "tengen"))
@@ -247,8 +259,8 @@
    emms-cache-modified-function 'emms-cache-dirty
    emms-cache-set-function 'emms-cache-set
    emms-info-functions '(emms-info-mediainfo
-						 emms-info-mpd emms-info-cueinfo
-						 emms-info-ogginfo)
+                                                 emms-info-mpd emms-info-cueinfo
+                                                 emms-info-ogginfo)
    emms-mode-line-cycle t
    emms-mode-line-mode-line-function 'emms-mode-line-cycle-mode-line-function
    emms-player-mpd-music-directory "/home/tsranso/Music"
@@ -259,15 +271,16 @@
    emms-track-description-function 'emms-info-track-description))
 
 (use-package bbdb
-      :config ()
-      (setq
-       bbdb-dial-function
-       (lambda
-	 (phone-number)
-	 (kdeconnect-send-sms
-	      (read-string "Enter message: ")
-	      (string-to-int
-	       (replace-regexp-in-string "[() -]" "" phone-number))))))
+  :ensure t
+  :config 
+  (setq
+   bbdb-dial-function
+   (lambda
+     (phone-number)
+     (kdeconnect-send-sms
+      (read-string "Enter message: ")
+      (string-to-int
+       (replace-regexp-in-string "[() -]" "" phone-number))))))
 
 (use-package slime
       :ensure t
@@ -275,18 +288,19 @@
       (setq inferior-lisp-program "sbcl")
       slime-contribs '(slime-fancy))
 
-(use-package fill-column-indicator
-  :ensure t
-  :config
-  (setq
-   fci-rule-column 80
-   fill-column 80))
+(when (>= (string-to-number emacs-version) 25)
+  (use-package fill-column-indicator
+    :ensure t
+    :config
+    (setq
+     fci-rule-column 80
+     fill-column 80)))
 
 (use-package smart-mode-line
   :ensure t
   :init 
   (setq sml/theme 'respectful
-	sml/no-confirm-load-theme t)
+        sml/no-confirm-load-theme t)
   :config (sml/setup))
 
 (use-package gnuplot :ensure t)
@@ -297,10 +311,10 @@
 (global-set-key (kbd "C-x C-k") #'kill-this-buffer)                     
 (global-set-key (kbd "C-h")     #'delete-backward-char)                 
 (global-set-key (kbd "C-x 2")                                           
-		(lambda ()                                              
-		  (interactive)                                         
-		  (split-window-vertically)                             
-		  (other-window 1)))
+                (lambda ()                                              
+                  (interactive)                                         
+                  (split-window-vertically)                             
+                  (other-window 1)))
 
 (defun transpose-windows (arg)
   "Transpose the buffers shown in two windows."
@@ -322,17 +336,19 @@ Assumes that the frame is only split into two."
       (interactive)
       (unless (= (length (window-list)) 2) (error "Can only toggle a frame split in two"))
       (let ((split-vertically-p (window-combined-p)))
-	(delete-window) ; closes current window
-	(if split-vertically-p
-		(split-window-horizontally)
-	      (split-window-vertically))
-	(switch-to-buffer nil)))
+        (delete-window) ; closes current window
+        (if split-vertically-p
+                (split-window-horizontally)
+              (split-window-vertically))
+        (switch-to-buffer nil)))
 
 (global-set-key (kbd "C-x |") 'toggle-frame-split)
 
-(autoload 'dired-async-mode "dired-async.el" nil t)
-(dired-async-mode 1)
-(async-bytecomp-package-mode 1)
+(use-package async
+  :ensure t
+  :config
+  (dired-async-mode 1)
+  (async-bytecomp-package-mode 1))
 
 (setq calendar-mark-diary-entries-flag t
       display-time-24hr-format t
@@ -358,7 +374,7 @@ Assumes that the frame is only split into two."
 (show-paren-mode t)
 
 (setq delete-by-moving-to-trash t
-	      trash-directory "/home/tsranso/.local/share/Trash/files/")
+              trash-directory "/home/tsranso/.local/share/Trash/files/")
 
 (setq 
    ;initial-buffer-choice (lambda nil (get-buffer "*dashboard*"))
@@ -370,15 +386,15 @@ Assumes that the frame is only split into two."
 "))
 
 (setq proced-auto-update-flag t
-	      proced-auto-update-interval 2
-	      proced-filter 'user)
+              proced-auto-update-interval 2
+              proced-filter 'user)
 
 (setq browse-url-browser-function 'browse-url-firefox
-	      browse-url-firefox-arguments '("-new-window")
-	      browse-url-firefox-startup-arguments nil)
+              browse-url-firefox-arguments '("-new-window")
+              browse-url-firefox-startup-arguments nil)
 
 (setq doc-view-continuous t
-	      doc-view-resolution 300)
+              doc-view-resolution 300)
 
 (setq
    backup-by-copying t      ; don't clobber symlinks
@@ -399,13 +415,13 @@ Assumes that the frame is only split into two."
 
 
 (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
-			async-bytecomp-package-mode t
-			gdb-many-windows t
-			large-file-warning-threshold 500000000
-			send-mail-function 'smtpmail-send-it
-			message-directory "~/.emacs.d/Mail/"
-					;tramp-histfile-override "/dev/null" nil (tramp)
-			)
+                        async-bytecomp-package-mode t
+                        gdb-many-windows t
+                        large-file-warning-threshold 500000000
+                        send-mail-function 'smtpmail-send-it
+                        message-directory "~/.emacs.d/Mail/"
+                                        ;tramp-histfile-override "/dev/null" nil (tramp)
+                        )
 
 (defun launch-program (command)
   (interactive (list (read-shell-command "$ ")))
@@ -415,117 +431,119 @@ Assumes that the frame is only split into two."
   (interactive)
   (shell-command "/usr/local/bin/lock.sh"))
 
-(use-package xelb 
-  :if (string= "exwm" (getenv "DESKTOP_SESSION"))
-  :ensure t)
+(when (>= (string-to-number emacs-version) 24.4)
+  (use-package xelb
+    :if (string= "exwm" (getenv "DESKTOP_SESSION"))
+    :ensure t))
 
-(use-package exwm
-  :if (string= "exwm" (getenv "DESKTOP_SESSION"))
-  :ensure t
-  :after (xelb)
-  :bind
-  (("s-x" . #'launch-program)
-   ("s-l" . #'lock-screen)
-   ("s-w" . #'exwm-workplace-switch)
-   ("s-r" . #'exwm-reset)
-   ("C-x C-c" . #'save-buffers-kill-emacs))
-  :config
-  (setq exwm-input-simulation-keys
-	'(([?\C-b] . [left])
-	  ([?\C-f] . [right])
-	  ([?\C-p] . [up])
-	  ([?\C-n] . [down])
-	  ([?\C-a] . [home])
-	  ([?\C-e] . [end])
-	  ([?\M-v] . [prior])
-	  ([?\C-v] . [next])
-	  ([?\C-d] . [delete])
-	  ([?\C-h] . [backspace])
-	  ([?\C-m] . [return])
-	  ([?\C-i] . [tab])
-	  ([?\C-g] . [escape])
-	  ([?\M-g] . [f5])
-	  ([?\C-s] . [C-f])
-	  ([?\C-y] . [C-v])
-	  ([?\M-w] . [C-c])
-	  ([?\M-<] . [home])
-	  ;; todo ([?\M-o] . [C-x o])
-	  ([?\M->] . [C-end])))
+(when (>= (string-to-number emacs-version) 24.4)
+  (use-package exwm
+    :if (string= "exwm" (getenv "DESKTOP_SESSION"))
+    :ensure t
+    :after (xelb)
+    :bind
+    (("s-x" . #'launch-program)
+     ("s-l" . #'lock-screen)
+     ("s-w" . #'exwm-workplace-switch)
+     ("s-r" . #'exwm-reset)
+     ("C-x C-c" . #'save-buffers-kill-emacs))
+    :config
+    (setq exwm-input-simulation-keys
+          '(([?\C-b] . [left])
+            ([?\C-f] . [right])
+            ([?\C-p] . [up])
+            ([?\C-n] . [down])
+            ([?\C-a] . [home])
+            ([?\C-e] . [end])
+            ([?\M-v] . [prior])
+            ([?\C-v] . [next])
+            ([?\C-d] . [delete])
+            ([?\C-h] . [backspace])
+            ([?\C-m] . [return])
+            ([?\C-i] . [tab])
+            ([?\C-g] . [escape])
+            ([?\M-g] . [f5])
+            ([?\C-s] . [C-f])
+            ([?\C-y] . [C-v])
+            ([?\M-w] . [C-c])
+            ([?\M-<] . [home])
+            ;; todo ([?\M-o] . [C-x o])
+            ([?\M->] . [C-end])))
 
-  (global-set-key (kbd "<mouse-12>") (lambda () (interactive)
-				       (exwm-input--fake-key 26)))
+    (global-set-key (kbd "<mouse-12>") (lambda () (interactive)
+                                         (exwm-input--fake-key 26)))
 
-  (dolist (k '(
-	       ("s-<return>" . "urxvtc")
-	       ("s-p" . "nemo")
-	       ("s-d" . "discord")
-	       ("s-t" . "transmission-remote-gtk")
-	       ("s-s" . "slack")
-	       ("s-<tab>" . "google-chrome-stable")
-	       ("<C-M-escape>" . "gnome-system-monitor")
-	       ("s-m" . "pavucontrol")
-	       ("s-<down>" . "amixer sset Master 5%-")
-	       ("s-<up>" . "amixer set Master unmute; amixer sset Master 5%+")
-	       ("<print>" . "scrot")
-	       ("<XF86MonBrightnessUp>" . "light -A 10")
-	       ("<XF86MonBrightnessDown>" . "light -U 10")
-	       ("<XF86AudioMute>"."amixer set Master toggle")
-	       ("<XF86AudioLowerVolume>" . "amixer sset Master 5%-")
-	       ("<XF86AudioRaiseVolume>" . "amixer set Master unmute; amixer sset Master 5%+")))
-    (let ((f (lambda () (interactive)
-	       (save-window-excursion
-		 (start-process-shell-command "" nil (cdr k))))))
-      (exwm-input-set-key (kbd (car k)) f)))
+    (dolist (k '(
+                 ("s-<return>" . "urxvtc")
+                 ("s-p" . "nemo")
+                 ("s-d" . "discord")
+                 ("s-t" . "transmission-remote-gtk")
+                 ("s-s" . "slack")
+                 ("s-<tab>" . "google-chrome-stable")
+                 ("<C-M-escape>" . "gnome-system-monitor")
+                 ("s-m" . "pavucontrol")
+                 ("s-<down>" . "amixer sset Master 5%-")
+                 ("s-<up>" . "amixer set Master unmute; amixer sset Master 5%+")
+                 ("<print>" . "scrot")
+                 ("<XF86MonBrightnessUp>" . "light -A 10")
+                 ("<XF86MonBrightnessDown>" . "light -U 10")
+                 ("<XF86AudioMute>"."amixer set Master toggle")
+                 ("<XF86AudioLowerVolume>" . "amixer sset Master 5%-")
+                 ("<XF86AudioRaiseVolume>" . "amixer set Master unmute; amixer sset Master 5%+")))
+      (let ((f (lambda () (interactive)
+                 (save-window-excursion
+                   (start-process-shell-command "" nil (cdr k))))))
+        (exwm-input-set-key (kbd (car k)) f)))
 
-  (require 'exwm-systemtray)
-  (exwm-systemtray-enable)
+    (require 'exwm-systemtray)
+    (exwm-systemtray-enable)
 
-  (add-hook 'exwm-floating-setup-hook #'exwm-layout-hide-mode-line)
-  (add-hook 'exwm-floating-exit-hook #'exwm-layout-show-mode-line)
+    (add-hook 'exwm-floating-setup-hook #'exwm-layout-hide-mode-line)
+    (add-hook 'exwm-floating-exit-hook #'exwm-layout-show-mode-line)
 
-  (add-hook 'exwm-update-title-hook 
-	    (lambda () (exwm-workspace-rename-buffer exwm-title)))
+    (add-hook 'exwm-update-title-hook
+              (lambda () (exwm-workspace-rename-buffer exwm-title)))
 
-  (setq exwm-workspace-number 10
-	exwm-workspace-show-all-buffers t
-	exwm-layout-show-all-buffers t)
+    (setq exwm-workspace-number 10
+          exwm-workspace-show-all-buffers t
+          exwm-layout-show-all-buffers t)
 
-  (dotimes (i 10)
-    (exwm-input-set-key (kbd (format "s-%d" i))
-			`(lambda ()
-			   (interactive)
-			   (exwm-workspace-switch-create ,i))))
+    (dotimes (i 10)
+      (exwm-input-set-key (kbd (format "s-%d" i))
+                          `(lambda ()
+                             (interactive)
+                             (exwm-workspace-switch-create ,i))))
 
-  (push ?\C-q exwm-input-prefix-keys)
-  (define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
+    (push ?\C-q exwm-input-prefix-keys)
+    (define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
 
-  (require 'exwm-randr)
-  (when (running-on-hosts '("tengen"))
-    (setq exwm-randr-workspace-output-plist
-	  '(0 "DP-2" 9 "DP-2" 8 "DP-2" 7 "DP-2" 6 "DP-2"
-	      1 "HDMI-3" 2 "HDMI-3" 3 "HDMI-3" 4 "HDMI-3" 5 "HDMI-3"))
-    (add-hook 'exwm-randr-screen-change-hook
-	      (lambda ()
-		(start-process-shell-command
-		 "xrandr" nil
-		 (concat "xrandr "
-			 "--output DP-2 --mode 1600x900 --pos 1920x180 "
-			 "--output HDMI-3 --mode 1920x1080 --pos 0x0 ")))))
+    (require 'exwm-randr)
+    (when (running-on-hosts '("tengen"))
+      (setq exwm-randr-workspace-output-plist
+            '(0 "DP-2" 9 "DP-2" 8 "DP-2" 7 "DP-2" 6 "DP-2"
+                1 "HDMI-3" 2 "HDMI-3" 3 "HDMI-3" 4 "HDMI-3" 5 "HDMI-3"))
+      (add-hook 'exwm-randr-screen-change-hook
+                (lambda ()
+                  (start-process-shell-command
+                   "xrandr" nil
+                   (concat "xrandr "
+                           "--output DP-2 --mode 1600x900 --pos 1920x180 "
+                           "--output HDMI-3 --mode 1920x1080 --pos 0x0 ")))))
 
-  (when (running-on-hosts '("206"))
-    (setq exwm-randr-workspace-output-plist
-	  '(0 "DP-2" 9 "DP-2" 8 "DP-2" 7 "DP-2" 6 "DP-2"
-	      1 "DP-1" 2 "DP-1" 3 "DP-1" 4 "DP-1" 5 "DP-1"))
-    (add-hook 'exwm-randr-screen-change-hook
-	      (lambda ()
-		(start-process-shell-command
-		 "xrandr" nil
-		 (concat "xrandr "
-			 "--output DP-2 --mode 1920x1080 --pos 1920x0 "
-			 "--output DP-1 --primary --mode 1920x1080 --pos 0x0")))))
+    (when (running-on-hosts '("206"))
+      (setq exwm-randr-workspace-output-plist
+            '(0 "DP-2" 9 "DP-2" 8 "DP-2" 7 "DP-2" 6 "DP-2"
+                1 "DP-1" 2 "DP-1" 3 "DP-1" 4 "DP-1" 5 "DP-1"))
+      (add-hook 'exwm-randr-screen-change-hook
+                (lambda ()
+                  (start-process-shell-command
+                   "xrandr" nil
+                   (concat "xrandr "
+                           "--output DP-2 --mode 1920x1080 --pos 1920x0 "
+                           "--output DP-1 --primary --mode 1920x1080 --pos 0x0")))))
 
-  (exwm-randr-enable)
-  (exwm-enable))
+    (exwm-randr-enable)
+    (exwm-enable)))
 
 (when (running-on-hosts '("joseki"))
   (display-battery-mode t)
@@ -536,7 +554,7 @@ Assumes that the frame is only split into two."
   (when (running-on-wireless '("Torus Shaped Earth\n"))
     (start-process "discord" nil "discord")
     (start-process "transmission"
-		   nil "transmission-daemon")))
+                   nil "transmission-daemon")))
 
 (when (running-on-hosts '("206"))
   (start-process "bluetooth applet" nil "blueman-applet")
@@ -544,16 +562,16 @@ Assumes that the frame is only split into two."
 
 
 (when (running-on-hosts '("joseki" "206"))
-  (unless (file-exists-p "~/.config/mpd/pid")			 
+  (unless (file-exists-p "~/.config/mpd/pid")
     (start-process "music player daemon" nil "mpd")))
 
 (when (not (running-on-hosts '("atari" "login001")))
-	   (start-process "urxvt daemon" nil "urxvtd" "-f" "-q" "-o")
-	   (start-process "syncthing" nil "syncthing")
-	   (start-process "xautolock" nil
-			  "xautolock"
-			  "-time 10"
-			  "-locker lock.sh"))
+           (start-process "urxvt daemon" nil "urxvtd" "-f" "-q" "-o")
+           (start-process "syncthing" nil "syncthing")
+           (start-process "xautolock" nil
+                          "xautolock"
+                          "-time 10"
+                          "-locker lock.sh"))
 
 (when (not (running-on-hosts '("login001")))
   (start-process "unclutter" nil "unclutter"))

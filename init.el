@@ -7,4 +7,6 @@
 (setq custom-file "~/.emacs.d/lisp/customize.el")
 (load custom-file)
 
-(org-babel-load-file "/home/tsranso/.emacs.d/lisp/config.org")
+(if (featurep 'org)
+    (org-babel-load-file "/home/tsranso/.emacs.d/lisp/config.org")
+  (load "/home/tsranso/.emacs.d/lisp/config.el"))
