@@ -55,84 +55,89 @@
 
 *** org
     #+BEGIN_SRC emacs-lisp
-		  (use-package org
-			  :config
-			  (setq diary-file "~/.emacs.d/org/schedule.org"
-			  org-agenda-files
-			  '("~/.emacs.d/org/fun/code-ideas.org"
-				  "~/.emacs.d/org/fun/music.org"
-				  "~/.emacs.d/org/scratch.org"
-				  "~/.emacs.d/org/research.org"
-				  "~/.emacs.d/org/schedule.org"
-				  "~/.emacs.d/org/todo.org")
-			  org-agenda-use-time-grid nil
-			  org-archive-location "~/.emacs.d/org/archive.org::* From %s"
-			  org-babel-load-languages
-			  '((emacs-lisp . t)
-				  (awk . t)
-				  (ditaa . t)
-				  (lisp . t)
-				  (haskell . t)
-				  (C . t)
-				  (gnuplot . t)
-				  (python . t)
-				  (shell . t)
-				  (sqlite . t)
-				  (java . t))
-			  org-capture-after-finalize-hook nil
-			  org-capture-templates '(("t" "Todo" entry
-						   (file+headline "~/.emacs.d/org/todo.org" "Tasks")
-						   "* TODO %?
-							  Entered on %T
-							   %i
-							   %a")
-						  ("e" "Event" entry
-						   (file "~/.emacs.d/org/schedule.org")
-						   "* %?
-							  Date %^t")
-						  ("b" "Fix Bug" checkitem
-						   (file+headline "~/.emacs.d/org/todo.org" "Bugs")
-						   "[ ] %?
-							  %A
-							  Entered on %T")
-						  ("n" "General notes" entry
-						   (file+headline "~/.emacs.d/org/scratch.org" "Notes")
-						   "* Note %?
-							   %T
-							  "))
-			  org-clock-sound t
-			  org-confirm-babel-evaluate nil
-			  org-datetree-add-timestamp 'inactive
-			  org-default-notes-file "~/.emacs.d/org/todo.org"
-			  org-directory "~/.emacs.d/org"
-			  org-gcal-client-secret "UwfWeXumob8oMLGTBs2D6D5j"
-			  org-gcal-dir "~/.emacs.d/org/org-gcal/"
-			  org-hide-leading-stars t
-			  org-highlight-latex-and-related '(latex)
-			  org-journal-dir "~/.emacs.d/org/journal"
-			  org-log-done 'time
-			  org-outline-path-complete-in-steps nil
-			  org-preview-latex-image-directory "~/.emacs.d/ltxpng/"
-			  org-refile-targets '((org-agenda-files :maxlevel . 2))
-			  org-refile-use-outline-path 'file
-			  org-startup-with-latex-preview t
-			  org-todo-keyword-faces
-			  '(("SOON"
-				   :foreground "blue"
-				   :background "sky blue"
-				   :weight bold)
-				  ("DONE"
-				   :foreground "darkseagreen4"
-				   :background "darkseagreen2"
-				   :weight bold))
-			  org-todo-keywords '((sequence "TODO" "SOON" "DONE")))
-			  :bind
-			  (
-			   ("C-c a" . #'org-agenda)
-			   ("C-c c" . #'org-capture)
-			   (:map org-mode-map
-			   (("C-c r" . #'org-archive-subtree)
-				  ("C-c C-r" . #'org-archive-subtree)))))
+      (use-package org
+	:config
+	(org-babel-do-load-languages
+	 'org-babel-load-languages
+	 '(
+	   (awk . t)
+	   (C . t)
+	   (ditaa . t)
+	   (dot . t)
+	   (emacs-lisp . t)
+	   (gnuplot . t)
+	   (haskell . t)
+	   (java . t)
+	   (lisp . t)
+	   (makefile . t)
+	   (python . t)
+	   (shell . t)
+	   (sql . t)
+	   (sqlite . t)))
+
+	(setq diary-file "~/.emacs.d/org/schedule.org"
+	      org-agenda-files
+	      '("~/.emacs.d/org/fun/code-ideas.org"
+		"~/.emacs.d/org/fun/music.org"
+		"~/.emacs.d/org/scratch.org"
+		"~/.emacs.d/org/research.org"
+		"~/.emacs.d/org/schedule.org"
+		"~/.emacs.d/org/todo.org")
+	      org-agenda-use-time-grid nil
+	      org-archive-location "~/.emacs.d/org/archive.org::* From %s"
+	      org-capture-after-finalize-hook nil
+	      org-capture-templates '(("t" "Todo" entry
+				       (file+headline "~/.emacs.d/org/todo.org" "Tasks")
+				       "* TODO %?
+								Entered on %T
+								 %i
+								 %a")
+				      ("e" "Event" entry
+				       (file "~/.emacs.d/org/schedule.org")
+				       "* %?
+								Date %^t")
+				      ("b" "Fix Bug" checkitem
+				       (file+headline "~/.emacs.d/org/todo.org" "Bugs")
+				       "[ ] %?
+								%A
+								Entered on %T")
+				      ("n" "General notes" entry
+				       (file+headline "~/.emacs.d/org/scratch.org" "Notes")
+				       "* Note %?
+								 %T
+								"))
+	      org-clock-sound t
+	      org-confirm-babel-evaluate nil
+	      org-datetree-add-timestamp 'inactive
+	      org-default-notes-file "~/.emacs.d/org/todo.org"
+	      org-directory "~/.emacs.d/org"
+	      org-gcal-client-secret "UwfWeXumob8oMLGTBs2D6D5j"
+	      org-gcal-dir "~/.emacs.d/org/org-gcal/"
+	      org-hide-leading-stars t
+	      org-highlight-latex-and-related '(latex)
+	      org-journal-dir "~/.emacs.d/org/journal"
+	      org-log-done 'time
+	      org-outline-path-complete-in-steps nil
+	      org-preview-latex-image-directory "~/.emacs.d/ltxpng/"
+	      org-refile-targets '((org-agenda-files :maxlevel . 2))
+	      org-refile-use-outline-path 'file
+	      org-startup-with-latex-preview t
+	      org-todo-keyword-faces
+	      '(("SOON"
+		 :foreground "blue"
+		 :background "sky blue"
+		 :weight bold)
+		("DONE"
+		 :foreground "darkseagreen4"
+		 :background "darkseagreen2"
+		 :weight bold))
+	      org-todo-keywords '((sequence "TODO" "SOON" "DONE")))
+	:bind
+	(("C-c a" . #'org-agenda)
+	 ("C-c c" . #'org-capture)
+	 (:map org-mode-map
+	       (("C-c r" . #'org-archive-subtree)
+		("C-c C-r" . #'org-archive-subtree)))))
     #+END_SRC
 
 **** bullets
