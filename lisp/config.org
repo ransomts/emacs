@@ -724,6 +724,7 @@
     #+BEGIN_SRC emacs-lisp :noweb yes
       (when (running-on-hosts '("joseki"))
 	(display-battery-mode t)
+	(start-process "bluetooth applet" nil "blueman-applet")
 	(start-process "" nil "xrdb" "-merge" "/home/tsranso/.config/urxvt/conf")
 	(start-process "wifi applet" nil "nm-applet")
 	(start-process "redshift" nil "redshift-gtk")
