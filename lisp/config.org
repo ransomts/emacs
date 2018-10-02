@@ -151,27 +151,33 @@
 
     IRC is a really valuable resource that is being used less and less. Having people to answer random technical questions is so nice when working on something and nobody around can help.
     #+BEGIN_SRC emacs-lisp
-    (use-package erc
-	  :config
-	  (setq
-	   erc-autojoin-channels-alist (quote (("freenode.net")))
-	   erc-autojoin-mode nil
-	   erc-autojoin-timing (quote ident)
-	   erc-hide-list (quote ("JOIN" "PART" "NICK" "QUIT"))
-	   erc-hide-timestamps t
-	   erc-list-mode t
-	   erc-log-channels-directory "~/.emacs.d/erc_log"
-	   erc-log-mode t
-	   erc-log-write-after-insert t
-	   erc-log-write-after-send t
-	   erc-modules
-	   '(autojoin button completion dcc fill irccontrols keep-place
-	     list log match menu move-to-prompt netsplit networks
-	     noncommands notifications readonly ring services sound
-	     stamp track)
-	   erc-nick "Timzi"
-	   erc-prompt "<Timzi>"
-	   erc-sound-mode t))
+      (use-package erc
+	:config
+	(setq
+	 erc-autojoin-channels-alist (quote (("freenode.net")))
+	 erc-autojoin-mode nil
+	 erc-autojoin-timing (quote ident)
+	 erc-hide-list (quote ("JOIN" "PART" "NICK" "QUIT"))
+	 erc-hide-timestamps t
+	 erc-list-mode t
+	 erc-log-channels-directory "~/.emacs.d/erc_log"
+	 erc-log-mode t
+	 erc-log-write-after-insert t
+	 erc-log-write-after-send t
+	 erc-modules
+	 '(autojoin button completion dcc fill irccontrols keep-place
+		    list log match menu move-to-prompt netsplit networks
+		    noncommands notifications readonly ring services sound
+		    stamp track)
+	 erc-nick "tinhatcat"
+	 erc-prompt "<tinhatcat>"
+	 erc-sound-mode t))
+
+      (use-package erc-twitch
+	:after erc
+	:config
+	(setq erc-twitch-networks (quote ("irc.chat.twitch.tv")))
+	(erc-twitch-mode))
     #+END_SRC
 
 *** dired
