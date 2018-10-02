@@ -412,7 +412,9 @@
 	:init 
 	(setq sml/theme 'respectful
 	      sml/no-confirm-load-theme t)
-	:config (sml/setup))
+	:config
+	(sml/setup)
+	(setq sml/name-width 30))
     #+END_SRC
 
 *** gnuplot
@@ -436,6 +438,14 @@
 		      (split-window-vertically)                             
 		      (other-window 1)))    
   #+END_SRC
+
+** smartparens
+
+#+BEGIN_SRC emacs-lisp
+  (use-package smartparens
+      :ensure t
+      :hook (prog-mode . turn-on-smartparens-strict-mode))
+#+END_SRC
 
 * Buffer Management
 ** transpose windows
@@ -745,7 +755,7 @@
 
       (when (not (running-on-hosts '("atari" "login001")))
 		 (start-process "urxvt daemon" nil "urxvtd" "-f" "-q" "-o")
-		 (start-process "syncthing" nil "syncthing")
+		 (start-process "syncthing" nil "syncthing" "-no-browser")
 		 (start-process "xautolock" nil
 				"xautolock"
 				"-time 10"
