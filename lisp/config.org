@@ -174,6 +174,7 @@
 	 erc-sound-mode t))
 
       (use-package erc-twitch
+	:disabled
 	:after erc
 	:config
 	(setq erc-twitch-networks (quote ("irc.chat.twitch.tv")))
@@ -195,6 +196,30 @@
      dired-recursive-deletes 'always))
   #+END_SRC
 
+*** eshell
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-x e")   #'eshell)
+
+  (defmacro with-face (str &rest properties)
+    `(propertize ,str 'face (list ,@properties)))
+
+  (defun my-eshell-prompt ()
+    (let ((header-bg "#fff")
+	  (host (nth 1 (split-string (eshell/pwd) ":"))))
+      (concat
+       (with-face (concat (eshell/pwd) " ") :background header-bg)
+       (with-face (format-time-string "(%H:%M) " (current-time)) :background header-bg :foreground "#888")
+       (with-face "\n" :background header-bg)
+       (with-face user-login-name :foreground "blue")
+       "@"
+       (with-face (if (eq nil host) "localhost" host) :foreground "green")
+       (if (= (user-uid) 0)
+	   (with-face " #" :foreground "red")
+	 " $")
+       " ")))
+  (setq eshell-prompt-function 'my-eshell-prompt)
+  (setq eshell-highlight-prompt nil)
+#+END_SRC
 ** External
 
 *** Dad-joke
@@ -453,6 +478,13 @@
       :hook (prog-mode . turn-on-smartparens-strict-mode))
 #+END_SRC
 
+** Hide show minor mode
+
+#+BEGIN_SRC emacs-lisp
+  (use-package hs-minor-mode
+    :hook prog-mode)
+#+END_SRC
+
 * Buffer Management
 ** transpose windows
 
@@ -593,7 +625,6 @@
    #+BEGIN_SRC emacs-lisp
 		 (global-set-key (kbd "<f6>")    #'calc)
 		 (global-set-key (kbd "<f7>")    #'calendar)
-		 (global-set-key (kbd "C-x e")   #'eshell)
 		 (global-set-key (kbd "C-c C-c") #'compile)
 		 (global-set-key (kbd "C-c r")   #'revert-buffer)
 
