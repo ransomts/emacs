@@ -482,7 +482,12 @@
 
 #+BEGIN_SRC emacs-lisp
   (use-package hs-minor-mode
-    :hook prog-mode)
+    :hook prog-mode
+    :bind (:map hs-minor-mode-map
+		("C-c b h" . hs-hide-block)
+		("C-c b s" . hs-show-block)
+		("C-c C-b h" . hs-hide-block)
+		("C-c C-b s" . hs-show-block)))
 #+END_SRC
 
 * Buffer Management
