@@ -804,7 +804,7 @@
 				"-time 10"
 				"-locker lock.sh"))
 
-      (when (not (running-on-hosts '("login001")))
+      (when (not (running-on-hosts '("login001" "marcher")))
 	(start-process "unclutter" nil "unclutter"))
 
 
