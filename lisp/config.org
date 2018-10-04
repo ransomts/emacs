@@ -486,6 +486,8 @@
     :hook prog-mode
     :bind (:map hs-minor-mode-map
 		("C-c b h" . hs-hide-block)
+		("C-c s" . hs-show-block)
+		("C-c h" . hs-hide-block)
 		("C-c b s" . hs-show-block)
 		("C-c C-b h" . hs-hide-block)
 		("C-c C-b s" . hs-show-block)))
