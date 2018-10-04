@@ -796,7 +796,7 @@
 	(unless (file-exists-p "~/.config/mpd/pid")
 	  (start-process "music player daemon" nil "mpd")))
 
-      (when (not (running-on-hosts '("atari" "login001")))
+      (when (not (running-on-hosts '("atari" "login001" "marcher")))
 		 (start-process "urxvt daemon" nil "urxvtd" "-f" "-q" "-o")
 		 (start-process "syncthing" nil "syncthing" "-no-browser")
 		 (start-process "xautolock" nil
