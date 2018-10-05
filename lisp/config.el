@@ -30,50 +30,56 @@
 ;;   )
 
 (use-package org
-	:config
-	(setq diary-file "~/.emacs.d/org/schedule.org"
+  :config
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '(
+     (awk . t)
+     (C . t)
+     (ditaa . t)
+     (dot . t)
+     (emacs-lisp . t)
+     (gnuplot . t)
+     (haskell . t)
+     (java . t)
+     (lisp . t)
+     (makefile . t)
+     (python . t)
+     (shell . t)
+     (sql . t)
+     (sqlite . t)))
+
+  (setq diary-file "~/.emacs.d/org/schedule.org"
 	org-agenda-files
 	'("~/.emacs.d/org/fun/code-ideas.org"
-		"~/.emacs.d/org/fun/music.org"
-		"~/.emacs.d/org/scratch.org"
-		"~/.emacs.d/org/research.org"
-		"~/.emacs.d/org/schedule.org"
-		"~/.emacs.d/org/todo.org")
+	  "~/.emacs.d/org/fun/music.org"
+	  "~/.emacs.d/org/scratch.org"
+	  "~/.emacs.d/org/research.org"
+	  "~/.emacs.d/org/schedule.org"
+	  "~/.emacs.d/org/todo.org")
 	org-agenda-use-time-grid nil
 	org-archive-location "~/.emacs.d/org/archive.org::* From %s"
-	org-babel-load-languages
-	'((emacs-lisp . t)
-		(awk . t)
-		(ditaa . t)
-		(lisp . t)
-		(haskell . t)
-		(C . t)
-		(gnuplot . t)
-		(python . t)
-		(shell . t)
-		(sqlite . t)
-		(java . t))
 	org-capture-after-finalize-hook nil
 	org-capture-templates '(("t" "Todo" entry
 				 (file+headline "~/.emacs.d/org/todo.org" "Tasks")
 				 "* TODO %?
-					Entered on %T
-					 %i
-					 %a")
+							  Entered on %T
+							   %i
+							   %a")
 				("e" "Event" entry
 				 (file "~/.emacs.d/org/schedule.org")
 				 "* %?
-					Date %^t")
+							  Date %^t")
 				("b" "Fix Bug" checkitem
 				 (file+headline "~/.emacs.d/org/todo.org" "Bugs")
 				 "[ ] %?
-					%A
-					Entered on %T")
+							  %A
+							  Entered on %T")
 				("n" "General notes" entry
 				 (file+headline "~/.emacs.d/org/scratch.org" "Notes")
 				 "* Note %?
-					 %T
-					"))
+							   %T
+							  "))
 	org-clock-sound t
 	org-confirm-babel-evaluate nil
 	org-datetree-add-timestamp 'inactive
@@ -92,47 +98,53 @@
 	org-startup-with-latex-preview t
 	org-todo-keyword-faces
 	'(("SOON"
-		 :foreground "blue"
-		 :background "sky blue"
-		 :weight bold)
-		("DONE"
-		 :foreground "darkseagreen4"
-		 :background "darkseagreen2"
-		 :weight bold))
+	   :foreground "blue"
+	   :background "sky blue"
+	   :weight bold)
+	  ("DONE"
+	   :foreground "darkseagreen4"
+	   :background "darkseagreen2"
+	   :weight bold))
 	org-todo-keywords '((sequence "TODO" "SOON" "DONE")))
-	:bind
-	(
-	 ("C-c a" . #'org-agenda)
-	 ("C-c c" . #'org-capture)
-	 (:map org-mode-map
+  :bind
+  (("C-c a" . #'org-agenda)
+   ("C-c c" . #'org-capture)
+   (:map org-mode-map
 	 (("C-c r" . #'org-archive-subtree)
-		("C-c C-r" . #'org-archive-subtree)))))
+	  ("C-c C-r" . #'org-archive-subtree)))))
 
 (use-package org-bullets
   :ensure t
   :hook (org-mode . org-bullets-mode))
 
 (use-package erc
-      :config
-      (setq
-       erc-autojoin-channels-alist (quote (("freenode.net")))
-       erc-autojoin-mode nil
-       erc-autojoin-timing (quote ident)
-       erc-hide-list (quote ("JOIN" "PART" "NICK" "QUIT"))
-       erc-hide-timestamps t
-       erc-list-mode t
-       erc-log-channels-directory "~/.emacs.d/erc_log"
-       erc-log-mode t
-       erc-log-write-after-insert t
-       erc-log-write-after-send t
-       erc-modules
-       '(autojoin button completion dcc fill irccontrols keep-place
-	 list log match menu move-to-prompt netsplit networks
-	 noncommands notifications readonly ring services sound
-	 stamp track)
-       erc-nick "Timzi"
-       erc-prompt "<Timzi>"
-       erc-sound-mode t))
+  :config
+  (setq
+   erc-autojoin-channels-alist (quote (("freenode.net")))
+   erc-autojoin-mode nil
+   erc-autojoin-timing (quote ident)
+   erc-hide-list (quote ("JOIN" "PART" "NICK" "QUIT"))
+   erc-hide-timestamps t
+   erc-list-mode t
+   erc-log-channels-directory "~/.emacs.d/erc_log"
+   erc-log-mode t
+   erc-log-write-after-insert t
+   erc-log-write-after-send t
+   erc-modules
+   '(autojoin button completion dcc fill irccontrols keep-place
+	      list log match menu move-to-prompt netsplit networks
+	      noncommands notifications readonly ring services sound
+	      stamp track)
+   erc-nick "tinhatcat"
+   erc-prompt "<tinhatcat>"
+   erc-sound-mode t))
+
+(use-package erc-twitch
+  :disabled
+  :after erc
+  :config
+  (setq erc-twitch-networks (quote ("irc.chat.twitch.tv")))
+  (erc-twitch-mode))
 
 (use-package dired+
   :bind (:map dired-mode-map
@@ -145,6 +157,29 @@
    dired-omit-files "^\\..*~?$"
    dired-recursive-copies 'always
    dired-recursive-deletes 'always))
+
+(global-set-key (kbd "C-x e")   #'eshell)
+
+(defmacro with-face (str &rest properties)
+  `(propertize ,str 'face (list ,@properties)))
+
+(defun my-eshell-prompt ()
+  (let ((header-bg "#fff")
+	(host (file-remote-p default-directory 'host)))
+	;(host (nth 1 (split-string (eshell/pwd) ":"))))
+  (concat
+   (with-face (concat (eshell/pwd) " ") :background header-bg)
+   (with-face (format-time-string "(%H:%M) " (current-time)) :background header-bg :foreground "#888")
+   (with-face "\n" :background header-bg)
+   (with-face user-login-name :foreground "blue")
+   "@"
+   (with-face (if (eq nil host) "localhost" host) :foreground "green")
+   (if (= (user-uid) 0)
+       (with-face " #" :foreground "red")
+     " $")
+   " ")))
+  (setq eshell-prompt-function 'my-eshell-prompt)
+  (setq eshell-highlight-prompt nil)
 
 (use-package dad-joke :ensure t)
 
@@ -300,7 +335,9 @@
   :init 
   (setq sml/theme 'respectful
 	sml/no-confirm-load-theme t)
-  :config (sml/setup))
+  :config
+  (sml/setup)
+  (setq sml/name-width 30))
 
 (use-package gnuplot :ensure t)
 
@@ -314,6 +351,20 @@
 		  (interactive)                                         
 		  (split-window-vertically)                             
 		  (other-window 1)))
+
+(use-package smartparens
+    :ensure t
+    :hook (prog-mode . turn-on-smartparens-strict-mode))
+
+(use-package hs-minor-mode
+  :hook prog-mode
+  :bind (:map hs-minor-mode-map
+	      ("C-c b h" . hs-hide-block)
+	      ("C-c s" . hs-show-block)
+	      ("C-c h" . hs-hide-block)
+	      ("C-c b s" . hs-show-block)
+	      ("C-c C-b h" . hs-hide-block)
+	      ("C-c C-b s" . hs-show-block)))
 
 (defun transpose-windows (arg)
   "Transpose the buffers shown in two windows."
@@ -408,7 +459,6 @@ Assumes that the frame is only split into two."
 
 (global-set-key (kbd "<f6>")    #'calc)
 (global-set-key (kbd "<f7>")    #'calendar)
-(global-set-key (kbd "C-x e")   #'eshell)
 (global-set-key (kbd "C-c C-c") #'compile)
 (global-set-key (kbd "C-c r")   #'revert-buffer)
 
@@ -430,12 +480,12 @@ Assumes that the frame is only split into two."
   (interactive)
   (shell-command "/usr/local/bin/lock.sh"))
 
-(when (>= (string-to-number emacs-version) 24.4)
+(when (and (>= (string-to-number emacs-version) 24.4)
+	   (not (running-on-hosts '("login001" "marcher"))))
   (use-package xelb
     :if (string= "exwm" (getenv "DESKTOP_SESSION"))
-    :ensure t))
+    :ensure t)
 
-(when (>= (string-to-number emacs-version) 24.4)
   (use-package exwm
     :if (string= "exwm" (getenv "DESKTOP_SESSION"))
     :ensure t
@@ -448,51 +498,51 @@ Assumes that the frame is only split into two."
      ("C-x C-c" . #'save-buffers-kill-emacs))
     :config
     (setq exwm-input-simulation-keys
-          '(([?\C-b] . [left])
-            ([?\C-f] . [right])
-            ([?\C-p] . [up])
-            ([?\C-n] . [down])
-            ([?\C-a] . [home])
-            ([?\C-e] . [end])
-            ([?\M-v] . [prior])
-            ([?\C-v] . [next])
-            ([?\C-d] . [delete])
-            ([?\C-h] . [backspace])
-            ([?\C-m] . [return])
-            ([?\C-i] . [tab])
-            ([?\C-g] . [escape])
-            ([?\M-g] . [f5])
-            ([?\C-s] . [C-f])
-            ([?\C-y] . [C-v])
-            ([?\M-w] . [C-c])
-            ([?\M-<] . [home])
-            ;; todo ([?\M-o] . [C-x o])
-            ([?\M->] . [C-end])))
+	  '(([?\C-b] . [left])
+	    ([?\C-f] . [right])
+	    ([?\C-p] . [up])
+	    ([?\C-n] . [down])
+	    ([?\C-a] . [home])
+	    ([?\C-e] . [end])
+	    ([?\M-v] . [prior])
+	    ([?\C-v] . [next])
+	    ([?\C-d] . [delete])
+	    ([?\C-h] . [backspace])
+	    ([?\C-m] . [return])
+	    ([?\C-i] . [tab])
+	    ([?\C-g] . [escape])
+	    ([?\M-g] . [f5])
+	    ([?\C-s] . [C-f])
+	    ([?\C-y] . [C-v])
+	    ([?\M-w] . [C-c])
+	    ([?\M-<] . [home])
+	    ;; todo ([?\M-o] . [C-x o])
+	    ([?\M->] . [C-end])))
 
     (global-set-key (kbd "<mouse-12>") (lambda () (interactive)
-                                         (exwm-input--fake-key 26)))
+					 (exwm-input--fake-key 26)))
 
     (dolist (k '(
-                 ("s-<return>" . "urxvtc")
-                 ("s-p" . "nemo")
-                 ("s-d" . "discord")
-                 ("s-t" . "transmission-remote-gtk")
-                 ("s-s" . "slack")
-                 ("s-<tab>" . "google-chrome-stable")
-                 ("<C-M-escape>" . "gnome-system-monitor")
-                 ("s-m" . "pavucontrol")
-                 ("s-<down>" . "amixer sset Master 5%-")
-                 ("s-<up>" . "amixer set Master unmute; amixer sset Master 5%+")
-                 ("<print>" . "scrot")
-                 ("<XF86MonBrightnessUp>" . "light -A 10")
-                 ("<XF86MonBrightnessDown>" . "light -U 10")
-                 ("<XF86AudioMute>"."amixer set Master toggle")
-                 ("<XF86AudioLowerVolume>" . "amixer sset Master 5%-")
-                 ("<XF86AudioRaiseVolume>" . "amixer set Master unmute; amixer sset Master 5%+")))
+		 ("s-<return>" . "urxvtc")
+		 ("s-p" . "nemo")
+		 ("s-d" . "discord")
+		 ("s-t" . "transmission-remote-gtk")
+		 ("s-s" . "slack")
+		 ("s-<tab>" . "google-chrome-stable")
+		 ("<C-M-escape>" . "gnome-system-monitor")
+		 ("s-m" . "pavucontrol")
+		 ("s-<down>" . "amixer sset Master 5%-")
+		 ("s-<up>" . "amixer set Master unmute; amixer sset Master 5%+")
+		 ("<print>" . "scrot")
+		 ("<XF86MonBrightnessUp>" . "light -A 10")
+		 ("<XF86MonBrightnessDown>" . "light -U 10")
+		 ("<XF86AudioMute>"."amixer set Master toggle")
+		 ("<XF86AudioLowerVolume>" . "amixer sset Master 5%-")
+		 ("<XF86AudioRaiseVolume>" . "amixer set Master unmute; amixer sset Master 5%+")))
       (let ((f (lambda () (interactive)
-                 (save-window-excursion
-                   (start-process-shell-command "" nil (cdr k))))))
-        (exwm-input-set-key (kbd (car k)) f)))
+		 (save-window-excursion
+		   (start-process-shell-command "" nil (cdr k))))))
+	(exwm-input-set-key (kbd (car k)) f)))
 
     (require 'exwm-systemtray)
     (exwm-systemtray-enable)
@@ -501,17 +551,17 @@ Assumes that the frame is only split into two."
     (add-hook 'exwm-floating-exit-hook #'exwm-layout-show-mode-line)
 
     (add-hook 'exwm-update-title-hook
-              (lambda () (exwm-workspace-rename-buffer exwm-title)))
+	      (lambda () (exwm-workspace-rename-buffer exwm-title)))
 
     (setq exwm-workspace-number 10
-          exwm-workspace-show-all-buffers t
-          exwm-layout-show-all-buffers t)
+	  exwm-workspace-show-all-buffers t
+	  exwm-layout-show-all-buffers t)
 
     (dotimes (i 10)
       (exwm-input-set-key (kbd (format "s-%d" i))
-                          `(lambda ()
-                             (interactive)
-                             (exwm-workspace-switch-create ,i))))
+			  `(lambda ()
+			     (interactive)
+			     (exwm-workspace-switch-create ,i))))
 
     (push ?\C-q exwm-input-prefix-keys)
     (define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
@@ -519,34 +569,37 @@ Assumes that the frame is only split into two."
     (require 'exwm-randr)
     (when (running-on-hosts '("tengen"))
       (setq exwm-randr-workspace-output-plist
-            '(0 "DP-2" 9 "DP-2" 8 "DP-2" 7 "DP-2" 6 "DP-2"
-                1 "HDMI-3" 2 "HDMI-3" 3 "HDMI-3" 4 "HDMI-3" 5 "HDMI-3"))
+	    '(0 "DP-2" 9 "DP-2" 8 "DP-2" 7 "DP-2" 6 "DP-2"
+		1 "HDMI-3" 2 "HDMI-3" 3 "HDMI-3" 4 "HDMI-3" 5 "HDMI-3"))
       (add-hook 'exwm-randr-screen-change-hook
-                (lambda ()
-                  (start-process-shell-command
-                   "xrandr" nil
-                   (concat "xrandr "
-                           "--output DP-2 --mode 1600x900 --pos 1920x180 "
-                           "--output HDMI-3 --mode 1920x1080 --pos 0x0 ")))))
+		(lambda ()
+		  (start-process-shell-command
+		   "xrandr" nil
+		   (concat "xrandr "
+			   "--output DP-2 --mode 1600x900 --pos 1920x180 "
+			   "--output HDMI-3 --mode 1920x1080 --pos 0x0 ")))))
 
     (when (running-on-hosts '("206"))
       (setq exwm-randr-workspace-output-plist
-            '(0 "DP-2" 9 "DP-2" 8 "DP-2" 7 "DP-2" 6 "DP-2"
-                1 "DP-1" 2 "DP-1" 3 "DP-1" 4 "DP-1" 5 "DP-1"))
+	    '(0 "DP-2" 9 "DP-2" 8 "DP-2" 7 "DP-2" 6 "DP-2"
+		1 "DP-1" 2 "DP-1" 3 "DP-1" 4 "DP-1" 5 "DP-1"))
       (add-hook 'exwm-randr-screen-change-hook
-                (lambda ()
-                  (start-process-shell-command
-                   "xrandr" nil
-                   (concat "xrandr "
-                           "--output DP-2 --mode 1920x1080 --pos 1920x0 "
-                           "--output DP-1 --primary --mode 1920x1080 --pos 0x0")))))
+		(lambda ()
+		  (start-process-shell-command
+		   "xrandr" nil
+		   (concat "xrandr "
+			   "--output DP-2 --mode 1920x1080 --pos 1920x0 "
+			   "--output DP-1 --primary --mode 1920x1080 --pos 0x0")))))
 
     (exwm-randr-enable)
     (exwm-enable)))
 
 (when (running-on-hosts '("joseki"))
+  (start-process "urxvt daemon" nil "urxvtd" "-f" "-q" "-o")
   (display-battery-mode t)
+  (start-process "bluetooth applet" nil "blueman-applet")
   (start-process "" nil "xrdb" "-merge" "/home/tsranso/.config/urxvt/conf")
+  (start-process "syncthing" nil "syncthing" "-no-browser")
   (start-process "wifi applet" nil "nm-applet")
   (start-process "redshift" nil "redshift-gtk")
 
@@ -554,6 +607,15 @@ Assumes that the frame is only split into two."
     (start-process "discord" nil "discord")
     (start-process "transmission"
 		   nil "transmission-daemon")))
+
+(when (running-on-hosts '("tengen"))
+  (start-process "urxvt daemon" nil "urxvtd" "-f" "-q" "-o")
+  (start-process "syncthing" nil "syncthing" "-no-browser")
+  (start-process "discord" nil "discord")
+  (start-process "redshift" nil "redshift-gtk")
+  (start-process "transmission"
+		 nil "transmission-daemon"))
+
 
 (when (running-on-hosts '("206"))
   (start-process "bluetooth applet" nil "blueman-applet")
@@ -564,13 +626,11 @@ Assumes that the frame is only split into two."
   (unless (file-exists-p "~/.config/mpd/pid")
     (start-process "music player daemon" nil "mpd")))
 
-(when (not (running-on-hosts '("atari" "login001")))
-	   (start-process "urxvt daemon" nil "urxvtd" "-f" "-q" "-o")
-	   (start-process "syncthing" nil "syncthing")
+(when (not (running-on-hosts '("atari" "login001" "marcher" "tengen")))
 	   (start-process "xautolock" nil
 			  "xautolock"
 			  "-time 10"
 			  "-locker lock.sh"))
 
-(when (not (running-on-hosts '("login001")))
+(when (not (running-on-hosts '("login001" "marcher")))
   (start-process "unclutter" nil "unclutter"))
