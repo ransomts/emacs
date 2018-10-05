@@ -217,7 +217,7 @@
      (if (= (user-uid) 0)
 	 (with-face " #" :foreground "red")
        " $")
-     " ")))
+     " "))
     (setq eshell-prompt-function 'my-eshell-prompt)
     (setq eshell-highlight-prompt nil)
 #+END_SRC
