@@ -486,6 +486,8 @@
     :hook prog-mode
     :bind (:map hs-minor-mode-map
 		("C-c b h" . hs-hide-block)
+		("C-c s" . hs-show-block)
+		("C-c h" . hs-hide-block)
 		("C-c b s" . hs-show-block)
 		("C-c C-b h" . hs-hide-block)
 		("C-c C-b s" . hs-show-block)))
@@ -776,9 +778,11 @@
    I use this config across several machines, depending which machine and what network it's connected to I want different autostart applications.
     #+BEGIN_SRC emacs-lisp :noweb yes
       (when (running-on-hosts '("joseki"))
+	(start-process "urxvt daemon" nil "urxvtd" "-f" "-q" "-o")
 	(display-battery-mode t)
 	(start-process "bluetooth applet" nil "blueman-applet")
 	(start-process "" nil "xrdb" "-merge" "/home/tsranso/.config/urxvt/conf")
+	(start-process "syncthing" nil "syncthing" "-no-browser")
 	(start-process "wifi applet" nil "nm-applet")
 	(start-process "redshift" nil "redshift-gtk")
 
@@ -786,6 +790,15 @@
 	  (start-process "discord" nil "discord")
 	  (start-process "transmission"
 			 nil "transmission-daemon")))
+
+      (when (running-on-hosts '("tengen"))
+	(start-process "urxvt daemon" nil "urxvtd" "-f" "-q" "-o")
+	(start-process "syncthing" nil "syncthing" "-no-browser")
+	(start-process "discord" nil "discord")
+	(start-process "redshift" nil "redshift-gtk")
+	(start-process "transmission"
+		       nil "transmission-daemon"))
+
 
       (when (running-on-hosts '("206"))
 	(start-process "bluetooth applet" nil "blueman-applet")
@@ -796,9 +809,7 @@
 	(unless (file-exists-p "~/.config/mpd/pid")
 	  (start-process "music player daemon" nil "mpd")))
 
-      (when (not (running-on-hosts '("atari" "login001" "marcher")))
-		 (start-process "urxvt daemon" nil "urxvtd" "-f" "-q" "-o")
-		 (start-process "syncthing" nil "syncthing" "-no-browser")
+      (when (not (running-on-hosts '("atari" "login001" "marcher" "tengen")))
 		 (start-process "xautolock" nil
 				"xautolock"
 				"-time 10"
@@ -806,7 +817,5 @@
 
       (when (not (running-on-hosts '("login001" "marcher")))
 	(start-process "unclutter" nil "unclutter"))
-
-
     #+END_SRC
 
