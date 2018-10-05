@@ -797,7 +797,7 @@
 	(start-process "discord" nil "discord")
 	(start-process "redshift" nil "redshift-gtk")
 	(start-process "transmission"
-		       nil "transmission-daemon")))
+		       nil "transmission-daemon"))
 
 
       (when (running-on-hosts '("206"))
