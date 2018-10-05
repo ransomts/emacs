@@ -223,6 +223,17 @@
 #+END_SRC
 ** External
 
+*** Package updater
+#+BEGIN_SRC emacs-lisp
+  (use-package auto-package-update
+    :ensure t
+    :config
+    (setq auto-package-update-prompt-before-update t
+	  auto-package-update-delete-old-versions t
+	  auto-package-update-interval 14)
+    (auto-package-update-maybe))
+#+END_SRC
+
 *** Dad-joke
 
     This is top tier package-age here.
