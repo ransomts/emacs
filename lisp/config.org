@@ -75,11 +75,11 @@
 	   (sql . t)
 	   (sqlite . t)))
 
+
+
 	(setq diary-file "~/.emacs.d/org/schedule.org"
 	      org-agenda-files
-	      '("~/.emacs.d/org/fun/code-ideas.org"
-		"~/.emacs.d/org/fun/music.org"
-		"~/.emacs.d/org/scratch.org"
+	      '("~/.emacs.d/org/scratch.org"
 		"~/.emacs.d/org/research.org"
 		"~/.emacs.d/org/schedule.org"
 		"~/.emacs.d/org/todo.org")
@@ -88,24 +88,16 @@
 	      org-capture-after-finalize-hook nil
 	      org-capture-templates '(("t" "Todo" entry
 				       (file+headline "~/.emacs.d/org/todo.org" "Tasks")
-				       "* TODO %?
-								Entered on %T
-								 %i
-								 %a")
+				       "* TODO %?\nEntered on %T\n%i\n%a")
 				      ("e" "Event" entry
 				       (file "~/.emacs.d/org/schedule.org")
-				       "* %?
-								Date %^t")
+				       "* %?\nDate %^t")
 				      ("b" "Fix Bug" checkitem
 				       (file+headline "~/.emacs.d/org/todo.org" "Bugs")
-				       "[ ] %?
-								%A
-								Entered on %T")
+				       "[ ] %?\n%A\nEntered on %T")
 				      ("n" "General notes" entry
 				       (file+headline "~/.emacs.d/org/scratch.org" "Notes")
-				       "* Note %?
-								 %T
-								"))
+				       "* Note %?\n%T\n"))
 	      org-clock-sound t
 	      org-confirm-babel-evaluate nil
 	      org-datetree-add-timestamp 'inactive
@@ -812,6 +804,7 @@
 
 
       (when (running-on-hosts '("206"))
+	(start-process "urxvt daemon" nil "urxvtd" "-f" "-q" "-o")
 	(start-process "bluetooth applet" nil "blueman-applet")
 	(start-process "redshift" nil "redshift-gtk"))
 
