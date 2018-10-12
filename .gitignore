@@ -9,3 +9,4 @@
 /gnus/*
 /org/*
 **.elc
+lisp/config.el
