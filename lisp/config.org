@@ -479,7 +479,7 @@
 #+BEGIN_SRC emacs-lisp
   (use-package smartparens
       :ensure t
-      :hook (prog-mode . turn-on-smartparens-strict-mode))
+      :hook (prog-mode . turn-off-smartparens-strict-mode))
 #+END_SRC
 
 ** Hide show minor mode
@@ -620,16 +620,17 @@
 
 ** file backup info
    #+BEGIN_SRC emacs-lisp
-(setq
-   backup-by-copying t      ; don't clobber symlinks
-   backup-directory-alist
-    '(("." . "/var/emacs/"))    ; don't litter my fs tree
-   delete-old-versions t
-   kept-new-versions 6
-   kept-old-versions 2
-   version-control t)       ; use versioned backups
+     (setq
+	backup-by-copying t      ; don't clobber symlinks
+	backup-directory-alist
+	 ;'(("." . (if (file-directory-p "/var/emacs/") "/var/emacs/" "/tmp/")))    ; don't litter my fs tree
+	 '(("." . "/tmp/"))    ; don't litter my fs tree
+	delete-old-versions t
+	kept-new-versions 6
+	kept-old-versions 2
+	version-control t)       ; use versioned backups
 
-(recentf-mode 1)
+     (recentf-mode 1)
    #+END_SRC
 
 ** misc
@@ -787,7 +788,7 @@
 	(start-process "" nil "xrdb" "-merge" "/home/tsranso/.config/urxvt/conf")
 	(start-process "syncthing" nil "syncthing" "-no-browser")
 	(start-process "wifi applet" nil "nm-applet")
-	(start-process "redshift" nil "redshift-gtk")
+	(start-process "redshift" nil "redshift" "-l" "34.67:-82.84")
 
 	(when (running-on-wireless '("Torus Shaped Earth\n"))
 	  (start-process "discord" nil "discord")
@@ -798,7 +799,7 @@
 	(start-process "urxvt daemon" nil "urxvtd" "-f" "-q" "-o")
 	(start-process "syncthing" nil "syncthing" "-no-browser")
 	(start-process "discord" nil "discord")
-	(start-process "redshift" nil "redshift-gtk")
+	(start-process "redshift" nil "redshift" "-l" "34.67:-82.84")
 	(start-process "transmission"
 		       nil "transmission-daemon"))
 
@@ -806,7 +807,7 @@
       (when (running-on-hosts '("206"))
 	(start-process "urxvt daemon" nil "urxvtd" "-f" "-q" "-o")
 	(start-process "bluetooth applet" nil "blueman-applet")
-	(start-process "redshift" nil "redshift-gtk"))
+	(start-process "redshift" nil "redshift" "-l" "34.67:-82.84"))
 
 
       (when (running-on-hosts '("joseki" "206"))

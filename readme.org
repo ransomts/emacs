@@ -9,7 +9,7 @@ Features:
  - Org mode src blocks group relevant packages
  - use-package
    - migrated customize.el settings into package specific configs
-   - proper load ordering and conditional ordering 
+   - proper load ordering and conditional ordering
  - exwm configuration
    - several multi-monitor machines
    - many simulation keys
