@@ -1,0 +1,26 @@
+#+AUTHOR: Tim Ransom
+#+TITLE: ransomts emacs customization
+
+Here's my shot at making a portable, modular, and org-anized configuration. I use this configuration on several machines with and without Xorg or consistant package updates. 
+
+Just about every src block in [[file:lisp/config.org][lisp/config.org]] can be taken as a unit block to use in other configs.
+
+Features:
+ - Org mode src blocks group relevant packages
+ - use-package
+   - migrated customize.el settings into package specific configs
+   - proper load ordering and conditional ordering
+ - exwm configuration
+   - several multi-monitor machines
+   - many simulation keys
+   - several xf86 multimedia keys supported
+ - configuration for several large emacs packages
+   - org
+   - erc
+   - eshell
+   - dired
+   - helm
+   - magit
+   - slime
+   - theme (with change on sunrise/sunset)
+
