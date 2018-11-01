@@ -196,7 +196,9 @@
     `(propertize ,str 'face (list ,@properties)))
 
   (defun my-eshell-prompt ()
-    (let ((header-bg "#fff")
+    (let ((header-bg (if (find 'material-light custom-enabled-themes)
+			 "#e0f7fa"
+		       "#1c1f26"))
 	  (host (file-remote-p default-directory 'host)))
 	  ;(host (nth 1 (split-string (eshell/pwd) ":"))))
     (concat
