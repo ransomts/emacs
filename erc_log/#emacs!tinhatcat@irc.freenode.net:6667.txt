@@ -1,0 +1,217 @@
+
+[Sun Dec  9 2018]
+*** Topic for #emacs: Don't forget to "like" us on your preferred obscure free
+    software alternative to Facebook”¢ï! | Emacs questions take priority over
+    off-topic chatter, so ask! | No public logging! What happens in #emacs
+    stays in #emacs | No racism, sexism, xenophobia, botwanking, or other
+    asshattery, please.  [17:45]
+*** #emacs: topic set by jlf!~jlf@pdpc/supporter/active/jlf, 2018-12-07
+    23:02:39
+*** Users on #emacs: tinhatcat j3kyl_ stefanc_diff bahtiyar ealfonso Misha_B
+    jrm thy0 ksft jaja Sheilong Kundry_Wag Demosthenex cjbayliss ecbrown dale
+    annadane thblt apteryx jaafar fledermaus jjttjj lampilelo isomer shackra
+    widp_ holomorph drymer_ jao inkbottle Albori justanotheruser pointsman pt1
+    _anb terrycojones theoceaniscool lahe zapata makomo clemens3 peirama
+    wigust- Formbi nykma davr0s HaraldJoerg tamouse__ blatte Lord_of_Life ptx
+    Snoras Ariakenom Necktwi _0bitcount
+*** Users on #emacs: bremner Gurkenglas alexas grift gagbo notzmv xkapastel
+    lxsameer lidstah wheeler zaeph mathrick AimHere wavekidsjp coco grumble
+    gko bbrodriguez froggey beneth alephnull Unhammer m4ho delx fstd
+    nullheroes cpe jazzpi tomterl steckerhalter sab110 efm hiroshi hemite
+    Pisuke mitescugd equwal yokel JamesNZ StephanLahl YoungFrog weaksauce
+    neeasade clearcasting mns jbalint K0HAX aindilis MaxLanar gpk bhavin192
+    Jonta dolphy n2o4 tazle edgar-rft razzy Redfoxmoon
+*** Users on #emacs: elgoosy Willis andirc8080 loke sauvin raeburn djhworld
+    HenryG simplisity thomasross jlf johnjay fsbot jlindsay ewatcher lodsw
+    cetchmoh vladimiroff diogenese sergiodj a--m mbrumlow fiete mattcen
+    gsingh93 lugh sshirokov micro_ w1gz z0d babilen_ swathe_ teiresias diginet
+    adx dys timvisher dwilc fxlt zcid eldritch jschoolcraft jandrusk visl
+    avalon macrobat arbv polyrob proj carmack swflint orgg iclon webshinra
+    chrisb dru1d goreye Xenguy grummund Natch exit70
+*** Users on #emacs: jacky bpalmer kenzo thadtheman szgyg Sketch subsonik
+    divansantana lnostdal Kabriel kloeri Odin- peb` Stromeko CompanionCube
+    poppyschmo gargantua cgfbee bsima tsani cliluw turbofail emar drewr physpi
+    kristjansson sigjuice AfroThundr|main zxrf lemonpie ozzloy shymega nD5Xjz
+    jasmith griphook Spr0cket terpri adulteratedjedi mandarg __heisenbug
+    DrMax_ DrMax croccydile bch siraben wilfredh HappyPonyLand rejuvyesh talyz
+    nwp stiell yourfate overclucker mwsb progo
+*** Users on #emacs: pw_ n35xdxb0 bjb mniip Abbott MindlessDrone umbSublime
+    Pio Dalvini irfus davexunit Praise mozzarella xnox LogicAside Jefe wagle
+    parsnip drewbarbs josteink francisv gagbo_work k-man deedra znpy glyph
+    fifr xristos TreyHarris bigMouthCommie kenrestivo Xal nottwo_ mrvdb
+    leothrix planigan Wysteriary[m] TheNet rotty averell mlt- rizary offby1
+    joschka SyrupThinker apetresc harrigan iovec dim symbot f6k totonika les
+    BeefEats giggybyte aidalgol plik tessier cbaines
+*** Users on #emacs: finkata tensorpudding fabfur` jaster dsal cmatei
+    seanparsons ferdy bitozoid jgkamat wdouglas benoitj ekleog palnabarun
+    Frozenlock treethought[m]2 specbot autrilla qdot_ anthracite emacsomancer
+    tinloaf[m] rann myrkraverk aaptel plasticle MoziM Fah theRoUS Madars
+    monotux pdv thinkpad Rovanion RusAlex nopf cheers Hobbyboy illandan[m]
+    gnomon blass grdryn[m] sielicki xylef jkamat ada[m] Evidlo kjeldahl
+    mrkotfw lewo elb nextloop Namigator eagleflo hmw slashfocus
+*** Users on #emacs: nasciiboy cyris212 fredsir kqr zfnmxt aspiers untoreh
+    endoffile hiredman trn mrm blueingress ldlework snackattack
+    AdmiralBumbleBee justinweiss magog octe adereth gchristensen dhanush phoe6
+    piyer jerme_ dzho meowray ieure sachac lhx offby1-irccloud boblefrag
+    fowlduck newcup SOO7 tazjin gonz_ feklee dellavg hunzelstrunz theanalyst
+    yurb correlr hohum fperrin Mon_Ouie xxpor syamaoka ntnn beaky
+    Spritzgebaeck nemesit|znc kanru angerman elvishjerricco qsx cnomad
+*** Users on #emacs: jolamb basilc PyroLagus waldhar_ ryjm pacon netkam2 xa0
+    tomaw gilbertw1 kini cehteh northcode vxe quotemstr defanor colekowalski
+    mfisher jacobian quite Khady ullbeking regtools cacheyourdreams ecraven
+    hodapp johnsu01 C-Keen kzar raph_ael ilbelkyr remote TheBrayn pepesza
+    c50a326 noonker wraithm relrod mfiano APic mdk cYmen haaja saon luis
+    benley bisco Philonous Dr_Jazz ibex forcer niko introom malthe
+    bertschneider affinespaces hober knobo TheCowboy Swant
+*** Users on #emacs: average fil CosmicRay erickgnavar snw SolarAquarion
+    johnhamelink dieggsy Athas malm offbyone peder juancate krobelus genpaku
+    noeatnosleep karstensrage Sigma xq japanoise dustinm` mquander drot
+    MrFantastik Guest40074 sacktown dmj` vifon wedens billstclair r4vi p_l
+    hoek johs robmyers MaryHadalittle gobostone woddf2 wasamasa dysfigured
+    zeltak Labu Oxyd tg cold_sauce rrix sm TacoThief esran d10n copec alphor
+    hhes unknown_lamer callahad endegraaf nckx telmich
+*** Users on #emacs: jobor crysosteros broquaint snuffychi aterius
+    stylewarning oberstein ioa cyphix NegativeFlare veinofstars DistantStar
+    _ay_ ohama pd nicolaso blu3r4d0n azahi drdo benaiah jhei teej psidhu
+    murr4y ljhms perryprog Blkt cranes cybrNaut technomancy tubbo sebboh ext
+    kodein Rhetorical nand1 tzz sheijk tasslehoff copypasteque evilmonads
+    cpt_nemo caoliver distopico diamondman akshay196 pdgwien zipper echoennis
+    joehillen jackhill jpzhu_ superbil kh31d4r zv
+*** Users on #emacs: theBlackDragon molloy leah2 mog blt ecocode MuffinPimp
+    arthurnn mickael-kerjean8 cp16net klostein amoe energizer nando293921
+    setre deego perrier-jouet TheWolf rudybot deadcyclo mgttlinger zhuhaow_
+    hyperair sanitypassing iskander edmz bandali erkin WA9ACE raso3 bdw carlf
+    winny thebigj moriacat quasisane phenoble benjamin-l buhman NemesisD
+    akraut_ davdunc ToBeCloud Cathy thomassgn martin_ junnu ski mbecroft
+    twainwek bilbo991
+*** #emacs modes: +Cnprstj 2:3
+*** #emacs was created on 2006-11-26 01:42:33
+<parsnip> hmm, i cleared some cache, i think the \\ may have fixed it
+*** #emacs URL: https://www.emacswiki.org/emacs/EmacsChannel
+<parsnip> ah, the lowercase c:/ may not have even been an issue, just the
+	  slashes  [17:46]
+<tinhatcat> Hi, I'm looking for a way to collapse rows in an org mode table
+	    based on the elements in a column. For example take the average of
+	    a column with rows that match on a different column, I've written
+	    an example in https://codeshare.io/collapse  [17:47]
+<parsnip> oh mi god, so they pointlessly had dart-formatter-command looking
+	  for dartfmt.exe, which is now called dartfmt.bat. but you can simply
+	  use "dart", it will still find dart.bat  [17:50]
+<parsnip> but if i fix that, it's now looking for `diff`  [17:51]
+<parsnip> but this came from go-mode.el, so does this mean their formatter
+	  doesn't work in Windows also?  [17:55]
+<parsnip> yep, https://github.com/dominikh/go-mode.el/issues/105  [17:56]
+<userr> Whats the best way to start execution of a python script at the end of
+	my .emacs?  [18:05]
+<dale> Oof, TIL let-alist.  (let-alist '((foo . bar)) (message "this works:
+       %S" .foo))  [18:06]
+<offby1> userr: dunno; ,,call-process might do it  [18:15]
+<fsbot> I want to TAKE IT HOME and DRESS IT UP in HOT PANTS!!
+<offby1> ,df call-process
+<fsbot> call-process is a built-in function in `C source code'.
+<fsbot> (call-process PROGRAM &optional INFILE DESTINATION DISPLAY &rest ARGS)
+<fsbot> Call PROGRAM synchronously in separate process.
+<fsbot> The remaining arguments are optional. ;;[ ,more/ ,dump]
+<parsnip> call-parsnip? who shall i execute?  [18:17]
+<notzmv> ,who
+<fsbot> BEEEP: Wrong number of arguments: (lambda (fs-verb &rest fs-whatever)
+	(erblisp-check-args-nascent) (sit-for 0) (fs-format "I %s!" (fs-or
+	(fs-cdr (fs-assoc fs-verb (quote ((is . "am") (does . "do") (did .
+	"did") (has . "have") (was . "was") (will . "will"))))) "do"))), 0
+<notzmv> weow  [18:18]
+<aidalgol> Does Emacs have any decent wrapper for git blame?  [18:37]
+<dale> aidalgol: Since you're asking I'm guessing vc-annotate is not what you
+       want?  [18:38]
+<aidalgol> dale: No, it kinda sucks.
+<dale> aidalgol: I *think* Magit probably has something, and there's also
+       git-timemachine.
+<aidalgol> You mean the Atom extension?  [18:39]
+<dale> aidalgol: https://gitlab.com/pidu/git-timemachine  [18:40]
+<dale> aidalgol: (I thought you were joking until I googled it and saw the
+       Atom extension of (almost) the same name was at least the first two
+       hits.)
+<aidalgol> Turns out magit-blame is what I wanted.  [18:48]
+<aidalgol> Right... magit does not seem to like DOS line endings.
+<notzmv> does anyone?  [18:49]
+<cjbayliss> ??  [18:50]
+<fsbot> I'm telling you, you don't want to know!
+<notzmv> uh oh
+<aidalgol> As much as I like to say "fuck Windows", I have to work with
+	   Windows shit.  [18:52]
+<twb> And you can't use GNU/ntoskrnl for most of it?  [18:53]
+<aidalgol> twb: Corporate finally set me up with a sanctioned Ubuntu box.
+<bremner> don't violate those sanctions  [18:54]
+<aidalgol> The problem comes from our git repo having line-ending conversion
+	   turned off, because SOMEONE here thinks that is BAAAD.
+<bremner> I agree
+<aidalgol> that a VCS has NO BUSINESS normalising line-endings.  [18:55]
+<bremner> just adjust your f'ing editors
+<twb> hahahaha
+<twb> kali (i.e. backtrack) is in the windows store
+<twb> and the day that happened, kali's support forums exploded with noobs
+      asking why they can't do <some action that isn't purely userland>
+<aidalgol> bremner: Fine.  Just tell me how to make Magit stop shitting "^M"
+	   all over my buffers.
+<bremner> yeah, sorry, I can't help there. But it does seem like a bug in
+	  magit.  [18:56]
+<bremner> the rest of emacs can cope with windows line endings, right?
+<twb> aidalgol: that sounds like something that should be fixable with a git
+      config
+<twb> aidalgol: git config core.eol
+<bremner> didn't we just discuss why that wasn't happening?
+<aidalgol> YES
+<bremner> ok, so it's not just me  [18:57]
+<twb> Are you saying the ^Ms are from git's own messages, or from git showing
+      the contents of CRLF files?
+<bremner> twb: so have you got all the newly required backdoors installed in
+	  your software?
+<aidalgol> It's not happening, because we have a) mixed line-endings, b) a mix
+	   of dos and unix line-endings, and c) THAT DOESN'T EVEN WORK
+	   PROPERLY
+<twb> bremner: nope  [18:58]
+<twb> bremner: nobody has asked us yet
+<bremner> you'd have to say that, wouldn't you?
+<twb> I dunno
+<bremner> or maybe "no comment"
+<aidalgol> Oh, and guess what?  core.eol is ALREADY SET TO "NATIVE".
+<twb> Most of our userbase is detainees, though, so they're already spied on
+<twb> aidalgol: shouldn't it be set to LF?
+<twb> aidalgol: so that git doesn't emit CRs  [18:59]
+<aidalgol> twb: If I'm reading this correctly, that is the same as native on
+	   linux.
+<twb> aidalgol: OK I'm confused
+<twb> aidalgol: I thought you were using emacs and git *on windows*
+<aidalgol> No, I'm on Ubuntu now.  [19:00]
+<twb> Ah, and it's the files themselves that contain CRLFs
+<twb> From my reading, core.autocrlf will work --- but only if you make *all
+      your coworkers* turn it on
+<aidalgol> Yeah, which isn't going to happen.
+<twb> So in case it's not obvious, the fundamental issue here is that Emacs
+      can auto-detect CRLF vs LF, but only per-file, not per-line.  git's own
+      output has LFs, but repo contents is CRLF, so a single buffer (git's
+      output) has both EOLs.  [19:02]
+<twb> git has magic to cope with this, but it assumes LF is the Right Thing in
+      the repo, and requires Windows people to fix their gits, and can't work
+      in the other direction
+<Misha_B> is there a libre alternative to youtube?  [19:04]
+<technomancy> Misha_B: peertube is one  [19:06]
+* offby1 waves  [19:07]
+<twb> SIGH.  MacOS has Python2 not Python3  [19:08]
+<offby1> heh
+<twb> STILL
+<Misha_B> >mac
+<dale> Hey, at least it's 2.7!
+<Misha_B> yikes
+<twb> And very very likely this is because all the Apple python code is still
+      not ported to python3, e.g.  calendarserver
+<offby1>  /usr/bin/emacs --version GNU Emacs 22.1.1
+<twb> offby1: when is that explicitly EOL'd?  [19:09]
+<offby1> be nice if they shipped python3 and just called it /usr/bin/python3
+<offby1> twb: beats me
+<dale> bash 3.2.57!
+<twb> $coworker is writing something in *BASH 3* because the target is macos,
+      and I'm like... python3.  But that's not installed.
+<dale> twb: TIL Apple ships Python code beyond stuff like the ObjC bridge.
+<Misha_B> but half the fun is guessing which python is `python`!
+<dale> Hm, /usr/bin/perl is somewhat older than I would have expected, too.
+       5.18, released ca. 2013.  [19:10]

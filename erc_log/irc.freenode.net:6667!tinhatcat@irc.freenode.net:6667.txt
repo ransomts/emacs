@@ -1,0 +1,123 @@
+
+[Sun Dec  9 2018]
+Opening connection..  [17:41]
+-leguin.freenode.net- *** Looking up your hostname...
+-leguin.freenode.net- *** Checking Ident
+-leguin.freenode.net- *** No Ident response
+-leguin.freenode.net- *** Couldn't look up your hostname
+*** Welcome to the freenode Internet Relay Chat Network tinhatcat
+*** Your host is leguin.freenode.net[2001:6b0:e:2a18::119/6667], running
+    version ircd-seven-1.1.7
+*** This server was created Tue Sep 25 2018 at 13:21:19 UTC
+*** leguin.freenode.net ircd-seven-1.1.7 DOQRSZaghilopswz
+    CFILMPQSbcefgijklmnopqrstvz
+*** CHANTYPES=# EXCEPTS INVEX CHANMODES=eIbq,k,flj,CFLMPQScgimnprstz
+    CHANLIMIT=#:120 PREFIX=(ov)@+ MAXLIST=bqeI:100 MODES=4 NETWORK=freenode
+    STATUSMSG=@+ CALLERID=g CASEMAPPING=rfc1459 are supported by this server
+*** CHARSET=ascii NICKLEN=16 CHANNELLEN=50 TOPICLEN=390 DEAF=D FNC
+    TARGMAX=NAMES:1,LIST:1,KICK:1,WHOIS:1,PRIVMSG:4,NOTICE:4,ACCEPT:,MONITOR:
+    EXTBAN=$,ajrxz CLIENTVER=3.0 CPRIVMSG CNOTICE KNOCK are supported by this
+    server
+*** ETRACE SAFELIST ELIST=CTU WHOX are supported by this server
+*** There are 109 users and 84625 invisible on 33 servers
+*** 32 operator(s) online
+*** 4 unknown connection(s)
+*** 49220 channels formed
+*** I have 4560 clients and 1 servers
+*** Current local users 4560, max 4980
+*** Current global users 84734, max 89332
+*** Highest connection count: 4981 (4980 clients) (86289 connections received)
+*** - leguin.freenode.net Message of the Day - 
+*** - Welcome to leguin.freenode.net in UmeÅÂ, Sweden, EU! Thanks to
+*** - the Academic Computer Club at UmeÅÂ University for sponsoring
+*** - this server!
+*** -  
+*** - LE GUIN, URSULA K. (1929-2018) Born in Berkeley, California,
+*** - Ursula Le Guin was an American author primarily known for
+*** - her Science Fiction and Fantasy. She was awarded the Hugo
+*** - and Nebula awards, and was best known for her Earthsea
+*** - and Hainish series.
+*** -  
+*** - Welcome to freenode - supporting the free and open source
+*** - software communities since 1998.
+*** -  
+*** - By connecting to freenode you indicate that you have read and
+*** - accept our policies and guidelines as set out on https://freenode.net
+*** -  
+*** - In the event that you observe behaviour that contravenes our policies,
+*** - please notify a volunteer staff member via private message, or send us
+    an
+*** - e-mail to complaints@freenode.net -- we will do our best to address the
+*** - situation within a reasonable period of time, and we may request further
+*** - information or, as appropriate, involve other parties such as channel
+    operators 
+*** - Group Contacts representing an on-topic group.
+*** -  
+*** - freenode runs an open proxy scanner.
+*** -  
+*** - If you are looking for assistance, you may be able to find a list of 
+*** - volunteer staff on '/stats p' (shows only on-call staff) or by joining 
+*** - #freenode and using the '/who freenode/staff/*' command. You may message
+*** - any of us at any time. Please note that freenode predominantly provides 
+*** - assistance via private message, and while we have a network channel the 
+*** - primary venue for support requests is via private message to a member 
+*** - of the volunteer staff team.
+*** -  
+*** - If you are looking for assistance, you will be able to find a list of
+*** - volunteer staff using the '/who freenode/staff/*' command, and you may
+*** - message any of us at any time. Please note that freenode predominantly
+*** - provides assistance via private message, and while we have a network
+*** - channel the primary venue for support requests is via private message to
+*** - a member of the volunteer staff team.
+*** -  
+*** - From time to time, volunteer staff may send server-wide notices relating
+    to
+*** - the project, or the communities that we host. The majority of such
+    notices
+*** - will be sent as wallops, and you can '/mode <yournick> +w' to ensure
+    that you
+*** - do not miss them. Important messages relating to the freenode project,
+    including
+*** - notices of upcoming maintenance and other scheduled downtime will be
+    issued as
+*** - global notices.
+*** -  
+*** - Representing an on-topic project? Don't forget to register, more
+    information
+*** - can be found on the https://freenode.net website under "Group
+    Registration".
+*** -  
+*** - freenode organises an annual conference, and we would like to extend our
+*** - thanks to the attendees, exhibitors and speakers who made freenode #live
+    2017
+*** - possible. And of course, our generous sponsors: Bytemark, Canonical
+    (Ubuntu),
+*** - Falanx Cyber Security, Private Internet Access and Yubico for footing
+    the bill.
+*** -  
+*** - Thank you also to our server sponsors for the sustained support in
+    keeping the
+*** - network going for close to two decades.
+*** -  
+*** - Thank you to all of our attendees, sponsors, speakers, exhibitors,
+    helpers,
+*** - and everyone else who made this year's freenode #live conference
+    amazing.
+*** - https://freenode.net/news/live-2018
+*** -  
+*** - Thank you for using freenode!
+*** -  
+*** -  
+*** End of /MOTD command.
+*** tinhatcat has changed mode for tinhatcat to +i
+-NickServ- This nickname is registered. Please choose a different nickname, or
+	   identify via /msg NickServ identify <password>.
+-NickServ- You are now identified for tinhatcat.
+-freenode-connect- Due to the ongoing spam, all new connections will be
+		 scanned for vulnerabilities. This will not harm your
+		 computer, and vulnerable hosts will be notified.
+==> ERROR from irc.freenode.net: Closing Link: 2602:306:c5b6:5a10::198 (Quit:
+    ERC (IRC client for Emacs 26.1))  [19:10]
+
+
+*** ERC finished ***
