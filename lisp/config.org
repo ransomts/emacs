@@ -46,12 +46,12 @@
 
 **** TODO scan daemon
      #+BEGIN_SRC emacs-lisp
-     ;; (use-package gnus-demon
-     ;;   :ensure t
-     ;;   :hook
-     ;;   (gnus-demon-add-handler #'gnus-demon-scan-news 2 nil)
-     ;;   (message "from hook")
-    ;;   )
+       ;; (use-package gnus-demon
+       ;;   :ensure t
+       ;;   :hook
+       ;;   (gnus-demon-add-handler #'gnus-demon-scan-news 2 nil)
+       ;;   (message "from hook")
+       ;;   )
      #+END_SRC
 
 *** org
@@ -75,8 +75,6 @@
 	   (shell . t)
 	   (sql . t)
 	   (sqlite . t)))
-
-
 
 	(setq diary-file "~/.emacs.d/org/schedule.org"
 	      org-agenda-files
@@ -130,14 +128,21 @@
 	 ("C-c c" . #'org-capture)
 	 (:map org-mode-map
 	       (("C-c r" . #'org-archive-subtree)
-		("C-c C-r" . #'org-archive-subtree)))))
+		("C-c C-r" . #'org-archive-subtree))))
+	:hook visual-line-mode)
     #+END_SRC
+**** async src blocks
+     #+BEGIN_SRC emacs-lisp
+       (use-package ob-async
+	 :ensure t
+	 :after org)
+     #+END_SRC
 
 **** bullets
      #+BEGIN_SRC emacs-lisp
-    (use-package org-bullets
-      :ensure t
-      :hook (org-mode . org-bullets-mode))
+       (use-package org-bullets
+	 :ensure t
+	 :hook (org-mode . org-bullets-mode))
      #+END_SRC
 
 *** erc
@@ -175,80 +180,76 @@
     #+END_SRC
 
 *** dired
-  #+BEGIN_SRC emacs-lisp
-  (use-package dired+
-    :bind (:map dired-mode-map
-		(("M-h" . #'dired-omit-mode)
-		 ("u" . #'dired-up-directory)))
-    :config
-    (setq
-     dired-listing-switches "-alh --no-group"
-     dired-no-confirm '(byte-compile copy delete)
-     dired-omit-files "^\\..*~?$"
-     dired-recursive-copies 'always
-     dired-recursive-deletes 'always))
-  #+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (use-package dired+
+	:bind (:map dired-mode-map
+		    (("M-h" . #'dired-omit-mode)
+		     ("u" . #'dired-up-directory)))
+	:config
+	(setq
+	 dired-listing-switches "-alh --no-group"
+	 dired-no-confirm '(byte-compile copy delete)
+	 dired-omit-files "^\\..*~?$"
+	 dired-recursive-copies 'always
+	 dired-recursive-deletes 'always))
+    #+END_SRC
 
 *** eshell
-#+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-x e")   #'eshell)
+    #+BEGIN_SRC emacs-lisp
+      (global-set-key (kbd "C-x e")   #'eshell)
 
-  (defmacro with-face (str &rest properties)
-    `(propertize ,str 'face (list ,@properties)))
+      (defmacro with-face (str &rest properties)
+	`(propertize ,str 'face (list ,@properties)))
 
-  (defun my-eshell-prompt ()
-    (let ((header-bg (if (find 'material-light custom-enabled-themes)
-			 "#e0f7fa"
-		       "#1c1f26"))
-	  (host (file-remote-p default-directory 'host)))
-      (concat
-       (with-face (concat (eshell/pwd) " ")
-		  :background header-bg)
-       (with-face (format-time-string "(%H:%M) " (current-time))
-		  :background header-bg
-		  :foreground "#888")
-       (with-face "\n" :background header-bg)
-       (with-face user-login-name
-		  :foreground "blue")
-       "@"
-       (with-face (if (eq nil host) "localhost" host)
-		  :foreground "green")
-       (if (= (user-uid) 0)
-	   (with-face " #" :foreground "red")
-	 " $")
-       " ")))
-  (setq eshell-prompt-function 'my-eshell-prompt)
-  (setq eshell-highlight-prompt nil)
-#+END_SRC
+      (defun my-eshell-prompt ()
+	(let ((header-bg (if (find 'material-light custom-enabled-themes)
+			     "#e0f7fa"
+			   "#1c1f26"))
+	      (host (file-remote-p default-directory 'host)))
+					      ;(host (nth 1 (split-string (eshell/pwd) ":"))))
+	  (concat
+	   (with-face (concat (eshell/pwd) " ") :background header-bg)
+	   (with-face (format-time-string "(%H:%M) " (current-time)) :background header-bg :foreground "#888")
+	   (with-face "\n" :background header-bg)
+	   (with-face user-login-name :foreground "blue")
+	   "@"
+	   (with-face (if (eq nil host) "localhost" host) :foreground "green")
+	   (if (= (user-uid) 0)
+	       (with-face " #" :foreground "red")
+	     " $")
+	   " ")))
+      (setq eshell-prompt-function 'my-eshell-prompt)
+      (setq eshell-highlight-prompt nil)
+    #+END_SRC
 ** External
 
 *** Package updater
-#+BEGIN_SRC emacs-lisp
-  (use-package auto-package-update
-    :ensure t
-    :config
-    (setq auto-package-update-prompt-before-update t
-	  auto-package-update-delete-old-versions t
-	  auto-package-update-interval 14)
-    (auto-package-update-maybe))
-#+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (use-package auto-package-update
+	:ensure t
+	:config
+	(setq auto-package-update-prompt-before-update t
+	      auto-package-update-delete-old-versions t
+	      auto-package-update-interval 14)
+	(auto-package-update-maybe))
+    #+END_SRC
 
 *** Dad-joke
 
     This is top tier package-age here.
     #+BEGIN_SRC emacs-lisp
-  (use-package dad-joke :ensure t)
+      (use-package dad-joke :ensure t)
     #+END_SRC
 
 *** Theme
 
     I really like themes that have light and dark modes. The material theme fits that and has been my theme of choice for a few years.
     #+BEGIN_SRC emacs-lisp
-  (use-package material-theme
-    :unless (running-on-hosts '("login001"))
-    :ensure t
-    :config
-    (load-theme 'material t))
+      (use-package material-theme
+	:unless (running-on-hosts '("login001"))
+	:ensure t
+	:config
+	(load-theme 'material t))
     #+END_SRC
 
     Switch between the light and dark modes on sunrise and sunset. Lets me know what the sun is doing even when I spend all day inside :)
@@ -268,14 +269,14 @@
     Helm is really a game changer for emacs. More over, it's the helm extensions that can really turn something tedious to easy.
     #+BEGIN_SRC emacs-lisp
       (when (>= (string-to-number emacs-version) 24.4)
-        (use-package helm
-          :ensure t
-          :bind (("M-x" . #'helm-M-x)
-                 ("C-x b" . #'helm-buffers-list)
-                 ("C-x f" . #'helm-find-files)
-                 ("C-x C-f" . #'helm-find-files))
-          :config
-          (helm-mode t)))
+	(use-package helm
+	  :ensure t
+	  :bind (("M-x" . #'helm-M-x)
+		 ("C-x b" . #'helm-buffers-list)
+		 ("C-x f" . #'helm-find-files)
+		 ("C-x C-f" . #'helm-find-files))
+	  :config
+	  (helm-mode t)))
     #+END_SRC
 
 **** tramp
@@ -283,10 +284,10 @@
      Reads in [[file:~/.ssh/config][my ssh config]] and connects me without needing to remember the trmp syntax.
      #+BEGIN_SRC emacs-lisp
        (when (>= (string-to-number emacs-version) 24.4)
-         (use-package helm-tramp
-           :unless (running-on-hosts '("login001"))
-           :ensure t
-           :requires helm))
+	 (use-package helm-tramp
+	   :unless (running-on-hosts '("login001"))
+	   :ensure t
+	   :requires helm))
      #+END_SRC
 
 **** bbdb
@@ -294,11 +295,11 @@
      This seems to be the most accepted way to manage contact info with emacs. It works well with mail and gnus though so it's okay with me.
      #+BEGIN_SRC emacs-lisp
        (when (>= (string-to-number emacs-version) 24.4)
-         (use-package helm-bbdb
-           :unless (running-on-hosts '("login001"))
-           :ensure t
-           :requires helm
-           :bind (("<f5>" . #'helm-bbdb))))
+	 (use-package helm-bbdb
+	   :unless (running-on-hosts '("login001"))
+	   :ensure t
+	   :requires helm
+	   :bind (("<f5>" . #'helm-bbdb))))
      #+END_SRC
 
 **** TODO dictionary
@@ -306,20 +307,20 @@
      Every computer used for writing should have a dictionary available by keystroke.
      #+BEGIN_SRC emacs-lisp
        (when (>= (string-to-number emacs-version) 24.4)
-         (use-package helm-dictionary
-           :unless (running-on-hosts '("login001"))
-           :requires helm
-           :ensure t
-           :bind (("<f8>" . #'helm-dictionary))
-           :config
-           (setq
-            helm-dictionary-browser-function 'browse-url-firefox
-            helm-dictionary-database "/usr/share/dict/words"
-            helm-dictionary-online-dicts
-            '(("wiktionary" . "http://en.wiktionary.org/wiki/%s")
-              ("Oxford English Dictionary" . "www.oed.com/search?searchType=dictionary&q=%s")
-              ("Merriam-Webster" . "https://www.merriam-webster.com/dictionary/%s"))
-            helm-dictionary-use-full-frame nil)))
+	 (use-package helm-dictionary
+	   :unless (running-on-hosts '("login001"))
+	   :requires helm
+	   :ensure t
+	   :bind (("<f8>" . #'helm-dictionary))
+	   :config
+	   (setq
+	    helm-dictionary-browser-function 'browse-url-firefox
+	    helm-dictionary-database "/usr/share/dict/words"
+	    helm-dictionary-online-dicts
+	    '(("wiktionary" . "http://en.wiktionary.org/wiki/%s")
+	      ("Oxford English Dictionary" . "www.oed.com/search?searchType=dictionary&q=%s")
+	      ("Merriam-Webster" . "https://www.merriam-webster.com/dictionary/%s"))
+	    helm-dictionary-use-full-frame nil)))
      #+END_SRC
 
 *** magit
@@ -327,9 +328,9 @@
     Great way to interact with git. Not much config needed, just a global keybinding to pop open the status.
     #+BEGIN_SRC emacs-lisp
       (when (>= (string-to-number emacs-version) 25.1)
-      (use-package magit
-        :ensure t
-        :bind ("C-x g" . #'magit-status)))
+	(use-package magit
+	  :ensure t
+	  :bind ("C-x g" . #'magit-status)))
     #+END_SRC
 
 *** pdf
@@ -337,7 +338,7 @@
       (use-package pdf-tools
 	:ensure t
 	:unless (or (string= nil (getenv "DESKTOP_SESSION")) 
-		     (running-on-hosts '("login001")))
+		    (running-on-hosts '("login001")))
 	:load-path "site-lisp/pdf-tools/lisp"
 	:magic ("%PDF" . pdf-view-mode)
 	:config
@@ -351,100 +352,99 @@
     For now I'm still choosing an org-mode scratch buffer but this is a todo.
     #+BEGIN_SRC emacs-lisp
       (use-package projectile
-        :disabled
-        :if (>= (string-to-number emacs-version) 24.4)
-        :ensure t)
+	:disabled
+	:if (>= (string-to-number emacs-version) 24.4)
+	:ensure t)
       (use-package page-break-lines
-        :disabled
-        :if (>= (string-to-number emacs-version) 24.4)
-        :ensure t)
+	:disabled
+	:if (>= (string-to-number emacs-version) 24.4)
+	:ensure t)
       (use-package dashboard
-        :ensure t
-;        :after (projectile page-line-breaks)
-        :config
-        (dashboard-setup-startup-hook)
-        (setq dashboard-items '((recents  . 5)
-                                (bookmarks . 5)
-                                ;(projects . 5)
-                                (agenda . 5)
-                                ;(registers . 5)
-				)))
+	:ensure t
+	; :after (projectile page-line-breaks)
+	:config
+	(dashboard-setup-startup-hook)
+	(setq dashboard-items '((recents  . 5)
+				;(bookmarks . 5)
+				;(projects . 5)
+				(agenda . 5)
+				(registers . 5))))
     #+END_SRC
 
 *** transmission
     #+BEGIN_SRC emacs-lisp
       (when (>= (string-to-number emacs-version) 24.4)
-      (use-package transmission
-        :ensure t
-        :if (running-on-hosts '("joseki" "tengen"))
-        :config
-        (setq
-         transmission-refresh-modes
-         '(transmission-mode
-           transmission-files-mode
-           transmission-info-mode
-           transmission-peers-mode))))
+	(use-package transmission
+	  :ensure t
+	  :if (running-on-hosts '("joseki" "tengen"))
+	  :config
+	  (setq
+	   transmission-refresh-modes
+	   '(transmission-mode
+	     transmission-files-mode
+	     transmission-info-mode
+	     transmission-peers-mode))))
     #+END_SRC
 
 *** emms
     #+BEGIN_SRC emacs-lisp
-	  (use-package emms
-	    :if (running-on-hosts '("joseki" "tengen"))
-	    :ensure t
-	    :config
-	    (setq
-	     emms-cache-get-function 'emms-cache-get
-	     emms-cache-modified-function 'emms-cache-dirty
-	     emms-cache-set-function 'emms-cache-set
-	     emms-info-functions '(emms-info-mediainfo
-							   emms-info-mpd emms-info-cueinfo
-							   emms-info-ogginfo)
-	     emms-mode-line-cycle t
-	     emms-mode-line-mode-line-function 'emms-mode-line-cycle-mode-line-function
-	     emms-player-mpd-music-directory "/home/tsranso/Music"
-	     emms-player-mplayer-command-name "mpv"
-	     emms-player-next-function 'emms-score-next-noerror
-	     emms-playlist-default-major-mode 'emms-playlist-mode
-	     emms-playlist-update-track-function 'emms-playlist-mode-update-track-function
-	     emms-track-description-function 'emms-info-track-description))
+      (use-package emms
+	:if (running-on-hosts '("joseki" "tengen"))
+	:ensure t
+	:config
+	(setq
+	 emms-cache-get-function 'emms-cache-get
+	 emms-cache-modified-function 'emms-cache-dirty
+	 emms-cache-set-function 'emms-cache-set
+	 emms-info-functions '(emms-info-mediainfo
+			       emms-info-mpd emms-info-cueinfo
+			       emms-info-ogginfo)
+	 emms-mode-line-cycle t
+	 emms-mode-line-mode-line-function 'emms-mode-line-cycle-mode-line-function
+	 emms-player-mpd-music-directory "/home/tsranso/Music"
+	 emms-player-mplayer-command-name "mpv"
+	 emms-player-next-function 'emms-score-next-noerror
+	 emms-playlist-default-major-mode 'emms-playlist-mode
+	 emms-playlist-update-track-function 'emms-playlist-mode-update-track-function
+	 emms-track-description-function 'emms-info-track-description))
     #+END_SRC
 
 *** bbdb
 
     #+BEGIN_SRC emacs-lisp
       (use-package bbdb
-        :ensure t
-        :config
-        (setq
-         bbdb-dial-function
-         (lambda
-           (phone-number)
-           (kdeconnect-send-sms
-            (read-string "Enter message: ")
-            (string-to-int
-             (replace-regexp-in-string "[() -]" "" phone-number))))))
+	:ensure t
+	:config
+	(setq
+	 bbdb-dial-function
+	 (lambda
+	   (phone-number)
+	   (kdeconnect-send-sms
+	    (read-string "Enter message: ")
+	    (string-to-int
+	     (replace-regexp-in-string "[() -]" "" phone-number))))))
     #+END_SRC
 
 *** slime
 
     Everybody who wants to dive into lisp should use slime. Even if just for learning differences between the lisps, slime is the way to go for lisp dev.
     #+BEGIN_SRC emacs-lisp
-    (use-package slime
-	  :ensure t
-	  :config
-	  (setq inferior-lisp-program "sbcl")
-	  slime-contribs '(slime-fancy))
+      (use-package slime
+	:ensure t
+	:config
+	(setq inferior-lisp-program "sbcl")
+	slime-contribs '(slime-fancy))
     #+END_SRC
 
 *** fill column indicator
     #+BEGIN_SRC emacs-lisp
       (when (>= (string-to-number emacs-version) 25)
-        (use-package fill-column-indicator
-          :ensure t
-          :config
-          (setq
-           fci-rule-column 80
-           fill-column 80)))
+	(use-package fill-column-indicator
+	  :ensure t
+	  :config
+	  (setq
+	   fci-rule-column 80
+	   fill-column 80)))
     #+END_SRC
 
 *** smart mode line
@@ -461,9 +461,9 @@
 
 *** gnuplot
 
-#+BEGIN_SRC emacs-lisp
-  (use-package gnuplot :ensure t)
-#+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (use-package gnuplot :ensure t)
+    #+END_SRC
 
 * Moving around
 
@@ -483,63 +483,63 @@
 
 ** smartparens
 
-#+BEGIN_SRC emacs-lisp
-  (use-package smartparens
-      :ensure t
-      :hook (prog-mode . turn-off-smartparens-strict-mode))
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (use-package smartparens
+       :ensure t
+       :hook (prog-mode . turn-off-smartparens-strict-mode))
+   #+END_SRC
 
 ** Hide show minor mode
 
-#+BEGIN_SRC emacs-lisp
-  (use-package hs-minor-mode
-    :hook prog-mode
-    :bind (:map hs-minor-mode-map
-		("C-c b h" . hs-hide-block)
-		("C-c s" . hs-show-block)
-		("C-c h" . hs-hide-block)
-		("C-c b s" . hs-show-block)
-		("C-c C-b h" . hs-hide-block)
-		("C-c C-b s" . hs-show-block)))
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (use-package hs-minor-mode
+       :hook prog-mode
+       :bind (:map hs-minor-mode-map
+		   ("C-c b h" . hs-hide-block)
+		   ("C-c s" . hs-show-block)
+		   ("C-c h" . hs-hide-block)
+		   ("C-c b s" . hs-show-block)
+		   ("C-c C-b h" . hs-hide-block)
+		   ("C-c C-b s" . hs-show-block)))
+   #+END_SRC
 
 * Buffer Management
 ** transpose windows
 
    Transposing is surprisingly not a built in function. Here's something that lets me move the current buffer around in the frame.
    #+BEGIN_SRC emacs-lisp
-      (defun transpose-windows (arg)
-        "Transpose the buffers shown in two windows."
-        (interactive "p")
-        (let ((selector (if (>= arg 0) 'next-window 'previous-window)))
-          (while (/= arg 0)
-            (let ((this-win (window-buffer))
-                  (next-win (window-buffer (funcall selector))))
-              (set-window-buffer (selected-window) next-win)
-              (set-window-buffer (funcall selector) this-win)
-              (select-window (funcall selector)))
-            (setq arg (if (plusp arg) (1- arg) (1+ arg))))))
+     (defun transpose-windows (arg)
+       "Transpose the buffers shown in two windows."
+       (interactive "p")
+       (let ((selector (if (>= arg 0) 'next-window 'previous-window)))
+	 (while (/= arg 0)
+	   (let ((this-win (window-buffer))
+		 (next-win (window-buffer (funcall selector))))
+	     (set-window-buffer (selected-window) next-win)
+	     (set-window-buffer (funcall selector) this-win)
+	     (select-window (funcall selector)))
+	   (setq arg (if (plusp arg) (1- arg) (1+ arg))))))
 
-      (global-set-key (kbd "C-x t") #'transpose-windows)
+     (global-set-key (kbd "C-x t") #'transpose-windows)
    #+END_SRC
 
 ** toggle frame split
 
    Likewise switching from vertical to horizantal (and back). Really should be built it.
    #+BEGIN_SRC emacs-lisp
-	  (defun toggle-frame-split ()
-		"If the frame is split vertically, split it horizontally or vice versa.
-	  Assumes that the frame is only split into two."
-		(interactive)
-		(unless (= (length (window-list)) 2) (error "Can only toggle a frame split in two"))
-		(let ((split-vertically-p (window-combined-p)))
-		  (delete-window) ; closes current window
-		  (if split-vertically-p
-			  (split-window-horizontally)
-			(split-window-vertically))
-		  (switch-to-buffer nil)))
+     (defun toggle-frame-split ()
+       "If the frame is split vertically, split it horizontally or vice versa.
+     Assumes that the frame is only split into two."
+       (interactive)
+       (unless (= (length (window-list)) 2) (error "Can only toggle a frame split in two"))
+       (let ((split-vertically-p (window-combined-p)))
+	 (delete-window) ; closes current window
+	 (if split-vertically-p
+	     (split-window-horizontally)
+	   (split-window-vertically))
+	 (switch-to-buffer nil)))
 
-	  (global-set-key (kbd "C-x |") 'toggle-frame-split)
+     (global-set-key (kbd "C-x |") 'toggle-frame-split)
    #+END_SRC
 
 * general emacs settings
@@ -564,16 +564,16 @@
 
 ** window behavior
    #+BEGIN_SRC emacs-lisp
-  ;; (setq 
-  ;;       use-dialog-box nil
-  ;;       line-number-mode t
-  ;;       column-number-mode t)
+     ;; (setq 
+     ;;       use-dialog-box nil
+     ;;       line-number-mode t
+     ;;       column-number-mode t)
 
-  (tooltip-mode 0)
-  (fringe-mode 1)
-  (tool-bar-mode 0)
-  (menu-bar-mode 0)
-  (scroll-bar-mode 0)
+     (tooltip-mode 0)
+     (fringe-mode 1)
+     (tool-bar-mode 0)
+     (menu-bar-mode 0)
+     (scroll-bar-mode 0)
    #+END_SRC
 
    #+RESULTS:
@@ -589,73 +589,74 @@
 
 ** trash behavior
    #+BEGIN_SRC emacs-lisp
-  (setq delete-by-moving-to-trash t
-		trash-directory "/home/tsranso/.local/share/Trash/files/")
+     (setq delete-by-moving-to-trash t
+	   trash-directory "/home/tsranso/.local/share/Trash/files/")
    #+END_SRC
 
 ** initialization
    #+BEGIN_SRC emacs-lisp
-   (setq 
-    ;initial-buffer-choice (lambda nil (get-buffer "*dashboard*"))
-    initial-buffer-choice (lambda nil (get-buffer "*scratch*"))
-    initial-major-mode 'org-mode
-    initial-scratch-message (concat (format-time-string "%Y-%m-%d")
- "
+     (setq 
+					     ;initial-buffer-choice (lambda nil (get-buffer "*dashboard*"))
+      initial-buffer-choice (lambda nil (get-buffer "*scratch*"))
+      initial-major-mode 'org-mode
+      initial-scratch-message (concat (format-time-string "%Y-%m-%d")
+				      "
 
- "))
+     "))
    #+END_SRC
 
 ** proced
    #+BEGIN_SRC emacs-lisp
-  (setq proced-auto-update-flag t
-		proced-auto-update-interval 2
-		proced-filter 'user)
+     (setq proced-auto-update-flag t
+	   proced-auto-update-interval 2
+	   proced-filter 'user)
    #+END_SRC
 
 ** browser
    #+BEGIN_SRC emacs-lisp
-  (setq browse-url-browser-function 'browse-url-firefox
-		browse-url-firefox-arguments '("-new-window")
-		browse-url-firefox-startup-arguments nil)
+     (setq browse-url-browser-function 'browse-url-firefox
+	   browse-url-firefox-arguments '("-new-window")
+	   browse-url-firefox-startup-arguments nil)
    #+END_SRC
 
 ** doc view
    #+BEGIN_SRC emacs-lisp
-  (setq doc-view-continuous t
-		doc-view-resolution 300)
+     (setq doc-view-continuous t
+	   doc-view-resolution 300)
    #+END_SRC
 
 ** file backup info
    #+BEGIN_SRC emacs-lisp
      (setq
-	backup-by-copying t      ; don't clobber symlinks
-	backup-directory-alist
-	 ;'(("." . (if (file-directory-p "/var/emacs/") "/var/emacs/" "/tmp/")))    ; don't litter my fs tree
-	 '(("." . "/tmp/"))    ; don't litter my fs tree
-	delete-old-versions t
-	kept-new-versions 6
-	kept-old-versions 2
-	version-control t)       ; use versioned backups
+      backup-by-copying t      ; don't clobber symlinks
+      backup-directory-alist
+					     ;'(("." . (if (file-directory-p "/var/emacs/") "/var/emacs/" "/tmp/")))    ; don't litter my fs tree
+      '(("." . "/tmp/"))    ; don't litter my fs tree
+      delete-old-versions t
+      kept-new-versions 6
+      kept-old-versions 2
+      version-control t)       ; use versioned backups
 
      (recentf-mode 1)
    #+END_SRC
 
 ** misc
    #+BEGIN_SRC emacs-lisp
-		 (global-set-key (kbd "<f6>")    #'calc)
-		 (global-set-key (kbd "<f7>")    #'calendar)
-		 (global-set-key (kbd "C-c C-c") #'compile)
-		 (global-set-key (kbd "C-c r")   #'revert-buffer)
+     (global-set-key (kbd "<f6>")    #'calc)
+     (global-set-key (kbd "<f7>")    #'calendar)
+     (global-set-key (kbd "C-c C-c") #'compile)
+     (global-set-key (kbd "C-c r")   #'revert-buffer)
 
+     (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
+	   async-bytecomp-package-mode t
+	   gdb-many-windows t
+	   large-file-warning-threshold 500000000
+	   send-mail-function 'smtpmail-send-it
+	   message-directory "~/.emacs.d/Mail/"
+					     ;tramp-histfile-override "/dev/null" nil (tramp)
+	   )
+     (add-to-list 'tramp-remote-path "/home/tsranso/bin")
 
-		 (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
-					 async-bytecomp-package-mode t
-					 gdb-many-windows t
-					 large-file-warning-threshold 500000000
-					 send-mail-function 'smtpmail-send-it
-					 message-directory "~/.emacs.d/Mail/"
-							 ;tramp-histfile-override "/dev/null" nil (tramp)
-					 )
    #+END_SRC
 
 * exwm
@@ -716,18 +717,18 @@
 		     ("s-p" . "nemo")
 		     ("s-d" . "discord")
 		     ("s-t" . "transmission-remote-gtk")
-		     ("s-s" . "slack")
+		     ("s-s" . "spotify")
 		     ("s-<tab>" . "google-chrome-stable")
 		     ("<C-M-escape>" . "gnome-system-monitor")
 		     ("s-m" . "pavucontrol")
-		     ("s-<down>" . "amixer sset Master 5%-")
-		     ("s-<up>" . "amixer set Master unmute; amixer sset Master 5%+")
+		     ("s-<down>" . "amixer -c 0 sset Master 5%-")
+		     ("s-<up>" . "amixer -c 0 set Master unmute; amixer -c 0 sset Master 5%+")
 		     ("<print>" . "scrot")
 		     ("<XF86MonBrightnessUp>" . "light -A 10")
 		     ("<XF86MonBrightnessDown>" . "light -U 10")
-		     ("<XF86AudioMute>"."amixer set Master toggle")
-		     ("<XF86AudioLowerVolume>" . "amixer sset Master 5%-")
-		     ("<XF86AudioRaiseVolume>" . "amixer set Master unmute; amixer sset Master 5%+")))
+		     ("<XF86AudioMute>"."amixer -c 0 set Master toggle")
+		     ("<XF86AudioLowerVolume>" . "amixer -c 0 sset Master 5%-")
+		     ("<XF86AudioRaiseVolume>" . "amixer -c 0 set Master unmute; amixer -c 0 sset Master 5%+")))
 	  (let ((f (lambda () (interactive)
 		     (save-window-excursion
 		       (start-process-shell-command "" nil (cdr k))))))
@@ -787,47 +788,49 @@
 ** Autostart programs
 
    I use this config across several machines, depending which machine and what network it's connected to I want different autostart applications.
-    #+BEGIN_SRC emacs-lisp :noweb yes
-      (when (running-on-hosts '("joseki"))
-	(start-process "urxvt daemon" nil "urxvtd" "-f" "-q" "-o")
-	(display-battery-mode t)
-	(start-process "bluetooth applet" nil "blueman-applet")
-	(start-process "" nil "xrdb" "-merge" "/home/tsranso/.config/urxvt/conf")
-	(start-process "syncthing" nil "syncthing" "-no-browser")
-	(start-process "wifi applet" nil "nm-applet")
-	(start-process "redshift" nil "redshift" "-l" "34.67:-82.84")
+   #+BEGIN_SRC emacs-lisp :noweb yes
+     (when (running-on-hosts '("joseki"))
+       (start-process "urxvt daemon" nil "urxvtd" "-f" "-q" "-o")
+       (display-battery-mode t)
+       (start-process "bluetooth applet" nil "blueman-applet")
+       (start-process "" nil "xrdb" "-merge" "/home/tsranso/.config/urxvt/conf")
+					     ;(start-process "syncthing" nil "syncthing" "-no-browser")
+       (start-process "wifi applet" nil "nm-applet")
+       (start-process "redshift" nil "redshift" "-l" "34.67:-82.84")
 
-	(when (running-on-wireless '("Torus Shaped Earth\n"))
-	  (start-process "discord" nil "discord")
-	  (start-process "transmission"
-			 nil "transmission-daemon")))
+       (when (running-on-wireless '("Torus Shaped Earth\n"))
+	 (start-process "discord" nil "discord")
+	 (start-process "spotify" nil "spotify")
+	 (start-process "transmission"
+			nil "transmission-daemon")))
 
-      (when (running-on-hosts '("tengen"))
-	(start-process "urxvt daemon" nil "urxvtd" "-f" "-q" "-o")
-	(start-process "syncthing" nil "syncthing" "-no-browser")
-	(start-process "discord" nil "discord")
-	(start-process "redshift" nil "redshift" "-l" "34.67:-82.84")
-	(start-process "transmission"
-		       nil "transmission-daemon"))
-
-
-      (when (running-on-hosts '("hoshi"))
-	(start-process "urxvt daemon" nil "urxvtd" "-f" "-q" "-o")
-	(start-process "bluetooth applet" nil "blueman-applet")
-	(start-process "redshift" nil "redshift" "-l" "34.67:-82.84"))
+     (when (running-on-hosts '("tengen"))
+       (start-process "urxvt daemon" nil "urxvtd" "-f" "-q" "-o")
+					     ;(start-process "syncthing" nil "syncthing" "-no-browser")
+       (start-process "discord" nil "discord")
+       (start-process "spotify" nil "spotify")
+       (start-process "redshift" nil "redshift" "-l" "34.67:-82.84")
+       (start-process "transmission"
+		      nil "transmission-daemon"))
 
 
-      (when (running-on-hosts '("joseki" "hoshi"))
-	(unless (file-exists-p "~/.config/mpd/pid")
-	  (start-process "music player daemon" nil "mpd")))
+     (when (running-on-hosts '("hoshi"))
+       (start-process "urxvt daemon" nil "urxvtd" "-f" "-q" "-o")
+       (start-process "bluetooth applet" nil "blueman-applet")
+       (start-process "redshift" nil "redshift" "-l" "34.67:-82.84"))
 
-      (when (not (running-on-hosts '("atari" "login001" "marcher" "tengen")))
-		 (start-process "xautolock" nil
-				"xautolock"
-				"-time 10"
-				"-locker lock.sh"))
 
-      (when (not (running-on-hosts '("login001" "marcher")))
-	(start-process "unclutter" nil "unclutter"))
-    #+END_SRC
+     (when (running-on-hosts '("joseki" "hoshi"))
+       (unless (file-exists-p "~/.config/mpd/pid")
+	 (start-process "music player daemon" nil "mpd")))
+
+     (when (not (running-on-hosts '("atari" "login001" "marcher" "tengen")))
+       (start-process "xautolock" nil
+		      "xautolock"
+		      "-time 10"
+		      "-locker lock.sh"))
+
+     (when (not (running-on-hosts '("login001" "marcher")))
+       (start-process "unclutter" nil "unclutter"))
+   #+END_SRC
 
