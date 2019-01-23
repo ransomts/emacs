@@ -13,3 +13,4 @@ lisp/config.el
 erc_log/*
 elpa/gnupg/pubring.gpg
 url/*
+**/epdfinfo

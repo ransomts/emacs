@@ -230,7 +230,7 @@
 	:config
 	(setq auto-package-update-prompt-before-update t
 	      auto-package-update-delete-old-versions t
-	      auto-package-update-interval 14)
+	      auto-package-update-interval 90)
 	(auto-package-update-maybe))
     #+END_SRC
 
