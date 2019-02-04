@@ -614,9 +614,8 @@
 
 ** browser
    #+BEGIN_SRC emacs-lisp
-     (setq browse-url-browser-function 'browse-url-firefox
-	   browse-url-firefox-arguments '("-new-window")
-	   browse-url-firefox-startup-arguments nil)
+     (setq browse-url-browser-function 'browse-url-chrome
+	   browse-url-chrome-arguments '("--new-window"))
    #+END_SRC
 
 ** doc view
@@ -657,7 +656,7 @@
 					     ;tramp-histfile-override "/dev/null" nil (tramp)
 	   )
      (add-to-list 'tramp-remote-path "/home/tsranso/bin")
-
+     (add-to-list 'tramp-remote-path "/home/tsranso/.local/bin")
    #+END_SRC
 
 * exwm
