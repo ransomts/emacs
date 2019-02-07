@@ -122,15 +122,8 @@
 		 :foreground "darkseagreen4"
 		 :background "darkseagreen2"
 		 :weight bold))
-	      org-todo-keywords '((sequence "TODO" "SOON" "DONE"))
-	      (add-to-list 'org-latex-classes
-			   '("IEEEtran"
-			     "\\documentclass[11pt]{IEEEtran}"
-			     ("\\section{%s}" . "\\section*{%s}")
-			     ("\\subsection{%s}" . "\\subsection*{%s}")
-			     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-			     ("\\paragraph{%s}" . "\\paragraph*{%s}")
-			     ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+	      org-todo-keywords '((sequence "TODO" "SOON" "DONE")))
+
 	:bind
 	(("C-c a" . #'org-agenda)
 	 ("C-c c" . #'org-capture)
@@ -139,6 +132,20 @@
 		("C-c C-r" . #'org-archive-subtree))))
 	:hook visual-line-mode)
     #+END_SRC
+
+**** IEEE latex class
+
+#+BEGIN_SRC emacs-lisp
+(with-eval-after-load 'ox-latex
+	(add-to-list 'org-latex-classes
+		     '("IEEEtran"
+		       "\\documentclass[11pt]{IEEEtran}"
+		       ("\\section{%s}" . "\\section*{%s}")
+		       ("\\subsection{%s}" . "\\subsection*{%s}")
+		       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+		       ("\\paragraph{%s}" . "\\paragraph*{%s}")
+		       ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+#+END_SRC
 **** async src blocks
      #+BEGIN_SRC emacs-lisp
        (use-package ob-async
@@ -729,8 +736,8 @@
 		     ("s-<tab>" . "google-chrome-stable")
 		     ("<C-M-escape>" . "gnome-system-monitor")
 		     ("s-m" . "pavucontrol")
-		     ("s-<down>" . "amixer -c 0 sset Master 5%-")
-		     ("s-<up>" . "amixer -c 0 set Master unmute; amixer -c 0 sset Master 5%+")
+		     ("s-<down>" . "amixer sset Master 5%-")
+		     ("s-<up>" . "amixer set Master unmute; amixer sset Master 5%+")
 		     ("<print>" . "scrot")
 		     ("<XF86MonBrightnessUp>" . "light -A 10")
 		     ("<XF86MonBrightnessDown>" . "light -U 10")
