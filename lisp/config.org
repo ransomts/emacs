@@ -728,6 +728,7 @@
 					     (exwm-input--fake-key 26)))
 
 	(dolist (k '(
+		     ("s-," . "alternate-screen")
 		     ("s-<return>" . "urxvtc")
 		     ("s-p" . "nemo")
 		     ("s-d" . "discord")
