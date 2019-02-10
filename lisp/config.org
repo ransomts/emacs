@@ -841,3 +841,12 @@
        (start-process "unclutter" nil "unclutter"))
    #+END_SRC
 
+** system monitoring
+
+#+BEGIN_SRC emacs-lisp
+  (use-package symon
+    :ensure t
+    :bind
+    ("s-h" . symon-mode))
+#+END_SRC
+
