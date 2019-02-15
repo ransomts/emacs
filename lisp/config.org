@@ -331,7 +331,7 @@
 	   :bind (("<f8>" . #'helm-dictionary))
 	   :config
 	   (setq
-	    helm-dictionary-browser-function 'browse-url-firefox
+	    helm-dictionary-browser-function 'browse-url-chrome
 	    helm-dictionary-database "/usr/share/dict/words"
 	    helm-dictionary-online-dicts
 	    '(("wiktionary" . "http://en.wiktionary.org/wiki/%s")
