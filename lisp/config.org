@@ -686,7 +686,7 @@
       (shell-command "/usr/local/bin/lock.sh"))
 
     (when (and (>= (string-to-number emacs-version) 24.4)
-	       (not (running-on-hosts '("login001" "marcher"))))
+	       (not (running-on-hosts '("login001" "marcher" "atari"))))
       (use-package xelb
 	:if (string= "exwm" (getenv "DESKTOP_SESSION"))
 	:ensure t)
