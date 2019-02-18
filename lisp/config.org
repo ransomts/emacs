@@ -831,13 +831,13 @@
        (start-process "urxvt daemon" nil "urxvtd" "-f" "-q" "-o")
        (start-process "bluetooth applet" nil "blueman-applet"))
 
-     (when (not (running-on-hosts '("atari" "login001" "marcher" "tengen")))
+     (when (not (running-on-hosts '("atari" "login001" "marcher" "tengen" "ivy2")))
        (start-process "xautolock" nil
 		      "xautolock"
 		      "-time 10"
 		      "-locker lock.sh"))
 
-     (when (not (running-on-hosts '("login001" "marcher")))
+     (when (not (running-on-hosts '("login001" "marcher" "ivy2")))
        (start-process "unclutter" nil "unclutter"))
    #+END_SRC
 
