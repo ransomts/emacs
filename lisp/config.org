@@ -697,7 +697,7 @@
       (shell-command "/usr/local/bin/lock.sh"))
 
     (when (and (>= (string-to-number emacs-version) 24.4)
-	       (not (running-on-hosts '("login001" "marcher"))))
+	       (not (running-on-hosts '("login001" "marcher" "atari"))))
       (use-package xelb
 	:if (string= "exwm" (getenv "DESKTOP_SESSION"))
 	:ensure t)
@@ -739,6 +739,7 @@
 					     (exwm-input--fake-key 26)))
 
 	(dolist (k '(
+		     ("s-," . "alternate-screen")
 		     ("s-<return>" . "urxvtc")
 		     ("s-p" . "nemo")
 		     ("s-d" . "discord")
@@ -816,48 +817,47 @@
    I use this config across several machines, depending which machine and what network it's connected to I want different autostart applications.
    #+BEGIN_SRC emacs-lisp :noweb yes
      (when (running-on-hosts '("joseki"))
-       (start-process "urxvt daemon" nil "urxvtd" "-f" "-q" "-o")
        (display-battery-mode t)
-       (start-process "bluetooth applet" nil "blueman-applet")
        (start-process "" nil "xrdb" "-merge" "/home/tsranso/.config/urxvt/conf")
-					     ;(start-process "syncthing" nil "syncthing" "-no-browser")
        (start-process "wifi applet" nil "nm-applet")
-       (start-process "redshift" nil "redshift" "-l" "34.67:-82.84")
 
        (when (running-on-wireless '("Torus Shaped Earth\n"))
 	 (start-process "discord" nil "discord")
 	 (start-process "spotify" nil "spotify")
-	 (start-process "transmission"
-			nil "transmission-daemon")))
+	 (start-process "transmission" nil "transmission-daemon")))
 
      (when (running-on-hosts '("tengen"))
-       (start-process "urxvt daemon" nil "urxvtd" "-f" "-q" "-o")
-					     ;(start-process "syncthing" nil "syncthing" "-no-browser")
-       (start-process "discord" nil "discord")
-       (start-process "spotify" nil "spotify")
-       (start-process "redshift" nil "redshift" "-l" "34.67:-82.84")
-       (start-process "transmission"
-		      nil "transmission-daemon"))
-
-
-     (when (running-on-hosts '("hoshi"))
-       (start-process "urxvt daemon" nil "urxvtd" "-f" "-q" "-o")
-       (start-process "bluetooth applet" nil "blueman-applet")
-       (start-process "redshift" nil "redshift" "-l" "34.67:-82.84")
-       (start-process "spotify" nil "spotify"))
-
+       (start-process "transmission" nil "transmission-daemon"))
 
      (when (running-on-hosts '("joseki" "hoshi"))
        (unless (file-exists-p "~/.config/mpd/pid")
 	 (start-process "music player daemon" nil "mpd")))
 
-     (when (not (running-on-hosts '("atari" "login001" "marcher" "tengen")))
+     (when (running-on-hosts '("hoshi" "tengen"))
+       (start-process "discord" nil "discord")
+       (start-process "spotify" nil "spotify"))
+
+     (when (running-on-hosts '("joseki" "hoshi" "tengen"))
+       (start-process "redshift" nil "redshift" "-l" "34.67:-82.84")
+       (start-process "urxvt daemon" nil "urxvtd" "-f" "-q" "-o")
+       (start-process "bluetooth applet" nil "blueman-applet"))
+
+     (when (not (running-on-hosts '("atari" "login001" "marcher" "tengen" "ivy2")))
        (start-process "xautolock" nil
 		      "xautolock"
 		      "-time 10"
 		      "-locker lock.sh"))
 
-     (when (not (running-on-hosts '("login001" "marcher")))
+     (when (not (running-on-hosts '("login001" "marcher" "ivy2")))
        (start-process "unclutter" nil "unclutter"))
    #+END_SRC
+
+** system monitoring
+
+#+BEGIN_SRC emacs-lisp
+  (use-package symon
+    :ensure t
+    :bind
+    ("s-h" . symon-mode))
+#+END_SRC
 
