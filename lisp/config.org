@@ -40,7 +40,18 @@
 	:config
 	(setq
 	 gnus-always-read-dribble-file t
-	 gnus-directory "~/.emacs.d/gnus"))
+	 gnus-directory "~/.emacs.d/gnus")
+	(setq-default
+	 gnus-summary-line-format "%U%R%z %(%&user-date; %[%-23,23f%]  %B%s%)\n"
+	 gnus-user-date-format-alist '((t . "%m-%d %H:%M"))
+	 gnus-summary-thread-gathering-function 'gnus-gather-threads-by-references
+	 gnus-thread-sort-functions '(gnus-thread-sort-by-date)
+	 gnus-sum-thread-tree-false-root ""
+	 gnus-sum-thread-tree-indent " "
+	 gnus-sum-thread-tree-leaf-with-other "├► "
+	 gnus-sum-thread-tree-root ""
+	 gnus-sum-thread-tree-single-leaf "╰► "
+	 gnus-sum-thread-tree-vertical "│"))
       (add-hook 'gnus-group-mode-hook 'gnus-topic-mode)
     #+END_SRC
 
@@ -240,6 +251,8 @@
 	   " ")))
       (setq eshell-prompt-function 'my-eshell-prompt)
       (setq eshell-highlight-prompt nil)
+      (setq eshell-cmpl-ignore-case t)
+      (setq eshell-highlight-prompt nil)
     #+END_SRC
 ** External
 
@@ -334,7 +347,7 @@
 	   :bind (("<f8>" . #'helm-dictionary))
 	   :config
 	   (setq
-	    helm-dictionary-browser-function 'browse-url-firefox
+	    helm-dictionary-browser-function 'browse-url-chrome
 	    helm-dictionary-database "/usr/share/dict/words"
 	    helm-dictionary-online-dicts
 	    '(("wiktionary" . "http://en.wiktionary.org/wiki/%s")
@@ -365,6 +378,15 @@
 	(pdf-tools-install)
 	(setq pdf-misc-print-programm "/usr/bin/gtklp"))
     #+END_SRC
+
+*** epub
+#+BEGIN_SRC emacs-lisp
+      (use-package nov
+	:ensure t
+	:unless (or (string= nil (getenv "DESKTOP_SESSION"))
+		    (running-on-hosts '("login001")))
+	:magic ("%EPUB" . nov-mode))
+#+END_SRC
 
 *** TODO dashboard
 
