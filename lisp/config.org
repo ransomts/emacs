@@ -423,6 +423,19 @@
 	     transmission-peers-mode))))
     #+END_SRC
 
+*** spotify
+    This just controls spotify, searching and account specific stuff still needs done through the desktop application.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package spotify :ensure t
+    :bind (("C-c s c" . #'spotify-current)
+	   ("C-c s <space>" . #'spotify-playpause)
+	   ("C-c s n" . #'spotify-next)
+	   ("C-c s p" . #'spotify-previous))
+    :config
+    (spotify-enable-song-notifications))
+#+END_SRC
+
 *** emms
     #+BEGIN_SRC emacs-lisp
       (use-package emms
