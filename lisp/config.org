@@ -441,6 +441,18 @@
     (spotify-enable-song-notifications))
 #+END_SRC
 
+*** hackernews
+
+#+BEGIN_SRC emacs-lisp
+  (use-package hackernews :ensure t)
+#+END_SRC
+
+*** stack overflow
+
+#+BEGIN_SRC emacs-lisp
+  (use-package sx :ensure t)
+#+END_SRC
+
 *** emms
     #+BEGIN_SRC emacs-lisp
       (use-package emms
