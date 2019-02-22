@@ -444,13 +444,17 @@
 *** hackernews
 
 #+BEGIN_SRC emacs-lisp
-  (use-package hackernews :ensure t)
+  (use-package hackernews
+    :ensure t
+    :bind ("C-c h" . #'hackernews))
 #+END_SRC
 
 *** stack overflow
 
 #+BEGIN_SRC emacs-lisp
-  (use-package sx :ensure t)
+  (use-package sx
+    :ensure t
+    :bind ("C-c x" . #'sx-tab-all-questions))
 #+END_SRC
 
 *** emms
