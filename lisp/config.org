@@ -87,6 +87,9 @@
 	   (sql . t)
 	   (sqlite . t)))
 
+	(require 'org-crypt)
+	(org-crypt-use-before-save-magic)
+
 	(setq diary-file "~/.emacs.d/org/schedule.org"
 	      org-agenda-files
 	      '("~/.emacs.d/org/scratch.org"
@@ -138,6 +141,8 @@
 	:bind
 	(("C-c a" . #'org-agenda)
 	 ("C-c c" . #'org-capture)
+	 ("C-c 1" . #'org-encrypt-entry)
+	 ("C-c 2" . #'org-decrypt-entry)
 	 (:map org-mode-map
 	       (("C-c r" . #'org-archive-subtree)
 		("C-c C-r" . #'org-archive-subtree))))
