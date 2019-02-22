@@ -713,6 +713,7 @@
      (global-set-key (kbd "C-c C-c") #'compile)
      (global-set-key (kbd "C-c r")   #'revert-buffer)
      (global-set-key (kbd "\C-z")    #'bury-buffer)
+     (global-set-key (kbd "\C-c v")  #'visual-line-mode)
 
      (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
 	   async-bytecomp-package-mode t
