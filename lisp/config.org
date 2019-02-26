@@ -37,10 +37,10 @@
     #+BEGIN_SRC emacs-lisp
       (use-package gnus
 	:bind ("C-M-g" . #'gnus)
+	:custom
+	 (gnus-always-read-dribble-file t)
+	 (gnus-directory "~/.emacs.d/gnus")
 	:config
-	(setq
-	 gnus-always-read-dribble-file t
-	 gnus-directory "~/.emacs.d/gnus")
 	(setq-default
 	 gnus-summary-line-format "%U%R%z %(%&user-date; %[%-23,23f%]  %B%s%)\n"
 	 gnus-user-date-format-alist '((t . "%m-%d %H:%M"))
@@ -181,26 +181,25 @@
     IRC is a really valuable resource that is being used less and less. Having people to answer random technical questions is so nice when working on something and nobody around can help.
     #+BEGIN_SRC emacs-lisp
       (use-package erc
-	:config
-	(setq
-	 erc-autojoin-channels-alist (quote (("freenode.net")))
-	 erc-autojoin-mode nil
-	 erc-autojoin-timing (quote ident)
-	 erc-hide-list (quote ("JOIN" "PART" "NICK" "QUIT"))
-	 erc-hide-timestamps t
-	 erc-list-mode t
-	 erc-log-channels-directory "~/.emacs.d/erc_log"
-	 erc-log-mode t
-	 erc-log-write-after-insert t
-	 erc-log-write-after-send t
-	 erc-modules
+	:custom
+	 (erc-autojoin-channels-alist (quote (("freenode.net"))))
+	 (erc-autojoin-mode nil)
+	 (erc-autojoin-timing (quote ident))
+	 (erc-hide-list (quote ("JOIN" "PART" "NICK" "QUIT")))
+	 (erc-hide-timestamps t)
+	 (erc-list-mode t)
+	 (erc-log-channels-directory "~/.emacs.d/erc_log")
+	 (erc-log-mode t)
+	 (erc-log-write-after-insert t)
+	 (erc-log-write-after-send t)
+	 (erc-modules
 	 '(autojoin button completion dcc fill irccontrols keep-place
 		    list log match menu move-to-prompt netsplit networks
 		    noncommands notifications readonly ring services sound
-		    stamp track)
-	 erc-nick "tinhatcat"
-	 erc-prompt "<tinhatcat>"
-	 erc-sound-mode t))
+		    stamp track))
+	 (erc-nick "tinhatcat")
+	 (erc-prompt "<tinhatcat>")
+	 (erc-sound-mode t))
 
       (use-package erc-twitch
 	:disabled
@@ -216,13 +215,12 @@
 	:bind (:map dired-mode-map
 		    (("M-h" . #'dired-omit-mode)
 		     ("u" . #'dired-up-directory)))
-	:config
-	(setq
-	 dired-listing-switches "-alh --no-group"
-	 dired-no-confirm '(byte-compile copy delete)
-	 dired-omit-files "^\\..*~?$"
-	 dired-recursive-copies 'always
-	 dired-recursive-deletes 'always))
+	:custom
+	 (dired-listing-switches "-alh --no-group")
+	 (dired-no-confirm '(byte-compile copy delete))
+	 (dired-omit-files "^\\..*~?$")
+	 (dired-recursive-copies 'always)
+	 (dired-recursive-deletes 'always))
     #+END_SRC
 
 *** eshell
@@ -261,10 +259,11 @@
     #+BEGIN_SRC emacs-lisp
       (use-package auto-package-update
 	:ensure t
+	:custom
+	(auto-package-update-prompt-before-update t)
+	(auto-package-update-delete-old-versions t)
+	(auto-package-update-interval 90)
 	:config
-	(setq auto-package-update-prompt-before-update t
-	      auto-package-update-delete-old-versions t
-	      auto-package-update-interval 90)
 	(auto-package-update-maybe))
     #+END_SRC
 
@@ -291,10 +290,10 @@
       (use-package theme-changer
 	:unless (running-on-hosts '("login001"))
 	:ensure t
-	:init
-	(setq calendar-latitude 34.67
-	      calendar-location-name "Clemson, SC"
-	      calendar-longitude -82.84)
+	:custom
+	(calendar-latitude 34.67)
+	(calendar-location-name "Clemson, SC")
+	(calendar-longitude -82.84)
 	:config (change-theme 'material-light 'material))
     #+END_SRC
 
@@ -308,7 +307,13 @@
 	  :bind (("M-x" . #'helm-M-x)
 		 ("C-x b" . #'helm-buffers-list)
 		 ("C-x f" . #'helm-find-files)
-		 ("C-x C-f" . #'helm-find-files))
+		 ("C-x C-f" . #'helm-find-files)
+		 ("M-y" . #'helm-show-kill-ring)
+		 ("C-c m" . #'helm-man-woman)
+		 ("C-c i" . #'helm-info-woman)
+		 ("C-c l" . #'helm-locate)
+		 ("C-c e" . #'helm-regexp)
+		 ("C-c g" . #'helm-google-suggest))
 	  :config
 	  (helm-mode t)))
     #+END_SRC
@@ -336,9 +341,11 @@
 	   :bind (("<f5>" . #'helm-bbdb))))
      #+END_SRC
 
-**** TODO dictionary
+**** dictionary
 
      Every computer used for writing should have a dictionary available by keystroke.
+
+     Also remember that =C-w= in a helm session inserts the word at point.
      #+BEGIN_SRC emacs-lisp
        (when (>= (string-to-number emacs-version) 24.4)
 	 (use-package helm-dictionary
@@ -346,15 +353,14 @@
 	   :requires helm
 	   :ensure t
 	   :bind (("<f8>" . #'helm-dictionary))
-	   :config
-	   (setq
-	    helm-dictionary-browser-function 'browse-url-chrome
-	    helm-dictionary-database "/usr/share/dict/words"
-	    helm-dictionary-online-dicts
+	   :custom
+	    (helm-dictionary-browser-function 'browse-url-chrome)
+	    (helm-dictionary-database "/usr/share/dict/words")
+	    (helm-dictionary-online-dicts
 	    '(("wiktionary" . "http://en.wiktionary.org/wiki/%s")
 	      ("Oxford English Dictionary" . "www.oed.com/search?searchType=dictionary&q=%s")
-	      ("Merriam-Webster" . "https://www.merriam-webster.com/dictionary/%s"))
-	    helm-dictionary-use-full-frame nil)))
+	      ("Merriam-Webster" . "https://www.merriam-webster.com/dictionary/%s")))
+	    (helm-dictionary-use-full-frame nil)))
      #+END_SRC
 
 *** magit
@@ -394,24 +400,16 @@
     This dashboard pairs really well with exwm but has been a bit of a pain to set up.
     For now I'm still choosing an org-mode scratch buffer but this is a todo.
     #+BEGIN_SRC emacs-lisp
-      (use-package projectile
-	:disabled
-	:if (>= (string-to-number emacs-version) 24.4)
-	:ensure t)
-      (use-package page-break-lines
-	:disabled
-	:if (>= (string-to-number emacs-version) 24.4)
-	:ensure t)
       (use-package dashboard
 	:ensure t
-	; :after (projectile page-line-breaks)
 	:config
 	(dashboard-setup-startup-hook)
-	(setq dashboard-items '((recents  . 5)
-				;(bookmarks . 5)
-				;(projects . 5)
-				(agenda . 5)
-				(registers . 5))))
+	:custom
+	(dashboard-items '((recents  . 5)
+			   ;; (bookmarks . 5)
+			   ;; (projects . 5)
+			   (agenda . 5)
+			   (registers . 5))))
     #+END_SRC
 
 *** transmission
@@ -420,9 +418,8 @@
 	(use-package transmission
 	  :ensure t
 	  :if (running-on-hosts '("joseki" "tengen"))
-	  :config
-	  (setq
-	   transmission-refresh-modes
+	  :custom
+	  (transmission-refresh-modes
 	   '(transmission-mode
 	     transmission-files-mode
 	     transmission-info-mode
@@ -463,22 +460,21 @@
       (use-package emms
 	:if (running-on-hosts '("joseki" "tengen"))
 	:ensure t
-	:config
-	(setq
-	 emms-cache-get-function 'emms-cache-get
-	 emms-cache-modified-function 'emms-cache-dirty
-	 emms-cache-set-function 'emms-cache-set
-	 emms-info-functions '(emms-info-mediainfo
+	:custom
+	(emms-cache-get-function 'emms-cache-get)
+	(emms-cache-modified-function 'emms-cache-dirty)
+	(emms-cache-set-function 'emms-cache-set)
+	(emms-info-functions '(emms-info-mediainfo
 			       emms-info-mpd emms-info-cueinfo
-			       emms-info-ogginfo)
-	 emms-mode-line-cycle t
-	 emms-mode-line-mode-line-function 'emms-mode-line-cycle-mode-line-function
-	 emms-player-mpd-music-directory "/home/tsranso/Music"
-	 emms-player-mplayer-command-name "mpv"
-	 emms-player-next-function 'emms-score-next-noerror
-	 emms-playlist-default-major-mode 'emms-playlist-mode
-	 emms-playlist-update-track-function 'emms-playlist-mode-update-track-function
-	 emms-track-description-function 'emms-info-track-description))
+			       emms-info-ogginfo))
+	(emms-mode-line-cycle t)
+	(emms-mode-line-mode-line-function 'emms-mode-line-cycle-mode-line-function)
+	(emms-player-mpd-music-directory "/home/tsranso/Music")
+	(emms-player-mplayer-command-name "mpv")
+	(emms-player-next-function 'emms-score-next-noerror)
+	(emms-playlist-default-major-mode 'emms-playlist-mode)
+	(emms-playlist-update-track-function 'emms-playlist-mode-update-track-function)
+	(emms-track-description-function 'emms-info-track-description))
     #+END_SRC
 
 *** bbdb
@@ -486,9 +482,8 @@
     #+BEGIN_SRC emacs-lisp
       (use-package bbdb
 	:ensure t
-	:config
-	(setq
-	 bbdb-dial-function
+	:custom
+	(bbdb-dial-function
 	 (lambda
 	   (phone-number)
 	   (kdeconnect-send-sms
@@ -503,29 +498,18 @@
     #+BEGIN_SRC emacs-lisp
       (use-package slime
 	:ensure t
-	:config
-	(setq inferior-lisp-program "sbcl")
-	slime-contribs '(slime-fancy))
-    #+END_SRC
-
-*** fill column indicator
-    #+BEGIN_SRC emacs-lisp
-      (when (>= (string-to-number emacs-version) 25)
-	(use-package fill-column-indicator
-	  :ensure t
-	  :config
-	  (setq
-	   fci-rule-column 80
-	   fill-column 80)))
+	:custom
+	(inferior-lisp-program "sbcl")
+	(slime-contribs '(slime-fancy)))
     #+END_SRC
 
 *** smart mode line
     #+BEGIN_SRC emacs-lisp
       (use-package smart-mode-line
 	:ensure t
-	:init 
-	(setq sml/theme 'respectful
-	      sml/no-confirm-load-theme t)
+	:custom
+	(sml/theme 'respectful)
+	(sml/no-confirm-load-theme t)
 	:config
 	(sml/setup)
 	(setq sml/name-width 30))
@@ -719,6 +703,7 @@
      (global-set-key (kbd "C-c r")   #'revert-buffer)
      (global-set-key (kbd "\C-z")    #'bury-buffer)
      (global-set-key (kbd "\C-c v")  #'visual-line-mode)
+     (global-set-key (kbd "\C-c t")  #'toggle-truncate-lines)
 
      (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
 	   async-bytecomp-package-mode t
