@@ -253,6 +253,7 @@
       (setq eshell-highlight-prompt nil)
       (setq eshell-cmpl-ignore-case t)
       (setq eshell-highlight-prompt nil)
+      ;(add-to-list 'eshell-visual-commands "rtv")
     #+END_SRC
 ** External
 
