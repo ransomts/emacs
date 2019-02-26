@@ -306,7 +306,13 @@
 	  :bind (("M-x" . #'helm-M-x)
 		 ("C-x b" . #'helm-buffers-list)
 		 ("C-x f" . #'helm-find-files)
-		 ("C-x C-f" . #'helm-find-files))
+		 ("C-x C-f" . #'helm-find-files)
+		 ("M-y" . #'helm-show-kill-ring)
+		 ("C-c m" . #'helm-man-woman)
+		 ("C-c i" . #'helm-info-woman)
+		 ("C-c l" . #'helm-locate)
+		 ("C-c e" . #'helm-regexp)
+		 ("C-c g" . #'helm-google-suggest))
 	  :config
 	  (helm-mode t)))
     #+END_SRC
@@ -334,9 +340,11 @@
 	   :bind (("<f5>" . #'helm-bbdb))))
      #+END_SRC
 
-**** TODO dictionary
+**** dictionary
 
      Every computer used for writing should have a dictionary available by keystroke.
+
+     Also remember that =C-w= in a helm session inserts the word at point.
      #+BEGIN_SRC emacs-lisp
        (when (>= (string-to-number emacs-version) 24.4)
 	 (use-package helm-dictionary
