@@ -149,6 +149,16 @@
 	:hook visual-line-mode)
     #+END_SRC
 
+**** org exports
+#+BEGIN_SRC emacs-lisp
+  (use-package ox-hugo
+    :ensure t
+    :after ox)
+
+  (use-package ox-beamer
+    :after ox)
+#+END_SRC
+
 **** IEEE latex class
 
      #+BEGIN_SRC emacs-lisp
