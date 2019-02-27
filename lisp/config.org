@@ -151,7 +151,7 @@
 
 **** IEEE latex class
 
-#+BEGIN_SRC emacs-lisp
+     #+BEGIN_SRC emacs-lisp
 (with-eval-after-load 'ox-latex
 	(add-to-list 'org-latex-classes
 		     '("IEEEtran"
@@ -161,7 +161,7 @@
 		       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
 		       ("\\paragraph{%s}" . "\\paragraph*{%s}")
 		       ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
-#+END_SRC
+     #+END_SRC
 **** async src blocks
      #+BEGIN_SRC emacs-lisp
        (use-package ob-async
@@ -225,7 +225,6 @@
 
 *** eshell
     #+BEGIN_SRC emacs-lisp
-      (global-set-key (kbd "C-x e")   #'eshell)
 
       (defmacro with-face (str &rest properties)
 	`(propertize ,str 'face (list ,@properties)))
@@ -247,12 +246,19 @@
 	       (with-face " #" :foreground "red")
 	     " $")
 	   " ")))
-      (setq eshell-prompt-function 'my-eshell-prompt)
-      (setq eshell-highlight-prompt nil)
-      (setq eshell-cmpl-ignore-case t)
-      (setq eshell-highlight-prompt nil)
-      ;(add-to-list 'eshell-visual-commands "rtv")
+
+      (use-package eshell
+	:bind ("C-x e" . #'eshell)
+	:custom
+	(eshell-prompt-function 'my-eshell-prompt)
+	(eshell-highlight-prompt nil)
+	(eshell-cmpl-ignore-case t)
+	(eshell-highlight-prompt nil)
+	(eshell-destroy-buffer-when-process-dies t)
+	(eshell-visual-commands
+	 '("vi" "vim" "screen" "top" "htop" "less" "more" "rtv")))
     #+END_SRC
+
 ** External
 
 *** Package updater
@@ -304,13 +310,12 @@
       (when (>= (string-to-number emacs-version) 24.4)
 	(use-package helm
 	  :ensure t
-	  :bind (("M-x" . #'helm-M-x)
+	  :bind (("M-x"   . #'helm-M-x)
 		 ("C-x b" . #'helm-buffers-list)
 		 ("C-x f" . #'helm-find-files)
 		 ("C-x C-f" . #'helm-find-files)
-		 ("M-y" . #'helm-show-kill-ring)
+		 ("M-y"   . #'helm-show-kill-ring)
 		 ("C-c m" . #'helm-man-woman)
-		 ("C-c i" . #'helm-info-woman)
 		 ("C-c l" . #'helm-locate)
 		 ("C-c e" . #'helm-regexp)
 		 ("C-c g" . #'helm-google-suggest))
@@ -387,13 +392,13 @@
     #+END_SRC
 
 *** epub
-#+BEGIN_SRC emacs-lisp
+    #+BEGIN_SRC emacs-lisp
       (use-package nov
 	:ensure t
 	:unless (or (string= nil (getenv "DESKTOP_SESSION"))
 		    (running-on-hosts '("login001")))
 	:magic ("%EPUB" . nov-mode))
-#+END_SRC
+    #+END_SRC
 
 *** TODO dashboard
 
@@ -429,7 +434,7 @@
 *** spotify
     This just controls spotify, searching and account specific stuff still needs done through the desktop application.
 
-#+BEGIN_SRC emacs-lisp
+    #+BEGIN_SRC emacs-lisp
   (use-package spotify :ensure t
     :bind (("C-c s c" . #'spotify-current)
 	   ("C-c s SPC" . #'spotify-playpause)
@@ -437,23 +442,23 @@
 	   ("C-c s p" . #'spotify-previous))
     :config
     (spotify-enable-song-notifications))
-#+END_SRC
+    #+END_SRC
 
 *** hackernews
 
-#+BEGIN_SRC emacs-lisp
+    #+BEGIN_SRC emacs-lisp
   (use-package hackernews
     :ensure t
     :bind ("C-c h" . #'hackernews))
-#+END_SRC
+    #+END_SRC
 
 *** stack overflow
 
-#+BEGIN_SRC emacs-lisp
+    #+BEGIN_SRC emacs-lisp
   (use-package sx
     :ensure t
     :bind ("C-c x" . #'sx-tab-all-questions))
-#+END_SRC
+    #+END_SRC
 
 *** emms
     #+BEGIN_SRC emacs-lisp
@@ -886,10 +891,10 @@
 
 ** system monitoring
 
-#+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
   (use-package symon
     :ensure t
     :bind
     ("s-h" . symon-mode))
-#+END_SRC
+   #+END_SRC
 
