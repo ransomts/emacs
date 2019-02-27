@@ -172,6 +172,7 @@
 		       ("\\paragraph{%s}" . "\\paragraph*{%s}")
 		       ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
      #+END_SRC
+
 **** async src blocks
      #+BEGIN_SRC emacs-lisp
        (use-package ob-async
