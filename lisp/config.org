@@ -11,11 +11,12 @@
   Just a couple of functions to help sort what machine and network the config is being loaded on. So long as the emacs version is >24 I think this should be sufficient to use filter packages and settings between setups.
   #+BEGIN_SRC emacs-lisp
     (defun running-on-hosts (hosts)
-      (member
+      (member*
        (car (split-string ; split the hostname on '.' for complex hostnames
 	     (car (split-string ; remove trailing newline from `hostname`
 		   (shell-command-to-string "hostname") "\n")) "\\."))
-       hosts))
+       hosts
+       :test '(lambda (x y) (booleanp (string-match x y)))))
 
     (defun running-on-wireless (essids)
       (member (shell-command-to-string "iwgetid --raw") essids))
@@ -890,13 +891,13 @@
        (start-process "urxvt daemon" nil "urxvtd" "-f" "-q" "-o")
        (start-process "bluetooth applet" nil "blueman-applet"))
 
-     (when (not (running-on-hosts '("atari" "login001" "marcher" "tengen" "ivy2")))
+     (when (not (running-on-hosts '("atari" "login*" "marcher" "tengen" "ivy*" "node*")))
        (start-process "xautolock" nil
 		      "xautolock"
 		      "-time 10"
 		      "-locker lock.sh"))
 
-     (when (not (running-on-hosts '("login001" "marcher" "ivy2")))
+     (when (not (running-on-hosts '("login*" "marcher" "ivy*" "node*")))
        (start-process "unclutter" nil "unclutter"))
    #+END_SRC
 
