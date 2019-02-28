@@ -423,6 +423,7 @@
     #+BEGIN_SRC emacs-lisp
       (use-package dashboard
 	:ensure t
+	:if (getenv "DESKTOP_SESSION")
 	:config
 	(dashboard-setup-startup-hook)
 	:custom
