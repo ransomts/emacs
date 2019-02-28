@@ -16,7 +16,7 @@
 	     (car (split-string ; remove trailing newline from `hostname`
 		   (shell-command-to-string "hostname") "\n")) "\\."))
        hosts
-       :test '(lambda (x y) (booleanp (string-match x y)))))
+       :test '(lambda (x y) (string-match x y))))
 
     (defun running-on-wireless (essids)
       (member (shell-command-to-string "iwgetid --raw") essids))
