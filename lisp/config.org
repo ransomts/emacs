@@ -93,10 +93,8 @@
 
 	(setq diary-file "~/.emacs.d/org/schedule.org"
 	      org-agenda-files
-	      '("~/.emacs.d/org/scratch.org"
-		"~/.emacs.d/org/research.org"
-		"~/.emacs.d/org/schedule.org"
-		"~/.emacs.d/org/todo.org")
+	      (directory-files (concat user-emacs-directory "org") nil
+	      "\\(?:\\(?:research\\|sc\\(?:hedule\\|ratch\\)\\|todo\\)\\.org\\)")
 	      org-agenda-use-time-grid nil
 	      org-archive-location "~/.emacs.d/org/archive.org::* From %s"
 	      org-capture-after-finalize-hook nil
