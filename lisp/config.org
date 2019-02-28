@@ -22,6 +22,13 @@
       (member (shell-command-to-string "iwgetid --raw") essids))
   #+END_SRC
 
+  I use syncthing to move some of the 'live' files emacs uses between machines. If I'm on a machine that hasn't had these folders made, create them.
+  #+BEGIN_SRC emacs-lisp
+    (mapc (lambda (dir) (make-directory (concat user-emacs-directory dir) t))	  '("org" "gnus" ".sx" "hackernews"))
+
+
+  #+END_SRC
+
   One last bootstrap, gotta load up use-package for good load times. This also adds any directories that might not be available through the usual methods like dired+.
   #+BEGIN_SRC emacs-lisp
     (let ((default-directory  "~/.emacs.d/packages/"))
@@ -446,6 +453,7 @@
 
     #+BEGIN_SRC emacs-lisp
   (use-package spotify :ensure t
+    :if (running-on-hosts '("tengen" "hoshi" "atari" "joseki"))
     :bind (("C-c s c" . #'spotify-current)
 	   ("C-c s SPC" . #'spotify-playpause)
 	   ("C-c s n" . #'spotify-next)
