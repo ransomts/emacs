@@ -70,7 +70,7 @@
   :group 'bindings)
 
 (defcustom transient-show-popup t
-  "Whether to show the current transient in the echo area.
+  "Whether to show the current transient in a popup buffer.
 
 If t, then show the popup as soon as a transient command is
 invoked.  If nil, then do not show the popup unless the user
@@ -84,7 +84,7 @@ or when the user explicitly requests it."
                  (number :tag "after delay" 1)))
 
 (defcustom transient-show-common-commands nil
-  "Whether to show common transient commands in the echo area.
+  "Whether to show common transient suffixes in the popup buffer.
 
 These commands are always shown after typing the prefix key
 \"C-x\" when a transient command is active.  To toggle the value
@@ -99,7 +99,7 @@ of this variable use \"C-x t\" when a transient is active."
 This only affects infix arguments that represent command-line
 arguments.  When this option is non-nil, then the key binding
 for infix argument are highlighted when only a long argument
-(e.g. \"--verbose\") is specified but no shor-thand (e.g \"-v\").
+\(e.g. \"--verbose\") is specified but no shor-thand (e.g \"-v\").
 In the rare case that a short-hand is specified but does not
 match the key binding, then it is highlighed differently.
 
@@ -494,8 +494,8 @@ argument supported by the constructor of that class.  The
 explicitly.
 
 GROUPs add key bindings for infix and suffix commands and specify
-how these bindings are presented in the echo area.  At least one
-GROUP has to be specified.  See info node `(transient)Binding
+how these bindings are presented in the popup buffer.  At least
+one GROUP has to be specified.  See info node `(transient)Binding
 Suffix and Infix Commands'.
 
 The BODY is optional.  If it is omitted, then ARGLIST is also
@@ -752,8 +752,12 @@ example, sets a variable use `define-infix-command' instead.
   (let ((cmd (oref obj command)))
     (unless (or (commandp cmd)
                 (get cmd 'transient--infix-command))
-      (put cmd 'transient--infix-command
-           (transient--default-infix-command)))))
+      (if (or (cl-typep obj 'transient-switch)
+              (cl-typep obj 'transient-option))
+          (put cmd 'transient--infix-command
+               (transient--default-infix-command))
+        ;; This is not an anonymous infix argument.
+        (error "Suffix %s is not defined or autoloaded as a command" cmd)))))
 
 (defun transient--derive-shortarg (arg)
   (save-match-data
@@ -767,11 +771,7 @@ example, sets a variable use `define-infix-command' instead.
          (mem (transient--layout-member prefix loc)))
     (if mem
         (progn
-          (when-let ((old (transient--layout-member
-                           prefix (plist-get (nth 2 suf) :command))))
-            (setcar old (cadr old))
-            (setcdr old (cddr old))
-            (setq mem (transient--layout-member prefix loc)))
+          (transient-remove-suffix prefix (plist-get (nth 2 suf) :command))
           (cl-ecase action
             (insert  (setcdr mem (cons (car mem) (cdr mem)))
                      (setcar mem suf))
@@ -913,7 +913,7 @@ variable instead.")
 (defconst transient--exit nil "Do exit the transient.")
 
 (defvar transient--exitp nil "Whether to exit the transient.")
-(defvar transient--showp nil "Whether the transient is show in echo area.")
+(defvar transient--showp nil "Whether the transient is show in a popup buffer.")
 (defvar transient--helpp nil "Whether help-mode is active.")
 (defvar transient--editp nil "Whether edit-mode is active.")
 
@@ -1673,11 +1673,11 @@ transient is active."
   (interactive))
 
 (defun transient-update ()
-  "Redraw the transient's state in the echo area."
+  "Redraw the transient's state in the popup buffer."
   (interactive))
 
 (defun transient-show ()
-  "Show the transient's state in the echo area."
+  "Show the transient's state in the popup buffer."
   (interactive)
   (setq transient--showp t))
 
