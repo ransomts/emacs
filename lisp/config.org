@@ -635,7 +635,7 @@
 	("org" (or (mode . org-mode)
 		   (filename . "OrgMode")))
 	("erc" (mode . erc-mode))
-	("magit" (name . "\*magit"))
+	("magit" (name . "magit\*"))
 	("subversion" (name . "\*svn"))
 	("helm" (mode . helm-major-mode))
 	("tramp" (name . "\*tramp\*"))
