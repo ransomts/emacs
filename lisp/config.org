@@ -583,6 +583,15 @@
    #+END_SRC
 
 * Buffer Management
+
+** ibuffer
+
+#+BEGIN_SRC emacs-lisp
+  (use-package ibuffer
+    :ensure t
+    :config (defalias 'list-buffers 'ibuffer))
+#+END_SRC
+
 ** transpose windows
 
    Transposing is surprisingly not a built in function. Here's something that lets me move the current buffer around in the frame.
