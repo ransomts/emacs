@@ -478,6 +478,28 @@
     :bind ("C-c x" . #'sx-tab-all-questions))
     #+END_SRC
 
+*** Wikipedia
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package wiki-summary
+	:defer 1
+	:bind ("C-c W" . wiki-summary)
+	:ensure t
+	:preface
+	(defun my/format-summary-in-buffer (summary)
+	  "Given a summary, stick it in the *wiki-summary* buffer and display the buffer"
+	  (let ((buf (generate-new-buffer "*wiki-summary*")))
+	    (with-current-buffer buf
+	      (princ summary buf)
+	      (fill-paragraph)
+	      (goto-char (point-min))
+	      (text-mode)
+	      (view-mode))
+	    (pop-to-buffer buf))))
+
+      (advice-add 'wiki-summary/format-summary-in-buffer :override #'my/format-summary-in-buffer)
+    #+END_SRC
+
 *** emms
     #+BEGIN_SRC emacs-lisp
       (use-package emms
@@ -559,6 +581,14 @@
 		      (split-window-vertically)                             
 		      (other-window 1)))    
   #+END_SRC
+
+** which key
+   #+BEGIN_SRC emacs-lisp
+     (use-package which-key
+       :ensure t
+       :custom (which-key-idle-delay 3.0)
+       :config (which-key-mode))
+   #+END_SRC
 
 ** smartparens
 
