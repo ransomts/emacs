@@ -44,13 +44,13 @@
  '(erc-nick "tinhatcat")
  '(erc-prompt "<tinhatcat>")
  '(erc-sound-mode t)
- '(eshell-cmpl-ignore-case t t)
- '(eshell-destroy-buffer-when-process-dies t t)
- '(eshell-highlight-prompt nil t)
- '(eshell-prompt-function (quote my-eshell-prompt) t)
+ '(eshell-cmpl-ignore-case t)
+ '(eshell-destroy-buffer-when-process-dies t)
+ '(eshell-highlight-prompt nil)
+ '(eshell-prompt-function (quote my-eshell-prompt))
  '(eshell-visual-commands
    (quote
-    ("vi" "vim" "screen" "top" "htop" "less" "more" "rtv")) t)
+    ("vi" "vim" "screen" "top" "htop" "less" "more" "rtv")))
  '(gnus-always-read-dribble-file t)
  '(gnus-directory "~/.emacs.d/gnus")
  '(helm-dictionary-browser-function (quote browse-url-chrome))
@@ -68,11 +68,13 @@
  '(package-enable-at-startup nil)
  '(package-selected-packages
    (quote
-    (hackernews spotify sx ob-async symon nov auto-package-update smartparens dad-joke gnuplot theme-changer smart-mode-line magit org-bullets exwm xelb page-breaks-line slime transmission pdf-tools material-theme helm-tramp helm-dictionary helm-bbdb emms dashboard)))
+    (which-key wiki-summary hackernews spotify sx ob-async symon nov auto-package-update smartparens dad-joke gnuplot theme-changer smart-mode-line magit org-bullets exwm xelb page-breaks-line slime transmission pdf-tools material-theme helm-tramp helm-dictionary helm-bbdb emms dashboard)))
  '(slime-contribs (quote (slime-fancy)) t)
  '(sml/no-confirm-load-theme t)
  '(sml/theme (quote respectful))
- '(tooltip-mode nil))
+ '(tooltip-mode nil)
+ '(which-key-idle-delay 3.0)
+ '(which-key-mode t))
  
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
