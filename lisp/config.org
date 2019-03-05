@@ -155,14 +155,14 @@
     #+END_SRC
 
 **** org exports
-#+BEGIN_SRC emacs-lisp
+     #+BEGIN_SRC emacs-lisp
   (use-package ox-hugo
     :ensure t
     :after ox)
 
   (use-package ox-beamer
     :after ox)
-#+END_SRC
+     #+END_SRC
 
 **** IEEE latex class
 
@@ -586,7 +586,7 @@
 
 ** ibuffer
 
-#+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
   (use-package ibuffer
     :ensure t
     :bind ("C-x C-b" . #'ibuffer)
@@ -639,6 +639,7 @@
 	("subversion" (name . "\*svn"))
 	("helm" (mode . helm-major-mode))
 	("tramp" (name . "\*tramp\*"))
+	("eshell" (name . "\*eshell"))
 	("gnus" (or
 		 (mode . message-mode)
 		 (mode . bbdb-mode)
@@ -653,15 +654,15 @@
 		    (name . "\*info\*"))))))
     (ibuffer-expert t)
     (ibuffer-show-empty-filter-groups nil))
-#+END_SRC
+   #+END_SRC
 *** ibuffer hooks
 
-#+BEGIN_SRC emacs-lisp
+    #+BEGIN_SRC emacs-lisp
   (add-hook 'ibuffer-mode-hook
 	    (lambda ()
 	      (ibuffer-auto-mode 1)
 	      (ibuffer-switch-to-saved-filter-groups "exwm")))
-#+END_SRC
+    #+END_SRC
 
 ** transpose windows
 
