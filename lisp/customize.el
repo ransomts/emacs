@@ -68,7 +68,7 @@
  '(package-enable-at-startup nil)
  '(package-selected-packages
    (quote
-    (which-key wiki-summary hackernews spotify sx ob-async symon nov auto-package-update smartparens dad-joke gnuplot theme-changer smart-mode-line magit org-bullets exwm xelb page-breaks-line slime transmission pdf-tools material-theme helm-tramp helm-dictionary helm-bbdb emms dashboard)))
+    (cmake-mode which-key wiki-summary hackernews spotify sx ob-async symon nov auto-package-update smartparens dad-joke gnuplot theme-changer smart-mode-line magit org-bullets exwm xelb page-breaks-line slime transmission pdf-tools material-theme helm-tramp helm-dictionary helm-bbdb emms dashboard)))
  '(slime-contribs (quote (slime-fancy)) t)
  '(sml/no-confirm-load-theme t)
  '(sml/theme (quote respectful))
