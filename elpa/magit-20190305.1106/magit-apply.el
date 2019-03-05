@@ -296,7 +296,7 @@ ignored) files."
   (when (magit-anything-staged-p)
     (magit-confirm 'stage-all-changes))
   (magit-with-toplevel
-    (magit-stage-1 (if all "--all" "-u"))))
+    (magit-stage-1 (if all "--all" "-u") magit-diff-section-file-args)))
 
 (defun magit-stage-1 (arg &optional files)
   (magit-wip-commit-before-change files " before stage")
@@ -419,7 +419,7 @@ without requiring confirmation."
             (magit-untracked-files))
     (magit-confirm 'unstage-all-changes))
   (magit-wip-commit-before-change nil " before unstage")
-  (magit-run-git "reset" "HEAD" "--")
+  (magit-run-git "reset" "HEAD" "--" magit-diff-section-file-args)
   (magit-wip-commit-after-apply nil " after unstage"))
 
 ;;;; Discard
@@ -556,23 +556,25 @@ without requiring confirmation."
                        files)
   (let ((delete-by-moving-to-trash magit-delete-by-moving-to-trash))
     (dolist (file files)
-      (if (memq (magit-diff-type) '(unstaged untracked))
-          (progn (dired-delete-file file dired-recursive-deletes
-                                    magit-delete-by-moving-to-trash)
-                 (dired-clean-up-after-deletion file))
-        (pcase (nth 3 (assoc file status))
-          (?  (delete-file file t)
-              (magit-call-git "rm" "--cached" "--" file))
-          (?M (let ((temp (magit-git-string "checkout-index" "--temp" file)))
-                (string-match
-                 (format "\\(.+?\\)\t%s" (regexp-quote file)) temp)
-                (rename-file (match-string 1 temp)
-                             (setq temp (concat file ".~{index}~")))
-                (delete-file temp t))
-              (magit-call-git "rm" "--cached" "--force" "--" file))
-          (?D (magit-call-git "checkout" "--" file)
-              (delete-file file t)
-              (magit-call-git "rm" "--cached" "--force" "--" file)))))))
+      (when (string-match-p "\\`\\\\?~" file)
+        (error "Refusing to delete %S, too dangerous" file))
+      (pcase (nth 3 (assoc file status))
+        ((guard (memq (magit-diff-type) '(unstaged untracked)))
+         (dired-delete-file file dired-recursive-deletes
+                            magit-delete-by-moving-to-trash)
+         (dired-clean-up-after-deletion file))
+        (?\s (delete-file file t)
+             (magit-call-git "rm" "--cached" "--" file))
+        (?M  (let ((temp (magit-git-string "checkout-index" "--temp" file)))
+               (string-match
+                (format "\\(.+?\\)\t%s" (regexp-quote file)) temp)
+               (rename-file (match-string 1 temp)
+                            (setq temp (concat file ".~{index}~")))
+               (delete-file temp t))
+             (magit-call-git "rm" "--cached" "--force" "--" file))
+        (?D  (magit-call-git "checkout" "--" file)
+             (delete-file file t)
+             (magit-call-git "rm" "--cached" "--force" "--" file))))))
 
 (defun magit-discard-files--rename (files status)
   (magit-confirm 'rename "Undo rename %s" "Undo %i renames" nil

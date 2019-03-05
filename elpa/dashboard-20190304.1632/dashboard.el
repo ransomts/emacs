@@ -23,7 +23,6 @@
 
 (require 'bookmark)
 (require 'calendar)
-(require 'org-agenda)
 (require 'page-break-lines)
 (require 'recentf)
 (require 'register)
@@ -59,8 +58,8 @@
         truncate-lines t))
 
 (defgroup dashboard nil
-  "Settings that are used in the Dashboard"
-  :group 'dashboard)
+  "Extensible startup screen."
+  :group 'applications)
 
 (defcustom dashboard-center-content nil
   "Whether to center content within the window."

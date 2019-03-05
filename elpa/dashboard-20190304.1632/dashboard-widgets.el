@@ -44,6 +44,11 @@ to the specified width, with aspect ratio preserved."
   :type 'integer
   :group 'dashboard)
 
+(defcustom dashboard-show-shortcuts t
+  "Whether to show shortcut keys for each section."
+  :type 'boolean
+  :group 'dashboard)
+
 (defconst dashboard-banners-directory
   (concat (file-name-directory
            (locate-library "dashboard"))
@@ -97,20 +102,27 @@ Set to nil for unbounded.")
 ;;
 ;; Faces
 ;;
-(defface dashboard-text-banner-face
+(defface dashboard-text-banner
   '((t :inherit default))
   "Face used for text banners."
   :group 'dashboard)
 
-(defface dashboard-banner-logo-title-face
+(defface dashboard-banner-logo-title
   '((t :inherit default))
   "Face used for the banner title."
   :group 'dashboard)
 
-(defface dashboard-heading-face
-  '((t :inherit default))
+(defface dashboard-heading
+  '((t (:inherit font-lock-function-name-face)))
   "Face used for widget headings."
   :group 'dashboard)
+
+(define-obsolete-face-alias
+  'dashboard-text-banner-face 'dashboard-text-banner "1.2.6")
+(define-obsolete-face-alias
+  'dashboard-banner-logo-title-face 'dashboard-banner-logo-title "1.2.6")
+(define-obsolete-face-alias
+  'dashboard-heading-face 'dashboard-heading "1.2.6")
 
 ;;
 ;; Generic widget helpers
@@ -131,8 +143,7 @@ Return entire list if `END' is omitted."
 Optionally, provide NO-NEXT-LINE to move the cursor forward a line."
   `(progn
      (eval-when-compile (defvar dashboard-mode-map))
-     (let ((sym nil))
-       (set 'sym (make-symbol (format "Jump to \"%s\"" ,search-label)))
+     (let ((sym (make-symbol (format "Jump to \"%s\"" ,search-label))))
        (fset sym (lambda ()
                    (interactive)
                    (unless (search-forward ,search-label (point-max) t)
@@ -155,9 +166,10 @@ If MESSAGEBUF is not nil then MSG is also written in message buffer."
   "Insert a page break line in dashboard buffer."
   (dashboard-append dashboard-page-separator))
 
-(defun dashboard-insert-heading (heading)
-  "Insert a widget HEADING in dashboard buffer."
-  (insert (propertize heading 'face 'dashboard-heading-face)))
+(defun dashboard-insert-heading (heading &optional shortcut)
+  "Insert a widget HEADING in dashboard buffer, adding SHORTCUT if provided."
+  (insert (propertize heading 'face 'dashboard-heading))
+  (if shortcut (insert (format " (%s)" shortcut))))
 
 ;;
 ;; BANNER
@@ -180,7 +192,7 @@ If MESSAGEBUF is not nil then MSG is also written in message buffer."
                  (insert (make-string margin ?\ ))
                  (forward-line 1))))
            (buffer-string))))
-    (put-text-property 0 (length ascii-banner) 'face 'dashboard-text-banner-face ascii-banner)
+    (put-text-property 0 (length ascii-banner) 'face 'dashboard-text-banner ascii-banner)
     (insert ascii-banner)))
 
 (defun dashboard-insert-image-banner (banner)
@@ -206,7 +218,7 @@ If MESSAGEBUF is not nil then MSG is also written in message buffer."
       (when title
         (insert (make-string (max 0 (floor (/ (- dashboard-banner-length
                                                  (+ (length title) 1)) 2))) ?\ ))
-        (insert (format "%s\n\n" (propertize title 'face 'dashboard-banner-logo-title-face)))))))
+        (insert (format "%s\n\n" (propertize title 'face 'dashboard-banner-logo-title)))))))
 
 (defun dashboard-get-banner-path (index)
   "Return the full path to banner with index INDEX."
@@ -272,14 +284,16 @@ SHORTCUT is the keyboard shortcut used to access the section.
 ACTION is theaction taken when the user activates the widget button.
 WIDGET-PARAMS are passed to the \"widget-create\" function."
   `(progn
-     (dashboard-insert-heading ,section-name)
-     (when (dashboard-insert-section-list
-            ,section-name
-            (dashboard-subseq ,list 0 list-size)
-            ,action
-            ,@widget-params)
-       (dashboard-insert-shortcut ,shortcut ,section-name))))
-
+     (dashboard-insert-heading ,section-name
+                               (if (and ,list dashboard-show-shortcuts) ,shortcut))
+     (if ,list
+         (when (dashboard-insert-section-list
+                ,section-name
+                (dashboard-subseq ,list 0 list-size)
+                ,action
+                ,@widget-params)
+           (dashboard-insert-shortcut ,shortcut ,section-name))
+       (insert "\n    --- No items ---"))))
 ;;
 ;; Recentf
 ;;
@@ -317,18 +331,16 @@ WIDGET-PARAMS are passed to the \"widget-create\" function."
 ;;
 (defun dashboard-insert-projects (list-size)
   "Add the list of LIST-SIZE items of projects."
-  (projectile-mode)
-  (if (bound-and-true-p projectile-mode)
-      (progn
-        (projectile-load-known-projects)
-        (dashboard-insert-section
-         "Projects:"
-         (dashboard-subseq (projectile-relevant-known-projects)
-                           0 list-size)
-         list-size
-         "p"
-         `(lambda (&rest ignore) (projectile-switch-project-by-name ,el))
-         (abbreviate-file-name el)))))
+  (require 'projectile)
+  (projectile-load-known-projects)
+  (dashboard-insert-section
+   "Projects:"
+   (dashboard-subseq (projectile-relevant-known-projects)
+                     0 list-size)
+   list-size
+   "p"
+   `(lambda (&rest ignore) (projectile-switch-project-by-name ,el))
+   (abbreviate-file-name el)))
 
 ;;
 ;; Org Agenda
@@ -393,21 +405,20 @@ date part is considered."
 
 (defun dashboard-insert-agenda (list-size)
   "Add the list of LIST-SIZE items of agenda."
+  (require 'org-agenda)
   (let ((agenda (dashboard-get-agenda)))
     (dashboard-insert-section
      (or (and (boundp 'show-week-agenda-p) show-week-agenda-p "Agenda for the coming week:")
          "Agenda for today:")
-     (or agenda '())
+     agenda
      list-size
      "a"
      `(lambda (&rest ignore)
-        (let ((buffer (find-file-other-window (nth 4 ,el))))
+        (let ((buffer (find-file-other-window (nth 4 ',el))))
           (with-current-buffer buffer
-            (goto-char (nth 3 ,el)))
+            (goto-char (nth 3 ',el)))
           (switch-to-buffer buffer)))
-     (format "%s" (nth 0 el)))
-    (and (not agenda)
-         (insert "\n    --- No items ---"))))
+     (format "%s" (nth 0 el)))))
 
 ;;
 ;; Registers
