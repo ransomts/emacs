@@ -20,6 +20,9 @@
 
     (defun running-on-wireless (essids)
       (member (shell-command-to-string "iwgetid --raw") essids))
+
+    (defun running-on-windows ()
+	(string= system-type "windows-nt"))
   #+END_SRC
 
   I use syncthing to move some of the 'live' files emacs uses between machines. If I'm on a machine that hasn't had these folders made, create them.
@@ -391,6 +394,7 @@
       (when (>= (string-to-number emacs-version) 25.1)
 	(use-package magit
 	  :ensure t
+	  :unless (running-on-windows)
 	  :bind ("C-x g" . #'magit-status)))
     #+END_SRC
 
@@ -453,6 +457,7 @@
     #+BEGIN_SRC emacs-lisp
   (use-package spotify :ensure t
     :if (running-on-hosts '("tengen" "hoshi" "atari" "joseki"))
+    :unless (running-on-windows)
     :bind (("C-c s c" . #'spotify-current)
 	   ("C-c s SPC" . #'spotify-playpause)
 	   ("C-c s n" . #'spotify-next)
@@ -809,8 +814,10 @@
 
 ** browser
    #+BEGIN_SRC emacs-lisp
-     (setq browse-url-browser-function 'browse-url-chrome
-	   browse-url-chrome-arguments '("--new-window"))
+     (if  (running-on-windows)
+	 (setq browse-url-browser-function 'eww-browse-url)
+       (setq browse-url-browser-function 'browse-url-chrome
+	     browse-url-chrome-arguments '("--new-window")))
    #+END_SRC
 
 ** doc view
@@ -997,18 +1004,21 @@
 	 (start-process "spotify" nil "spotify")
 	 (start-process "transmission" nil "transmission-daemon")))
 
-     (when (running-on-hosts '("tengen"))
+     (when (and (running-on-hosts '("tengen"))
+		(not (running-on-windows)))
        (start-process "transmission" nil "transmission-daemon"))
 
      (when (running-on-hosts '("joseki" "hoshi"))
        (unless (file-exists-p "~/.config/mpd/pid")
 	 (start-process "music player daemon" nil "mpd")))
 
-     (when (running-on-hosts '("hoshi" "tengen"))
+     (when (and (running-on-hosts '("hoshi" "tengen"))
+		(not (running-on-windows)))
        (start-process "discord" nil "discord")
        (start-process "spotify" nil "spotify"))
 
-     (when (running-on-hosts '("joseki" "hoshi" "tengen"))
+     (when (and (running-on-hosts '("joseki" "hoshi" "tengen"))
+		(not (running-on-windows)))
        (start-process "redshift" nil "redshift" "-l" "34.67:-82.84")
        (start-process "urxvt daemon" nil "urxvtd" "-f" "-q" "-o")
        (start-process "bluetooth applet" nil "blueman-applet"))
@@ -1019,7 +1029,8 @@
 		      "-time 10"
 		      "-locker lock.sh"))
 
-     (when (not (running-on-hosts '("login*" "marcher" "ivy*" "node*")))
+     (when (and (not (running-on-hosts '("login*" "marcher" "ivy*" "node*")))
+		(not (running-on-windows)))
        (start-process "unclutter" nil "unclutter"))
    #+END_SRC
 
