@@ -1,11 +1,13 @@
 #+AUTHOR: Tim Ransom
 #+TITLE: ransomts emacs customization
 
-Here's my shot at making a portable, modular, and org-anized configuration. I use this configuration on several machines with and without Xorg or consistant package updates. 
+Here's my shot at making a portable, modular, and org-anized configuration.
+I use this configuration on several machines, operating systems, with and without Xorg or consistant package updates. 
 
 Just about every src block in [[file:lisp/config.org][lisp/config.org]] can be taken as a unit block to use in other configs.
 
 Features:
+ - Adapts to Linux/Windows
  - Org mode src blocks group relevant packages
  - use-package
    - migrated customize.el settings into package specific configs
