@@ -742,6 +742,24 @@
      (global-set-key (kbd "C-x |") 'toggle-frame-split)
    #+END_SRC
 
+** edit current buffer as root
+
+   #+BEGIN_SRC emacs-lisp
+     (defun edit-as-su (&optional arg)
+       "Edit currently visited file as root.
+
+     With a prefix ARG prompt for a file to visit.
+     Will also prompt for a file to visit if current
+     buffer is not visiting a file."
+       (interactive "P")
+       (if (or arg (not buffer-file-name))
+	   (find-file (concat "/sudo:root@localhost:"
+			      (ido-read-file-name "Find file(as root): ")))
+	 (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
+
+     (global-set-key (kbd "C-c o") #'edit-as-su)
+   #+END_SRC
+
 * general emacs settings
 ** asynchronous
    Gotta use the few async operations we have
@@ -1014,6 +1032,7 @@
 
      (when (and (running-on-hosts '("hoshi" "tengen"))
 		(not (running-on-windows)))
+       (start-process "fix screenlayout" nil "tengen-screen-fix.sh")
        (start-process "discord" nil "discord")
        (start-process "spotify" nil "spotify"))
 
