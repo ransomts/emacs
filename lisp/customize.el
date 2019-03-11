@@ -52,6 +52,7 @@
    (quote
     ("vi" "vim" "screen" "top" "htop" "less" "more" "rtv")))
  '(gnus-always-read-dribble-file t)
+ '(gnus-blocked-images nil)
  '(gnus-directory "~/.emacs.d/gnus")
  '(helm-dictionary-browser-function (quote browse-url-chrome))
  '(helm-dictionary-database "/usr/share/dict/words")
@@ -61,6 +62,45 @@
      ("Oxford English Dictionary" . "www.oed.com/search?searchType=dictionary&q=%s")
      ("Merriam-Webster" . "https://www.merriam-webster.com/dictionary/%s"))))
  '(helm-dictionary-use-full-frame nil t)
+ '(ibuffer-default-sorting-mode (quote major-mode))
+ '(ibuffer-expert t)
+ '(ibuffer-saved-filter-groups
+   (quote
+    (("exwm"
+      ("exwm"
+       (mode . exwm-mode))
+      ("dired"
+       (mode . dired-mode))
+      ("org"
+       (or
+	(mode . org-mode)
+	(filename . "OrgMode")))
+      ("erc"
+       (mode . erc-mode))
+      ("magit"
+       (name . "magit*"))
+      ("subversion"
+       (name . "*svn"))
+      ("helm"
+       (mode . helm-major-mode))
+      ("tramp"
+       (name . "*tramp*"))
+      ("gnus"
+       (or
+	(mode . message-mode)
+	(mode . bbdb-mode)
+	(mode . mail-mode)
+	(mode . gnus-group-mode)
+	(mode . gnus-summary-mode)
+	(mode . gnus-article-mode)
+	(name . "^\\.bbdb$")
+	(name . "^\\.newsrc-dribble")))
+      ("help"
+       (or
+	(name . "*Help*")
+	(name . "*Apropos*")
+	(name . "*info*")))))))
+ '(ibuffer-show-empty-filter-groups nil)
  '(inferior-lisp-program "sbcl" t)
  '(org-agenda-files
    (quote
@@ -68,13 +108,11 @@
  '(package-enable-at-startup nil)
  '(package-selected-packages
    (quote
-    (cmake-mode which-key wiki-summary hackernews spotify sx ob-async symon nov auto-package-update smartparens dad-joke gnuplot theme-changer smart-mode-line magit org-bullets exwm xelb page-breaks-line slime transmission pdf-tools material-theme helm-tramp helm-dictionary helm-bbdb emms dashboard)))
+    (hackernews spotify sx ob-async symon nov auto-package-update smartparens dad-joke gnuplot theme-changer smart-mode-line magit org-bullets exwm xelb page-breaks-line slime transmission pdf-tools material-theme helm-tramp helm-dictionary helm-bbdb emms dashboard)))
  '(slime-contribs (quote (slime-fancy)) t)
  '(sml/no-confirm-load-theme t)
  '(sml/theme (quote respectful))
- '(tooltip-mode nil)
- '(which-key-idle-delay 3.0)
- '(which-key-mode t))
+ '(tooltip-mode nil))
  
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
