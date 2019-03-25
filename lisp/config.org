@@ -738,6 +738,8 @@
 	   )
      (add-to-list 'tramp-remote-path "/home/tsranso/bin")
      (add-to-list 'tramp-remote-path "/home/tsranso/.local/bin")
+     (add-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)
+
    #+END_SRC
 
 * exwm
