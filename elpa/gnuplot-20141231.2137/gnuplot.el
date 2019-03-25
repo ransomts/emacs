@@ -791,7 +791,7 @@ non-nil."
 (defvar gnuplot-mode-menu nil)
 
 (defvar gnuplot-display-options-menu
-  (flet ((make-image-setter (type)
+  (cl-flet ((make-image-setter (type)
            `[,(concat (upcase type) " images")
               (lambda () (interactive) (gnuplot-set-image-format ,type))
               :style toggle
