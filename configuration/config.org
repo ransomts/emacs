@@ -1034,7 +1034,6 @@
 
      (when (and (running-on-hosts '("hoshi" "tengen"))
 		(not (running-on-windows)))
-       (start-process "fix screenlayout" nil "tengen-screen-fix.sh")
        (start-process "discord" nil "discord")
        (start-process "spotify" nil "spotify"))
 

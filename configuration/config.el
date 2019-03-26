@@ -649,6 +649,7 @@ buffer is not visiting a file."
       )
 (add-to-list 'tramp-remote-path "/home/tsranso/bin")
 (add-to-list 'tramp-remote-path "/home/tsranso/.local/bin")
+(add-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)
 
 (defun launch-program (command)
   (interactive (list (read-shell-command "$ ")))
@@ -793,7 +794,6 @@ buffer is not visiting a file."
 
 (when (and (running-on-hosts '("hoshi" "tengen"))
 	   (not (running-on-windows)))
-  (start-process "fix screenlayout" nil "tengen-screen-fix.sh")
   (start-process "discord" nil "discord")
   (start-process "spotify" nil "spotify"))
 
