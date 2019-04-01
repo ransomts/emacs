@@ -749,16 +749,26 @@ buffer is not visiting a file."
     (require 'exwm-randr)
     (when (running-on-hosts '("tengen"))
       (setq exwm-randr-workspace-output-plist
-	    '(0 "DP-2" 9 "DP-2" 8 "DP-2" 7 "DP-2" 6 "DP-2"
-		1 "HDMI-3" 2 "HDMI-3" 3 "HDMI-3" 4 "HDMI-3" 5 "HDMI-3"))
+	    '(0 "DisplayPort-2"
+		1 "HDMI-A-0"
+		2 "DVI-D-0"
+		3 "DisplayPort-0"
+		4 "DisplayPort-1"
+		5 "DisplayPort-2"
+		6 "HDMI-A-0"
+		7 "DVI-D-0"
+		8 "DisplayPort-0"
+		9 "DisplayPort-1"))
       (add-hook 'exwm-randr-screen-change-hook
 		(lambda ()
 		  (start-process-shell-command
 		   "xrandr" nil
 		   (concat "xrandr "
-			   "--output DP-2 --mode 1600x900 --pos 1920x180 "
-			   "--output HDMI-3 --mode 1920x1080 --pos 0x0 ")))))
-
+			   "--output DisplayPort-1 --mode 1920x1200 --pos 3120x240 --rotate left "
+			   "--output DisplayPort-0 --primary --mode 1920x1200 --pos 1920x240 --rotate left "
+			   "--output DisplayPort-2 --mode 1920x1200 --pos 4320x576 "
+			   "--output DVI-D-0 --mode 1920x1080 --pos 0x1080 "
+			   "--output HDMI-A-0 --mode 1920x1080 --pos 0x0")))))
     (when (running-on-hosts '("hoshi"))
       (setq exwm-randr-workspace-output-plist
 	    '(1 "DP-1" 4 "HDMI-1" 7 "DP-2"

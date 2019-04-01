@@ -886,130 +886,140 @@
 * exwm
 
   #+BEGIN_SRC emacs-lisp
-    (defun launch-program (command)
-      (interactive (list (read-shell-command "$ ")))
-      (start-process-shell-command command nil command))
+	(defun launch-program (command)
+	  (interactive (list (read-shell-command "$ ")))
+	  (start-process-shell-command command nil command))
 
-    (defun lock-screen ()
-      (interactive)
-      (shell-command "/usr/local/bin/lock.sh"))
+	(defun lock-screen ()
+	  (interactive)
+	  (shell-command "/usr/local/bin/lock.sh"))
 
-    (when (and (>= (string-to-number emacs-version) 24.4)
-	       (not (running-on-hosts '("login001" "marcher" "atari"))))
-      (use-package xelb
-	:if (string= "exwm" (getenv "DESKTOP_SESSION"))
-	:ensure t)
+	(when (and (>= (string-to-number emacs-version) 24.4)
+		   (not (running-on-hosts '("login001" "marcher" "atari"))))
+	  (use-package xelb
+	    :if (string= "exwm" (getenv "DESKTOP_SESSION"))
+	    :ensure t)
 
-      (use-package exwm
-	:if (string= "exwm" (getenv "DESKTOP_SESSION"))
-	:ensure t
-	:after (xelb)
-	:bind
-	(("s-x" . #'launch-program)
-	 ("s-l" . #'lock-screen)
-	 ("s-w" . #'exwm-workplace-switch)
-	 ("s-r" . #'exwm-reset)
-	 ("C-x C-c" . #'save-buffers-kill-emacs))
-	:config
-	(setq exwm-input-simulation-keys
-	      '(([?\C-b] . [left])
-		([?\C-f] . [right])
-		([?\C-p] . [up])
-		([?\C-n] . [down])
-		([?\C-a] . [home])
-		([?\C-e] . [end])
-		([?\M-v] . [prior])
-		([?\C-v] . [next])
-		([?\C-d] . [delete])
-		([?\C-h] . [backspace])
-		([?\C-m] . [return])
-		([?\C-i] . [tab])
-		([?\C-g] . [escape])
-		([?\M-g] . [f5])
-		([?\C-s] . [C-f])
-		([?\C-y] . [C-v])
-		([?\M-w] . [C-c])
-		([?\M-<] . [home])
-		;; todo ([?\M-o] . [C-x o])
-		([?\M->] . [C-end])))
+	  (use-package exwm
+	    :if (string= "exwm" (getenv "DESKTOP_SESSION"))
+	    :ensure t
+	    :after (xelb)
+	    :bind
+	    (("s-x" . #'launch-program)
+	     ("s-l" . #'lock-screen)
+	     ("s-w" . #'exwm-workplace-switch)
+	     ("s-r" . #'exwm-reset)
+	     ("C-x C-c" . #'save-buffers-kill-emacs))
+	    :config
+	    (setq exwm-input-simulation-keys
+		  '(([?\C-b] . [left])
+		    ([?\C-f] . [right])
+		    ([?\C-p] . [up])
+		    ([?\C-n] . [down])
+		    ([?\C-a] . [home])
+		    ([?\C-e] . [end])
+		    ([?\M-v] . [prior])
+		    ([?\C-v] . [next])
+		    ([?\C-d] . [delete])
+		    ([?\C-h] . [backspace])
+		    ([?\C-m] . [return])
+		    ([?\C-i] . [tab])
+		    ([?\C-g] . [escape])
+		    ([?\M-g] . [f5])
+		    ([?\C-s] . [C-f])
+		    ([?\C-y] . [C-v])
+		    ([?\M-w] . [C-c])
+		    ([?\M-<] . [home])
+		    ;; todo ([?\M-o] . [C-x o])
+		    ([?\M->] . [C-end])))
 
-	(global-set-key (kbd "<mouse-12>") (lambda () (interactive)
-					     (exwm-input--fake-key 26)))
+	    (global-set-key (kbd "<mouse-12>") (lambda () (interactive)
+						 (exwm-input--fake-key 26)))
 
-	(dolist (k '(
-		     ("s-," . "alternate-screen")
-		     ("s-<return>" . "urxvtc")
-		     ("s-p" . "nemo")
-		     ("s-d" . "discord")
-		     ("s-t" . "transmission-remote-gtk")
-		     ("s-s" . "spotify")
-		     ("s-<tab>" . "google-chrome-stable")
-		     ("<C-M-escape>" . "gnome-system-monitor")
-		     ("s-m" . "pavucontrol")
-		     ("s-<down>" . "amixer sset Master 5%-")
-		     ("s-<up>" . "amixer set Master unmute; amixer sset Master 5%+")
-		     ("<print>" . "scrot")
-		     ("<XF86MonBrightnessUp>" . "light -A 10")
-		     ("<XF86MonBrightnessDown>" . "light -U 10")
-		     ("<XF86AudioMute>"."amixer -c 0 set Master toggle")
-		     ("<XF86AudioLowerVolume>" . "amixer -c 0 sset Master 5%-")
-		     ("<XF86AudioRaiseVolume>" . "amixer -c 0 set Master unmute; amixer -c 0 sset Master 5%+")))
-	  (let ((f (lambda () (interactive)
-		     (save-window-excursion
-		       (start-process-shell-command "" nil (cdr k))))))
-	    (exwm-input-set-key (kbd (car k)) f)))
+	    (dolist (k '(
+			 ("s-," . "alternate-screen")
+			 ("s-<return>" . "urxvtc")
+			 ("s-p" . "nemo")
+			 ("s-d" . "discord")
+			 ("s-t" . "transmission-remote-gtk")
+			 ("s-s" . "spotify")
+			 ("s-<tab>" . "google-chrome-stable")
+			 ("<C-M-escape>" . "gnome-system-monitor")
+			 ("s-m" . "pavucontrol")
+			 ("s-<down>" . "amixer sset Master 5%-")
+			 ("s-<up>" . "amixer set Master unmute; amixer sset Master 5%+")
+			 ("<print>" . "scrot")
+			 ("<XF86MonBrightnessUp>" . "light -A 10")
+			 ("<XF86MonBrightnessDown>" . "light -U 10")
+			 ("<XF86AudioMute>"."amixer -c 0 set Master toggle")
+			 ("<XF86AudioLowerVolume>" . "amixer -c 0 sset Master 5%-")
+			 ("<XF86AudioRaiseVolume>" . "amixer -c 0 set Master unmute; amixer -c 0 sset Master 5%+")))
+	      (let ((f (lambda () (interactive)
+			 (save-window-excursion
+			   (start-process-shell-command "" nil (cdr k))))))
+		(exwm-input-set-key (kbd (car k)) f)))
 
-	(require 'exwm-systemtray)
-	(exwm-systemtray-enable)
+	    (require 'exwm-systemtray)
+	    (exwm-systemtray-enable)
 
-	(add-hook 'exwm-floating-setup-hook #'exwm-layout-hide-mode-line)
-	(add-hook 'exwm-floating-exit-hook #'exwm-layout-show-mode-line)
+	    (add-hook 'exwm-floating-setup-hook #'exwm-layout-hide-mode-line)
+	    (add-hook 'exwm-floating-exit-hook #'exwm-layout-show-mode-line)
 
-	(add-hook 'exwm-update-title-hook
-		  (lambda () (exwm-workspace-rename-buffer exwm-title)))
+	    (add-hook 'exwm-update-title-hook
+		      (lambda () (exwm-workspace-rename-buffer exwm-title)))
 
-	(setq exwm-workspace-number 10
-	      exwm-workspace-show-all-buffers t
-	      exwm-layout-show-all-buffers t)
+	    (setq exwm-workspace-number 10
+		  exwm-workspace-show-all-buffers t
+		  exwm-layout-show-all-buffers t)
 
-	(dotimes (i 10)
-	  (exwm-input-set-key (kbd (format "s-%d" i))
-			      `(lambda ()
-				 (interactive)
-				 (exwm-workspace-switch-create ,i))))
+	    (dotimes (i 10)
+	      (exwm-input-set-key (kbd (format "s-%d" i))
+				  `(lambda ()
+				     (interactive)
+				     (exwm-workspace-switch-create ,i))))
 
-	(push ?\C-q exwm-input-prefix-keys)
-	(define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
+	    (push ?\C-q exwm-input-prefix-keys)
+	    (define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
 
-	(require 'exwm-randr)
-	(when (running-on-hosts '("tengen"))
-	  (setq exwm-randr-workspace-output-plist
-		'(0 "DP-2" 9 "DP-2" 8 "DP-2" 7 "DP-2" 6 "DP-2"
-		    1 "HDMI-3" 2 "HDMI-3" 3 "HDMI-3" 4 "HDMI-3" 5 "HDMI-3"))
-	  (add-hook 'exwm-randr-screen-change-hook
-		    (lambda ()
-		      (start-process-shell-command
-		       "xrandr" nil
-		       (concat "xrandr "
-			       "--output DP-2 --mode 1600x900 --pos 1920x180 "
-			       "--output HDMI-3 --mode 1920x1080 --pos 0x0 ")))))
+	    (require 'exwm-randr)
+	    (when (running-on-hosts '("tengen"))
+	      (setq exwm-randr-workspace-output-plist
+		    '(0 "DisplayPort-2"
+			1 "HDMI-A-0"
+			2 "DVI-D-0"
+			3 "DisplayPort-0" 
+			4 "DisplayPort-1" 
+			5 "DisplayPort-2" 
+			6 "HDMI-A-0"
+			7 "DVI-D-0" 
+			8 "DisplayPort-0"
+			9 "DisplayPort-1"))
+	      (add-hook 'exwm-randr-screen-change-hook
+			(lambda ()
+			  (start-process-shell-command
+			   "xrandr" nil
+			   (concat "xrandr "
+				   "--output DisplayPort-1 --mode 1920x1200 --pos 3120x240 --rotate left "
+				   "--output DisplayPort-0 --primary --mode 1920x1200 --pos 1920x240 --rotate left "
+				   "--output DisplayPort-2 --mode 1920x1200 --pos 4320x576 "
+				   "--output DVI-D-0 --mode 1920x1080 --pos 0x1080 "
+				   "--output HDMI-A-0 --mode 1920x1080 --pos 0x0")))))
+	    (when (running-on-hosts '("hoshi"))
+	      (setq exwm-randr-workspace-output-plist
+		    '(1 "DP-1" 4 "HDMI-1" 7 "DP-2"
+			2 "DP-1" 5 "HDMI-1" 8 "DP-2"
+			3 "DP-1" 6 "HDMI-1" 9 "DP-2" 0 "DP-2"))
+	      (add-hook 'exwm-randr-screen-change-hook
+			(lambda ()
+			  (start-process-shell-command
+			   "xrandr" nil
+			   (concat "xrandr "
+				   "--output HDMI-1 --mode 1920x1080 --pos 1920x0 "
+				   "--output DP-2 --mode 1920x1080 --pos 3840x0 "
+				   "--output DP-1 --primary --mode 1920x1080 --pos 0x0")))))
 
-	(when (running-on-hosts '("hoshi"))
-	  (setq exwm-randr-workspace-output-plist
-		'(1 "DP-1" 4 "HDMI-1" 7 "DP-2"
-		    2 "DP-1" 5 "HDMI-1" 8 "DP-2"
-		    3 "DP-1" 6 "HDMI-1" 9 "DP-2" 0 "DP-2"))
-	  (add-hook 'exwm-randr-screen-change-hook
-		    (lambda ()
-		      (start-process-shell-command
-		       "xrandr" nil
-		       (concat "xrandr "
-			       "--output HDMI-1 --mode 1920x1080 --pos 1920x0 "
-			       "--output DP-2 --mode 1920x1080 --pos 3840x0 "
-			       "--output DP-1 --primary --mode 1920x1080 --pos 0x0")))))
-
-	(exwm-randr-enable)
-	(exwm-enable)))
+	    (exwm-randr-enable)
+	    (exwm-enable)))
   #+END_SRC
 
 ** Autostart programs
