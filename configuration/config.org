@@ -996,14 +996,16 @@
 
 	(when (running-on-hosts '("hoshi"))
 	  (setq exwm-randr-workspace-output-plist
-		'(0 "DP-2" 9 "DP-2" 8 "DP-2" 7 "DP-2" 6 "DP-2"
-		    1 "DP-1" 2 "DP-1" 3 "DP-1" 4 "DP-1" 5 "DP-1"))
+		'(1 "DP-1" 4 "HDMI-1" 7 "DP-2"
+		    2 "DP-1" 5 "HDMI-1" 8 "DP-2"
+		    3 "DP-1" 6 "HDMI-1" 9 "DP-2" 0 "DP-2"))
 	  (add-hook 'exwm-randr-screen-change-hook
 		    (lambda ()
 		      (start-process-shell-command
 		       "xrandr" nil
 		       (concat "xrandr "
-			       "--output DP-2 --mode 1920x1080 --pos 1920x0 "
+			       "--output HDMI-1 --mode 1920x1080 --pos 1920x0 "
+			       "--output DP-2 --mode 1920x1080 --pos 3840x0 "
 			       "--output DP-1 --primary --mode 1920x1080 --pos 0x0")))))
 
 	(exwm-randr-enable)
