@@ -475,7 +475,7 @@
 		" "
 		filename-and-process)))
 
-  (setq mp/ibuffer-collapsed-groups (list "helm" "tramp"))
+  (setq mp/ibuffer-collapsed-groups (list "helm" "tramp" "magit" "gnus"))
 
   (defadvice ibuffer (after collapse-helm)
     (dolist (group mp/ibuffer-collapsed-groups)
