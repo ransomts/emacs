@@ -22,7 +22,7 @@
       (member (shell-command-to-string "iwgetid --raw") essids))
 
     (defun running-on-windows ()
-	(string= system-type "windows-nt"))
+      (string= system-type "windows-nt"))
   #+END_SRC
 
   I use syncthing to move some of the 'live' files emacs uses between machines. If I'm on a machine that hasn't had these folders made, create them.
@@ -48,8 +48,8 @@
       (use-package gnus
 	:bind ("C-M-g" . #'gnus)
 	:custom
-	 (gnus-always-read-dribble-file t)
-	 (gnus-directory "~/.emacs.d/gnus")
+	(gnus-always-read-dribble-file t)
+	(gnus-directory "~/.emacs.d/gnus")
 	:config
 	(setq-default
 	 gnus-summary-line-format "%U%R%z %(%&user-date; %[%-23,23f%]  %B%s%)\n"
@@ -103,7 +103,7 @@
 	(setq diary-file "~/.emacs.d/org/schedule.org"
 	      org-agenda-files
 	      (directory-files (concat user-emacs-directory "org") nil
-	      "\\(?:\\(?:research\\|sc\\(?:hedule\\|ratch\\)\\|todo\\)\\.org\\)")
+			       "\\(?:\\(?:research\\|sc\\(?:hedule\\|ratch\\)\\|todo\\)\\.org\\)")
 	      org-agenda-use-time-grid nil
 	      org-archive-location "~/.emacs.d/org/archive.org::* From %s"
 	      org-capture-after-finalize-hook nil
@@ -159,26 +159,26 @@
 
 **** org exports
      #+BEGIN_SRC emacs-lisp
-  (use-package ox-hugo
-    :ensure t
-    :after ox)
+       (use-package ox-hugo
+	 :ensure t
+	 :after ox)
 
-  (use-package ox-beamer
-    :after ox)
+       (use-package ox-beamer
+	 :after ox)
      #+END_SRC
 
 **** IEEE latex class
 
      #+BEGIN_SRC emacs-lisp
-(with-eval-after-load 'ox-latex
-	(add-to-list 'org-latex-classes
-		     '("IEEEtran"
-		       "\\documentclass[11pt]{IEEEtran}"
-		       ("\\section{%s}" . "\\section*{%s}")
-		       ("\\subsection{%s}" . "\\subsection*{%s}")
-		       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-		       ("\\paragraph{%s}" . "\\paragraph*{%s}")
-		       ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+       (with-eval-after-load 'ox-latex
+	 (add-to-list 'org-latex-classes
+		      '("IEEEtran"
+			"\\documentclass[11pt]{IEEEtran}"
+			("\\section{%s}" . "\\section*{%s}")
+			("\\subsection{%s}" . "\\subsection*{%s}")
+			("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+			("\\paragraph{%s}" . "\\paragraph*{%s}")
+			("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
      #+END_SRC
 
 **** async src blocks
@@ -201,24 +201,24 @@
     #+BEGIN_SRC emacs-lisp
       (use-package erc
 	:custom
-	 (erc-autojoin-channels-alist (quote (("freenode.net"))))
-	 (erc-autojoin-mode nil)
-	 (erc-autojoin-timing (quote ident))
-	 (erc-hide-list (quote ("JOIN" "PART" "NICK" "QUIT")))
-	 (erc-hide-timestamps t)
-	 (erc-list-mode t)
-	 (erc-log-channels-directory "~/.emacs.d/erc_log")
-	 (erc-log-mode t)
-	 (erc-log-write-after-insert t)
-	 (erc-log-write-after-send t)
-	 (erc-modules
+	(erc-autojoin-channels-alist (quote (("freenode.net"))))
+	(erc-autojoin-mode nil)
+	(erc-autojoin-timing (quote ident))
+	(erc-hide-list (quote ("JOIN" "PART" "NICK" "QUIT")))
+	(erc-hide-timestamps t)
+	(erc-list-mode t)
+	(erc-log-channels-directory "~/.emacs.d/erc_log")
+	(erc-log-mode t)
+	(erc-log-write-after-insert t)
+	(erc-log-write-after-send t)
+	(erc-modules
 	 '(autojoin button completion dcc fill irccontrols keep-place
 		    list log match menu move-to-prompt netsplit networks
 		    noncommands notifications readonly ring services sound
 		    stamp track))
-	 (erc-nick "tinhatcat")
-	 (erc-prompt "<tinhatcat>")
-	 (erc-sound-mode t))
+	(erc-nick "tinhatcat")
+	(erc-prompt "<tinhatcat>")
+	(erc-sound-mode t))
 
       (use-package erc-twitch
 	:disabled
@@ -235,11 +235,11 @@
 		    (("M-h" . #'dired-omit-mode)
 		     ("u" . #'dired-up-directory)))
 	:custom
-	 (dired-listing-switches "-alh --no-group")
-	 (dired-no-confirm '(byte-compile copy delete))
-	 (dired-omit-files "^\\..*~?$")
-	 (dired-recursive-copies 'always)
-	 (dired-recursive-deletes 'always))
+	(dired-listing-switches "-alh --no-group")
+	(dired-no-confirm '(byte-compile copy delete))
+	(dired-omit-files "^\\..*~?$")
+	(dired-recursive-copies 'always)
+	(dired-recursive-deletes 'always))
     #+END_SRC
 
 *** eshell
@@ -378,13 +378,13 @@
 	   :ensure t
 	   :bind (("<f8>" . #'helm-dictionary))
 	   :custom
-	    (helm-dictionary-browser-function 'browse-url-chrome)
-	    (helm-dictionary-database "/usr/share/dict/words")
-	    (helm-dictionary-online-dicts
+	   (helm-dictionary-browser-function 'browse-url-chrome)
+	   (helm-dictionary-database "/usr/share/dict/words")
+	   (helm-dictionary-online-dicts
 	    '(("wiktionary" . "http://en.wiktionary.org/wiki/%s")
 	      ("Oxford English Dictionary" . "www.oed.com/search?searchType=dictionary&q=%s")
 	      ("Merriam-Webster" . "https://www.merriam-webster.com/dictionary/%s")))
-	    (helm-dictionary-use-full-frame nil)))
+	   (helm-dictionary-use-full-frame nil)))
      #+END_SRC
 
 *** magit
@@ -434,7 +434,7 @@
 	(dashboard-items '((recents  . 5)
 			   (agenda . 5)
 			   (registers . 5))))
-			   ;; todo: make (todos . 5) source
+      ;; todo: make (todos . 5) source
     #+END_SRC
 
 *** transmission
@@ -455,31 +455,31 @@
     This just controls spotify, searching and account specific stuff still needs done through the desktop application.
 
     #+BEGIN_SRC emacs-lisp
-  (use-package spotify :ensure t
-    :if (running-on-hosts '("tengen" "hoshi" "atari" "joseki"))
-    :unless (running-on-windows)
-    :bind (("C-c s c" . #'spotify-current)
-	   ("C-c s SPC" . #'spotify-playpause)
-	   ("C-c s n" . #'spotify-next)
-	   ("C-c s p" . #'spotify-previous))
-    :config
-    (spotify-enable-song-notifications))
+      (use-package spotify :ensure t
+	:if (running-on-hosts '("tengen" "hoshi" "atari" "joseki"))
+	:unless (running-on-windows)
+	:bind (("C-c s c" . #'spotify-current)
+	       ("C-c s SPC" . #'spotify-playpause)
+	       ("C-c s n" . #'spotify-next)
+	       ("C-c s p" . #'spotify-previous))
+	:config
+	(spotify-enable-song-notifications))
     #+END_SRC
 
 *** hackernews
 
     #+BEGIN_SRC emacs-lisp
-  (use-package hackernews
-    :ensure t
-    :bind ("C-c h" . #'hackernews))
+      (use-package hackernews
+	:ensure t
+	:bind ("C-c h" . #'hackernews))
     #+END_SRC
 
 *** stack overflow
 
     #+BEGIN_SRC emacs-lisp
-  (use-package sx
-    :ensure t
-    :bind ("C-c x" . #'sx-tab-all-questions))
+      (use-package sx
+	:ensure t
+	:bind ("C-c x" . #'sx-tab-all-questions))
     #+END_SRC
 
 *** wikipedia
@@ -592,6 +592,12 @@
 		      (other-window 1)))    
   #+END_SRC
 
+** focus follows mouse
+   #+BEGIN_SRC emacs-lisp
+     (setq mouse-autoselect-window t
+	   focus-follows-mouse t)
+   #+END_SRC
+
 ** which key
    #+BEGIN_SRC emacs-lisp
      (use-package which-key
@@ -627,81 +633,89 @@
 ** ibuffer
 
    #+BEGIN_SRC emacs-lisp
-  (use-package ibuffer
-    :ensure t
-    :bind ("C-x C-b" . #'ibuffer)
-    :config
-    ;; Use human readable Size column instead of original one
-    (define-ibuffer-column size-h
-      (:name "Size" :inline t)
-      (cond
-       ((> (buffer-size) 1000000) (format "%7.1fM" (/ (buffer-size) 1000000.0)))
-       ((> (buffer-size) 100000) (format "%7.0fk" (/ (buffer-size) 1000.0)))
-       ((> (buffer-size) 1000) (format "%7.1fk" (/ (buffer-size) 1000.0)))
-       (t (format "%8d" (buffer-size)))))
+     (use-package ibuffer
+       :ensure t
+       :bind ("C-x C-b" . #'ibuffer)
+       :config
+       ;; Use human readable Size column instead of original one
+       (define-ibuffer-column size-h
+	 (:name "Size" :inline t)
+	 (cond
+	  ((> (buffer-size) 1000000) (format "%7.1fM" (/ (buffer-size) 1000000.0)))
+	  ((> (buffer-size) 100000) (format "%7.0fk" (/ (buffer-size) 1000.0)))
+	  ((> (buffer-size) 1000) (format "%7.1fk" (/ (buffer-size) 1000.0)))
+	  (t (format "%8d" (buffer-size)))))
 
-    ;; Modify the default ibuffer-formats
-    (setq ibuffer-formats
-	  '((mark modified read-only " "
-		  (name 18 18 :left :elide)
-		  " "
-		  (size-h 9 -1 :right)
-		  " "
-		  (mode 16 16 :left :elide)
-		  " "
-		  filename-and-process)))
+       ;; Modify the default ibuffer-formats
+       (setq ibuffer-formats
+	     '((mark modified read-only " "
+		     (name 18 18 :left :elide)
+		     " "
+		     (size-h 9 -1 :right)
+		     " "
+		     (mode 16 16 :left :elide)
+		     " "
+		     filename-and-process)))
 
-    (setq mp/ibuffer-collapsed-groups (list "helm" "tramp"))
+       (setq mp/ibuffer-collapsed-groups (list "helm" "tramp"))
 
-    (defadvice ibuffer (after collapse-helm)
-      (dolist (group mp/ibuffer-collapsed-groups)
-	(progn
-	  (goto-char 1)
-	  (when (search-forward (concat "[ " group " ]") (point-max) t)
-	    (progn
-	      (move-beginning-of-line nil)
-	      (ibuffer-toggle-filter-group)))))
-      (goto-char 1)
-      (search-forward "[ " (point-max) t))
+       (defadvice ibuffer (after collapse-helm)
+	 (dolist (group mp/ibuffer-collapsed-groups)
+	   (progn
+	     (goto-char 1)
+	     (when (search-forward (concat "[ " group " ]") (point-max) t)
+	       (progn
+		 (move-beginning-of-line nil)
+		 (ibuffer-toggle-filter-group)))))
+	 (goto-char 1)
+	 (search-forward "[ " (point-max) t))
 
-    (ad-activate 'ibuffer)
+       (ad-activate 'ibuffer)
 
-    :custom
-    (ibuffer-default-sorting-mode 'major-mode)
-    (ibuffer-saved-filter-groups
-     '(("exwm"
-	("exwm" (mode . exwm-mode))
-	("dired" (mode . dired-mode))
-	("org" (or (mode . org-mode)
-		   (filename . "OrgMode")))
-	("erc" (mode . erc-mode))
-	("magit" (name . "magit\*"))
-	("subversion" (name . "\*svn"))
-	("helm" (mode . helm-major-mode))
-	("tramp" (name . "\*tramp\*"))
-	("eshell" (name . "\*eshell"))
-	("gnus" (or
-		 (mode . message-mode)
-		 (mode . bbdb-mode)
-		 (mode . mail-mode)
-		 (mode . gnus-group-mode)
-		 (mode . gnus-summary-mode)
-		 (mode . gnus-article-mode)
-		 (name . "^\\.bbdb$")
-		 (name . "^\\.newsrc-dribble")))
-	("help" (or (name . "\*Help\*")
-		    (name . "\*Apropos\*")
-		    (name . "\*info\*"))))))
-    (ibuffer-expert t)
-    (ibuffer-show-empty-filter-groups nil))
+       :custom
+       (ibuffer-default-sorting-mode 'major-mode)
+       (ibuffer-saved-filter-groups
+	'(("exwm"
+	   ("exwm" (mode . exwm-mode))
+	   ("dired" (mode . dired-mode))
+	   ("org" (or (mode . org-mode)
+		      (filename . "OrgMode")))
+	   ("erc" (mode . erc-mode))
+	   ("magit" (name . "magit\*"))
+	   ("subversion" (name . "\*svn"))
+	   ("helm" (mode . helm-major-mode))
+	   ("tramp" (name . "\*tramp\*"))
+	   ("eshell" (name . "\*eshell"))
+	   ("gnus" (or
+		    (mode . message-mode)
+		    (mode . bbdb-mode)
+		    (mode . mail-mode)
+		    (mode . gnus-group-mode)
+		    (mode . gnus-summary-mode)
+		    (mode . gnus-article-mode)
+		    (name . "^\\.bbdb$")
+		    (name . "^\\.newsrc-dribble")))
+	   ("help" (or (name . "\*Help\*")
+		       (name . "\*Apropos\*")
+		       (name . "\*info\*"))))))
+       (ibuffer-expert t)
+       (ibuffer-show-empty-filter-groups nil)
+       (ibuffer-formats
+	'((mark modified read-only " "
+		(name 30 30 :left :elide)
+		" "
+		(size-h 9 -1 :right)
+		" "
+		(mode 16 16 :left :elide)
+		" " filename-and-process))))
    #+END_SRC
 *** ibuffer hooks
 
     #+BEGIN_SRC emacs-lisp
-  (add-hook 'ibuffer-mode-hook
-	    (lambda ()
-	      (ibuffer-auto-mode 1)
-	      (ibuffer-switch-to-saved-filter-groups "exwm")))
+      (add-hook 'ibuffer-mode-hook
+		(lambda ()
+		  (ibuffer-auto-mode 1)
+		  (ibuffer-switch-to-saved-filter-groups "exwm")))
     #+END_SRC
 
 ** transpose windows
@@ -886,140 +900,144 @@
 * exwm
 
   #+BEGIN_SRC emacs-lisp
-	(defun launch-program (command)
-	  (interactive (list (read-shell-command "$ ")))
-	  (start-process-shell-command command nil command))
+    (defun launch-program-with-sudo (command)
+      (interactive (list (read-shell-command "(with sudo) $ ")))
+      (start-process-shell-command command nil (concat "sudo " command)))
 
-	(defun lock-screen ()
-	  (interactive)
-	  (shell-command "/usr/local/bin/lock.sh"))
+    (defun launch-program (command)
+      (interactive (list (read-shell-command "$ ")))
+      (start-process-shell-command command nil command))
 
-	(when (and (>= (string-to-number emacs-version) 24.4)
-		   (not (running-on-hosts '("login001" "marcher" "atari"))))
-	  (use-package xelb
-	    :if (string= "exwm" (getenv "DESKTOP_SESSION"))
-	    :ensure t)
+    (defun lock-screen ()
+      (interactive)
+      (shell-command "/usr/local/bin/lock.sh"))
 
-	  (use-package exwm
-	    :if (string= "exwm" (getenv "DESKTOP_SESSION"))
-	    :ensure t
-	    :after (xelb)
-	    :bind
-	    (("s-x" . #'launch-program)
-	     ("s-l" . #'lock-screen)
-	     ("s-w" . #'exwm-workplace-switch)
-	     ("s-r" . #'exwm-reset)
-	     ("C-x C-c" . #'save-buffers-kill-emacs))
-	    :config
-	    (setq exwm-input-simulation-keys
-		  '(([?\C-b] . [left])
-		    ([?\C-f] . [right])
-		    ([?\C-p] . [up])
-		    ([?\C-n] . [down])
-		    ([?\C-a] . [home])
-		    ([?\C-e] . [end])
-		    ([?\M-v] . [prior])
-		    ([?\C-v] . [next])
-		    ([?\C-d] . [delete])
-		    ([?\C-h] . [backspace])
-		    ([?\C-m] . [return])
-		    ([?\C-i] . [tab])
-		    ([?\C-g] . [escape])
-		    ([?\M-g] . [f5])
-		    ([?\C-s] . [C-f])
-		    ([?\C-y] . [C-v])
-		    ([?\M-w] . [C-c])
-		    ([?\M-<] . [home])
-		    ;; todo ([?\M-o] . [C-x o])
-		    ([?\M->] . [C-end])))
+    (when (and (>= (string-to-number emacs-version) 24.4)
+	       (not (running-on-hosts '("login001" "marcher" "atari"))))
+      (use-package xelb
+	:if (string= "exwm" (getenv "DESKTOP_SESSION"))
+	:ensure t)
 
-	    (global-set-key (kbd "<mouse-12>") (lambda () (interactive)
-						 (exwm-input--fake-key 26)))
+      (use-package exwm
+	:if (string= "exwm" (getenv "DESKTOP_SESSION"))
+	:ensure t
+	:after (xelb)
+	:bind
+	(("s-x" . #'launch-program)
+	 ("s-X" . #'launch-program-with-sudo)
+	 ("s-l" . #'lock-screen)
+	 ("s-w" . #'exwm-workplace-switch)
+	 ("s-r" . #'exwm-reset)
+	 ("C-x C-c" . #'save-buffers-kill-emacs))
+	:config
+	(setq exwm-input-simulation-keys
+	      '(([?\C-b] . [left])
+		([?\C-f] . [right])
+		([?\C-p] . [up])
+		([?\C-n] . [down])
+		([?\C-a] . [home])
+		([?\C-e] . [end])
+		([?\M-v] . [prior])
+		([?\C-v] . [next])
+		([?\C-d] . [delete])
+		([?\C-h] . [backspace])
+		([?\C-m] . [return])
+		([?\C-i] . [tab])
+		([?\C-g] . [escape])
+		([?\M-g] . [f5])
+		([?\C-s] . [C-f])
+		([?\C-y] . [C-v])
+		([?\M-w] . [C-c])
+		([?\M-<] . [home])
+		;; todo ([?\M-o] . [C-x o])
+		([?\M->] . [C-end])))
 
-	    (dolist (k '(
-			 ("s-," . "alternate-screen")
-			 ("s-<return>" . "urxvtc")
-			 ("s-p" . "nemo")
-			 ("s-d" . "discord")
-			 ("s-t" . "transmission-remote-gtk")
-			 ("s-s" . "spotify")
-			 ("s-<tab>" . "google-chrome-stable")
-			 ("<C-M-escape>" . "gnome-system-monitor")
-			 ("s-m" . "pavucontrol")
-			 ("s-<down>" . "amixer sset Master 5%-")
-			 ("s-<up>" . "amixer set Master unmute; amixer sset Master 5%+")
-			 ("<print>" . "scrot")
-			 ("<XF86MonBrightnessUp>" . "light -A 10")
-			 ("<XF86MonBrightnessDown>" . "light -U 10")
-			 ("<XF86AudioMute>"."amixer -c 0 set Master toggle")
-			 ("<XF86AudioLowerVolume>" . "amixer -c 0 sset Master 5%-")
-			 ("<XF86AudioRaiseVolume>" . "amixer -c 0 set Master unmute; amixer -c 0 sset Master 5%+")))
-	      (let ((f (lambda () (interactive)
-			 (save-window-excursion
-			   (start-process-shell-command "" nil (cdr k))))))
-		(exwm-input-set-key (kbd (car k)) f)))
+	(global-set-key (kbd "<mouse-12>") (lambda () (interactive)
+					     (exwm-input--fake-key 26)))
 
-	    (require 'exwm-systemtray)
-	    (exwm-systemtray-enable)
+	(dolist (k '(
+		     ("s-," . "alternate-screen")
+		     ("s-<return>" . "urxvtc")
+		     ("s-p" . "nemo")
+		     ("s-d" . "discord")
+		     ("s-t" . "transmission-remote-gtk")
+		     ("s-s" . "spotify")
+		     ("s-<tab>" . "google-chrome-stable")
+		     ("<C-M-escape>" . "gnome-system-monitor")
+		     ("s-m" . "pavucontrol")
+		     ("s-<down>" . "amixer sset Master 5%-")
+		     ("s-<up>" . "amixer set Master unmute; amixer sset Master 5%+")
+		     ("<print>" . "scrot")
+		     ("<XF86MonBrightnessUp>" . "light -A 10")
+		     ("<XF86MonBrightnessDown>" . "light -U 10")
+		     ("<XF86AudioMute>"."amixer -c 0 set Master toggle")
+		     ("<XF86AudioLowerVolume>" . "amixer -c 0 sset Master 5%-")
+		     ("<XF86AudioRaiseVolume>" . "amixer -c 0 set Master unmute; amixer -c 0 sset Master 5%+")))
+	  (let ((f (lambda () (interactive)
+		     (save-window-excursion
+		       (start-process-shell-command "" nil (cdr k))))))
+	    (exwm-input-set-key (kbd (car k)) f)))
 
-	    (add-hook 'exwm-floating-setup-hook #'exwm-layout-hide-mode-line)
-	    (add-hook 'exwm-floating-exit-hook #'exwm-layout-show-mode-line)
+	(require 'exwm-systemtray)
+	(exwm-systemtray-enable)
 
-	    (add-hook 'exwm-update-title-hook
-		      (lambda () (exwm-workspace-rename-buffer exwm-title)))
+	(add-hook 'exwm-floating-setup-hook #'exwm-layout-hide-mode-line)
+	(add-hook 'exwm-floating-exit-hook #'exwm-layout-show-mode-line)
 
-	    (setq exwm-workspace-number 10
-		  exwm-workspace-show-all-buffers t
-		  exwm-layout-show-all-buffers t)
+	(add-hook 'exwm-update-title-hook
+		  (lambda () (exwm-workspace-rename-buffer exwm-title)))
 
-	    (dotimes (i 10)
-	      (exwm-input-set-key (kbd (format "s-%d" i))
-				  `(lambda ()
-				     (interactive)
-				     (exwm-workspace-switch-create ,i))))
+	(setq exwm-workspace-show-all-buffers t
+	      exwm-layout-show-all-buffers t)
 
-	    (push ?\C-q exwm-input-prefix-keys)
-	    (define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
+	(dotimes (i 10)
+	  (exwm-input-set-key (kbd (format "s-%d" i))
+			      `(lambda ()
+				 (interactive)
+				 (exwm-workspace-switch-create ,i))))
 
-	    (require 'exwm-randr)
-	    (when (running-on-hosts '("tengen"))
-	      (setq exwm-randr-workspace-output-plist
-		    '(0 "DisplayPort-2"
-			1 "HDMI-A-0"
-			2 "DVI-D-0"
-			3 "DisplayPort-0" 
-			4 "DisplayPort-1" 
-			5 "DisplayPort-2" 
-			6 "HDMI-A-0"
-			7 "DVI-D-0" 
-			8 "DisplayPort-0"
-			9 "DisplayPort-1"))
-	      (add-hook 'exwm-randr-screen-change-hook
-			(lambda ()
-			  (start-process-shell-command
-			   "xrandr" nil
-			   (concat "xrandr "
-				   "--output DisplayPort-1 --mode 1920x1200 --pos 3120x240 --rotate left "
-				   "--output DisplayPort-0 --primary --mode 1920x1200 --pos 1920x240 --rotate left "
-				   "--output DisplayPort-2 --mode 1920x1200 --pos 4320x576 "
-				   "--output DVI-D-0 --mode 1920x1080 --pos 0x1080 "
-				   "--output HDMI-A-0 --mode 1920x1080 --pos 0x0")))))
-	    (when (running-on-hosts '("hoshi"))
-	      (setq exwm-randr-workspace-output-plist
-		    '(1 "DP-1" 4 "HDMI-1" 7 "DP-2"
-			2 "DP-1" 5 "HDMI-1" 8 "DP-2"
-			3 "DP-1" 6 "HDMI-1" 9 "DP-2" 0 "DP-2"))
-	      (add-hook 'exwm-randr-screen-change-hook
-			(lambda ()
-			  (start-process-shell-command
-			   "xrandr" nil
-			   (concat "xrandr "
-				   "--output HDMI-1 --mode 1920x1080 --pos 1920x0 "
-				   "--output DP-2 --mode 1920x1080 --pos 3840x0 "
-				   "--output DP-1 --primary --mode 1920x1080 --pos 0x0")))))
+	(push ?\C-q exwm-input-prefix-keys)
+	(define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
 
-	    (exwm-randr-enable)
-	    (exwm-enable)))
+	(require 'exwm-randr)
+	(when (running-on-hosts '("tengen"))
+
+	  (setq exwm-workspace-number 5
+		exwm-randr-workspace-output-plist
+		'(0 "DP-3" 1 "HDMI-1" 2 "DVI-D-1" 3 "DP-1" 4 "DP-2"
+		    5 "DP-3" 6 "HDMI-1" 7 "DVI-D-1" 8 "DP-1" 9 "DP-2"))
+	  (add-hook 'exwm-randr-screen-change-hook
+		    (lambda ()
+		      (start-process-shell-command
+		       "xrandr" nil
+		       (concat "xrandr "
+			       "--output HDMI-1 --mode 1920x1080 --pos 0x0 --rotate normal "
+			       "--output DP-3 --mode 1920x1200 --pos 4320x624 --rotate normal "
+			       "--output DP-2 --mode 1920x1200 --pos 3120x240 --rotate left "
+			       "--output DP-1 --mode 1920x1200 --pos 1920x240 --rotate left "
+			       "--output DVI-D-1 --mode 1920x1080 --pos 0x1080 --rotate normal ")))))
+	(when (running-on-hosts '("hoshi"))
+	  (setq exwm-randr-workspace-output-plist
+		'(1 "DP-1" 4 "HDMI-1" 7 "DP-2"
+		    2 "DP-1" 5 "HDMI-1" 8 "DP-2"
+		    3 "DP-1" 6 "HDMI-1" 9 "DP-2" 0 "DP-2"))
+	  (add-hook 'exwm-randr-screen-change-hook
+		    (lambda ()
+		      (start-process-shell-command
+		       "xrandr" nil
+		       (concat "xrandr "
+			       "--output HDMI-1 --mode 1920x1080 --pos 1920x0 "
+			       "--output DP-2 --mode 1920x1080 --pos 3840x0 "
+			       "--output DP-1 --primary --mode 1920x1080 --pos 0x0")))))
+
+	(add-hook 'exwm-manage-finish-hook
+		  (lambda ()
+		    (when (and exwm-class-name
+			       (string= exwm-class-name "urxvt"))
+		      (exwm-input-set-local-simulation-keys '(([?\C-c ?\C-c] . ?\C-c))))))
+
+	(exwm-randr-enable)
+	(exwm-enable)))
   #+END_SRC
 
 ** Autostart programs
@@ -1028,50 +1046,45 @@
    #+BEGIN_SRC emacs-lisp :noweb yes
      (when (running-on-hosts '("joseki"))
        (display-battery-mode t)
-       (start-process "" nil "xrdb" "-merge" "/home/tsranso/.config/urxvt/conf")
+       ;; (start-process "" nil "xrdb" "-merge" "/home/tsranso/.config/urxvt/conf")
        (start-process "wifi applet" nil "nm-applet")
 
        (when (running-on-wireless '("Torus Shaped Earth\n"))
-	 (start-process "discord" nil "discord")
-	 (start-process "spotify" nil "spotify")
-	 (start-process "transmission" nil "transmission-daemon")))
+	 (launch-program "discord")
+	 (launch-program "spotify")
+	 (launch-program "transmission-daemon")))
 
      (when (and (running-on-hosts '("tengen"))
 		(not (running-on-windows)))
-       (start-process "transmission" nil "transmission-daemon"))
-
-     (when (running-on-hosts '("joseki" "hoshi"))
-       (unless (file-exists-p "~/.config/mpd/pid")
-	 (start-process "music player daemon" nil "mpd")))
+       (launch-program "transmission-daemon"))
 
      (when (and (running-on-hosts '("hoshi" "tengen"))
 		(not (running-on-windows)))
-       (start-process "discord" nil "discord")
-       (start-process "spotify" nil "spotify"))
+       (launch-program "discord")
+       (launch-program "spotify"))
 
      (when (and (running-on-hosts '("joseki" "hoshi" "tengen"))
 		(not (running-on-windows)))
-       (start-process "redshift" nil "redshift" "-l" "34.67:-82.84")
-       (start-process "urxvt daemon" nil "urxvtd" "-f" "-q" "-o")
-       (start-process "bluetooth applet" nil "blueman-applet"))
+       ;; (launch-program "redshift" "-l" "34.67:-82.84")
+       (launch-program "urxvtd")
+       (launch-program "blueman-applet"))
 
-     (when (not (running-on-hosts '("atari" "login*" "marcher" "tengen" "ivy*" "node*")))
-       (start-process "xautolock" nil
-		      "xautolock"
-		      "-time 10"
-		      "-locker lock.sh"))
+     ;; (when (not (running-on-hosts '("atari" "login*" "marcher" "tengen" "ivy*" "node*")))
+     ;;   (launch-program "xautolock"
+     ;; 		  "-time 10"
+     ;; 		  "-locker lock.sh"))
 
      (when (and (not (running-on-hosts '("login*" "marcher" "ivy*" "node*")))
 		(not (running-on-windows)))
-       (start-process "unclutter" nil "unclutter"))
+       (launch-program "unclutter"))
+
    #+END_SRC
 
 ** system monitoring
 
    #+BEGIN_SRC emacs-lisp
-  (use-package symon
-    :ensure t
-    :bind
-    ("s-h" . symon-mode))
+     (use-package symon
+       :ensure t
+       :bind
+       ("s-h" . symon-mode))
    #+END_SRC
-
