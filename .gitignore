@@ -1,6 +1,6 @@
 **/epdfinfo
 **.elc
-lisp/config.el
+configuration/config.el
 recentf
 tramp
 .org-id-locations
