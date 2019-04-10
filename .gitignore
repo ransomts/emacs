@@ -23,3 +23,5 @@ transient
 nov-places
 /#recentf#
 /history
+**config.el
+/.persistent-scratch
