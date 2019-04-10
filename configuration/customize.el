@@ -103,8 +103,8 @@
  '(ibuffer-show-empty-filter-groups nil)
  '(inferior-lisp-program "sbcl" t)
  '(org-agenda-files
-   (quote
-    ("~/.emacs.d/org/research.org" "~/.emacs.d/org/schedule.org" "~/.emacs.d/org/todo.org")))
+   (directory-files (concat user-emacs-directory "org") t
+			       "\\(?:\\(?:research\\|\\.*-gcal\\|schedule\\|scratch\\|todo\\)\\.org\\)"))
  '(package-enable-at-startup nil)
  '(package-selected-packages
    (quote

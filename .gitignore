@@ -25,3 +25,6 @@ nov-places
 /history
 **config.el
 /.persistent-scratch
+/org-gcal/
+/request/
+

@@ -12,7 +12,7 @@
   (member (shell-command-to-string "iwgetid --raw") essids))
 
 (defun running-on-windows ()
-    (string= system-type "windows-nt"))
+  (string= system-type "windows-nt"))
 
 (mapc (lambda (dir) (make-directory (concat user-emacs-directory dir) t))
       '("org" "gnus" ".sx" "hackernews"))
@@ -25,8 +25,8 @@
 (use-package gnus
   :bind ("C-M-g" . #'gnus)
   :custom
-   (gnus-always-read-dribble-file t)
-   (gnus-directory "~/.emacs.d/gnus")
+  (gnus-always-read-dribble-file t)
+  (gnus-directory "~/.emacs.d/gnus")
   :config
   (setq-default
    gnus-summary-line-format "%U%R%z %(%&user-date; %[%-23,23f%]  %B%s%)\n"
@@ -73,8 +73,8 @@
 
   (setq diary-file "~/.emacs.d/org/schedule.org"
 	org-agenda-files
-	(directory-files (concat user-emacs-directory "org") nil
-	"\\(?:\\(?:research\\|sc\\(?:hedule\\|ratch\\)\\|todo\\)\\.org\\)")
+	(directory-files (concat user-emacs-directory "org") t
+			 "\\(?:\\(?:research\\|\\.*-gcal\\|schedule\\|scratch\\|todo\\)\\.org\\)")
 	org-agenda-use-time-grid nil
 	org-archive-location "~/.emacs.d/org/archive.org::* From %s"
 	org-capture-after-finalize-hook nil
@@ -89,14 +89,15 @@
 				 "[ ] %?\n%A\nEntered on %T")
 				("n" "General notes" entry
 				 (file+headline "~/.emacs.d/org/scratch.org" "Notes")
-				 "* Note %?\n%T\n"))
+				 "* Note %?\n%T\n")
+				("a" "Appointment" entry (file  "~/.emacs.d/org/ransomtim8078-gcal.org" )
+				 "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")
+				)
 	org-clock-sound t
 	org-confirm-babel-evaluate nil
 	org-datetree-add-timestamp 'inactive
 	org-default-notes-file "~/.emacs.d/org/todo.org"
 	org-directory "~/.emacs.d/org"
-	org-gcal-client-secret "UwfWeXumob8oMLGTBs2D6D5j"
-	org-gcal-dir "~/.emacs.d/org/org-gcal/"
 	org-hide-leading-stars t
 	org-highlight-latex-and-related '(latex)
 	org-journal-dir "~/.emacs.d/org/journal"
@@ -135,14 +136,14 @@
   :after ox)
 
 (with-eval-after-load 'ox-latex
-	(add-to-list 'org-latex-classes
-		     '("IEEEtran"
-		       "\\documentclass[11pt]{IEEEtran}"
-		       ("\\section{%s}" . "\\section*{%s}")
-		       ("\\subsection{%s}" . "\\subsection*{%s}")
-		       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-		       ("\\paragraph{%s}" . "\\paragraph*{%s}")
-		       ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+  (add-to-list 'org-latex-classes
+	       '("IEEEtran"
+		 "\\documentclass[11pt]{IEEEtran}"
+		 ("\\section{%s}" . "\\section*{%s}")
+		 ("\\subsection{%s}" . "\\subsection*{%s}")
+		 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+		 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+		 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
 
 (use-package ob-async
   :ensure t
@@ -154,24 +155,24 @@
 
 (use-package erc
   :custom
-   (erc-autojoin-channels-alist (quote (("freenode.net"))))
-   (erc-autojoin-mode nil)
-   (erc-autojoin-timing (quote ident))
-   (erc-hide-list (quote ("JOIN" "PART" "NICK" "QUIT")))
-   (erc-hide-timestamps t)
-   (erc-list-mode t)
-   (erc-log-channels-directory "~/.emacs.d/erc_log")
-   (erc-log-mode t)
-   (erc-log-write-after-insert t)
-   (erc-log-write-after-send t)
-   (erc-modules
+  (erc-autojoin-channels-alist (quote (("freenode.net"))))
+  (erc-autojoin-mode nil)
+  (erc-autojoin-timing (quote ident))
+  (erc-hide-list (quote ("JOIN" "PART" "NICK" "QUIT")))
+  (erc-hide-timestamps t)
+  (erc-list-mode t)
+  (erc-log-channels-directory "~/.emacs.d/erc_log")
+  (erc-log-mode t)
+  (erc-log-write-after-insert t)
+  (erc-log-write-after-send t)
+  (erc-modules
    '(autojoin button completion dcc fill irccontrols keep-place
 	      list log match menu move-to-prompt netsplit networks
 	      noncommands notifications readonly ring services sound
 	      stamp track))
-   (erc-nick "tinhatcat")
-   (erc-prompt "<tinhatcat>")
-   (erc-sound-mode t))
+  (erc-nick "tinhatcat")
+  (erc-prompt "<tinhatcat>")
+  (erc-sound-mode t))
 
 (use-package erc-twitch
   :disabled
@@ -185,11 +186,11 @@
 	      (("M-h" . #'dired-omit-mode)
 	       ("u" . #'dired-up-directory)))
   :custom
-   (dired-listing-switches "-alh --no-group")
-   (dired-no-confirm '(byte-compile copy delete))
-   (dired-omit-files "^\\..*~?$")
-   (dired-recursive-copies 'always)
-   (dired-recursive-deletes 'always))
+  (dired-listing-switches "-alh --no-group")
+  (dired-no-confirm '(byte-compile copy delete))
+  (dired-omit-files "^\\..*~?$")
+  (dired-recursive-copies 'always)
+  (dired-recursive-deletes 'always))
 
 (defmacro with-face (str &rest properties)
   `(propertize ,str 'face (list ,@properties)))
@@ -284,13 +285,13 @@
     :ensure t
     :bind (("<f8>" . #'helm-dictionary))
     :custom
-     (helm-dictionary-browser-function 'browse-url-chrome)
-     (helm-dictionary-database "/usr/share/dict/words")
-     (helm-dictionary-online-dicts
+    (helm-dictionary-browser-function 'browse-url-chrome)
+    (helm-dictionary-database "/usr/share/dict/words")
+    (helm-dictionary-online-dicts
      '(("wiktionary" . "http://en.wiktionary.org/wiki/%s")
        ("Oxford English Dictionary" . "www.oed.com/search?searchType=dictionary&q=%s")
        ("Merriam-Webster" . "https://www.merriam-webster.com/dictionary/%s")))
-     (helm-dictionary-use-full-frame nil)))
+    (helm-dictionary-use-full-frame nil)))
 
 (when (>= (string-to-number emacs-version) 25.1)
   (use-package magit
@@ -323,7 +324,7 @@
   (dashboard-items '((recents  . 5)
 		     (agenda . 5)
 		     (registers . 5))))
-		     ;; todo: make (todos . 5) source
+;; todo: make (todos . 5) source
 
 (when (>= (string-to-number emacs-version) 24.4)
   (use-package transmission
@@ -421,6 +422,25 @@
 
 (use-package gnuplot :ensure t)
 
+(use-package org-gcal
+  :ensure t
+  :config
+  (setq org-gcal-client-id "819418314073-8pnmvge9jmpu6jf2hktbuo8m5gakuoeu.apps.googleusercontent.com"
+	org-gcal-client-secret "lMo_aNdgaa-_dFWmzrBVi5VO"
+	org-gcal-file-alist '(("ransomtim8078@gmail.com" .  "~/.emacs.d/org/ransomtim8078-gcal.org")
+			      ("tsranso@g.clemson.edu" .  "~/.emacs.d/org/tsranso-gcal.org")
+			      ("g.clemson.edu_h14th1n5kst3v1eq1mifc91bcg@group.calendar.google.com" . "~/.emacs.d/org/schedule.org")
+			      ("socclemson@gmail.com" . "~/.emacs.d/org/SoC-gcal.org")
+			      )))
+
+(add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync) ))
+(add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync) ))
+
+(setq org-agenda-custom-commands
+      '(("c" "Simple agenda view"
+	 ((agenda "")
+	  (alltodo "")))))
+
 (global-set-key (kbd "M-o")     #'other-window)
 (global-set-key (kbd "M-h")     #'backward-kill-word)                   
 (global-set-key (kbd "C-x k")   #'kill-this-buffer)                     
@@ -430,7 +450,16 @@
 		(lambda ()                                              
 		  (interactive)                                         
 		  (split-window-vertically)                             
-		  (other-window 1)))
+		  (other-window 1)))    
+(global-hl-line-mode t)
+
+(use-package beacon
+  :ensure t
+  :config
+  (beacon-mode 1))
+
+(setq mouse-autoselect-window t
+      focus-follows-mouse t)
 
 (use-package which-key
   :ensure t
@@ -475,7 +504,7 @@
 		" "
 		filename-and-process)))
 
-  (setq mp/ibuffer-collapsed-groups (list "helm" "tramp" "magit" "gnus"))
+  (setq mp/ibuffer-collapsed-groups (list "helm" "tramp"))
 
   (defadvice ibuffer (after collapse-helm)
     (dolist (group mp/ibuffer-collapsed-groups)
@@ -517,7 +546,15 @@
 		  (name . "\*Apropos\*")
 		  (name . "\*info\*"))))))
   (ibuffer-expert t)
-  (ibuffer-show-empty-filter-groups nil))
+  (ibuffer-show-empty-filter-groups nil)
+  (ibuffer-formats
+   '((mark modified read-only " "
+	   (name 30 30 :left :elide)
+	   " "
+	   (size-h 9 -1 :right)
+	   " "
+	   (mode 16 16 :left :elide)
+	   " " filename-and-process))))
 
 (add-hook 'ibuffer-mode-hook
 	  (lambda ()
@@ -651,6 +688,10 @@ buffer is not visiting a file."
 (add-to-list 'tramp-remote-path "/home/tsranso/.local/bin")
 (add-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)
 
+(defun launch-program-with-sudo (command)
+  (interactive (list (read-shell-command "(with sudo) $ ")))
+  (start-process-shell-command command nil (concat "sudo " command)))
+
 (defun launch-program (command)
   (interactive (list (read-shell-command "$ ")))
   (start-process-shell-command command nil command))
@@ -671,6 +712,7 @@ buffer is not visiting a file."
     :after (xelb)
     :bind
     (("s-x" . #'launch-program)
+     ("s-X" . #'launch-program-with-sudo)
      ("s-l" . #'lock-screen)
      ("s-w" . #'exwm-workplace-switch)
      ("s-r" . #'exwm-reset)
@@ -733,8 +775,7 @@ buffer is not visiting a file."
     (add-hook 'exwm-update-title-hook
 	      (lambda () (exwm-workspace-rename-buffer exwm-title)))
 
-    (setq exwm-workspace-number 10
-	  exwm-workspace-show-all-buffers t
+    (setq exwm-workspace-show-all-buffers t
 	  exwm-layout-show-all-buffers t)
 
     (dotimes (i 10)
@@ -748,27 +789,21 @@ buffer is not visiting a file."
 
     (require 'exwm-randr)
     (when (running-on-hosts '("tengen"))
-      (setq exwm-randr-workspace-output-plist
-	    '(0 "DisplayPort-2"
-		1 "HDMI-A-0"
-		2 "DVI-D-0"
-		3 "DisplayPort-0"
-		4 "DisplayPort-1"
-		5 "DisplayPort-2"
-		6 "HDMI-A-0"
-		7 "DVI-D-0"
-		8 "DisplayPort-0"
-		9 "DisplayPort-1"))
+
+      (setq exwm-workspace-number 5
+	    exwm-randr-workspace-output-plist
+	    '(0 "DP-3" 1 "HDMI-1" 2 "DVI-D-1" 3 "DP-1" 4 "DP-2"
+		5 "DP-3" 6 "HDMI-1" 7 "DVI-D-1" 8 "DP-1" 9 "DP-2"))
       (add-hook 'exwm-randr-screen-change-hook
 		(lambda ()
 		  (start-process-shell-command
 		   "xrandr" nil
 		   (concat "xrandr "
-			   "--output DisplayPort-1 --mode 1920x1200 --pos 3120x240 --rotate left "
-			   "--output DisplayPort-0 --primary --mode 1920x1200 --pos 1920x240 --rotate left "
-			   "--output DisplayPort-2 --mode 1920x1200 --pos 4320x576 "
-			   "--output DVI-D-0 --mode 1920x1080 --pos 0x1080 "
-			   "--output HDMI-A-0 --mode 1920x1080 --pos 0x0")))))
+			   "--output HDMI-1 --mode 1920x1080 --pos 0x0 --rotate normal "
+			   "--output DP-3 --mode 1920x1200 --pos 4320x624 --rotate normal "
+			   "--output DP-2 --mode 1920x1200 --pos 3120x240 --rotate left "
+			   "--output DP-1 --mode 1920x1200 --pos 1920x240 --rotate left "
+			   "--output DVI-D-1 --mode 1920x1080 --pos 0x1080 --rotate normal ")))))
     (when (running-on-hosts '("hoshi"))
       (setq exwm-randr-workspace-output-plist
 	    '(1 "DP-1" 4 "HDMI-1" 7 "DP-2"
@@ -783,47 +818,55 @@ buffer is not visiting a file."
 			   "--output DP-2 --mode 1920x1080 --pos 3840x0 "
 			   "--output DP-1 --primary --mode 1920x1080 --pos 0x0")))))
 
+    (setq exwm-manage-configurations
+	  (quote
+	   (((equal exwm-instance-name "discord")
+	     workspace 2)
+	    ((equal exwm-instance-name "spotify")
+	     workspace 1))))
+
+    (add-hook 'exwm-manage-finish-hook
+	      (lambda ()
+		(when (and exwm-class-name
+			   (string= exwm-class-name "urxvt"))
+		  (exwm-input-set-local-simulation-keys '(([?\C-c ?\C-c] . ?\C-c))))))
+
     (exwm-randr-enable)
     (exwm-enable)))
 
 (when (running-on-hosts '("joseki"))
   (display-battery-mode t)
-  (start-process "" nil "xrdb" "-merge" "/home/tsranso/.config/urxvt/conf")
+  ;; (start-process "" nil "xrdb" "-merge" "/home/tsranso/.config/urxvt/conf")
   (start-process "wifi applet" nil "nm-applet")
 
   (when (running-on-wireless '("Torus Shaped Earth\n"))
-    (start-process "discord" nil "discord")
-    (start-process "spotify" nil "spotify")
-    (start-process "transmission" nil "transmission-daemon")))
+    (launch-program "discord")
+    (launch-program "spotify")
+    (launch-program "transmission-daemon")))
 
 (when (and (running-on-hosts '("tengen"))
 	   (not (running-on-windows)))
-  (start-process "transmission" nil "transmission-daemon"))
-
-(when (running-on-hosts '("joseki" "hoshi"))
-  (unless (file-exists-p "~/.config/mpd/pid")
-    (start-process "music player daemon" nil "mpd")))
+  (launch-program "transmission-daemon"))
 
 (when (and (running-on-hosts '("hoshi" "tengen"))
 	   (not (running-on-windows)))
-  (start-process "discord" nil "discord")
-  (start-process "spotify" nil "spotify"))
+  (launch-program "discord")
+  (launch-program "spotify"))
 
 (when (and (running-on-hosts '("joseki" "hoshi" "tengen"))
 	   (not (running-on-windows)))
-  (start-process "redshift" nil "redshift" "-l" "34.67:-82.84")
-  (start-process "urxvt daemon" nil "urxvtd" "-f" "-q" "-o")
-  (start-process "bluetooth applet" nil "blueman-applet"))
+  ;; (launch-program "redshift" "-l" "34.67:-82.84")
+  (launch-program "urxvtd")
+  (launch-program "blueman-applet"))
 
-(when (not (running-on-hosts '("atari" "login*" "marcher" "tengen" "ivy*" "node*")))
-  (start-process "xautolock" nil
-		 "xautolock"
-		 "-time 10"
-		 "-locker lock.sh"))
+;; (when (not (running-on-hosts '("atari" "login*" "marcher" "tengen" "ivy*" "node*")))
+;;   (launch-program "xautolock"
+;; 		  "-time 10"
+;; 		  "-locker lock.sh"))
 
 (when (and (not (running-on-hosts '("login*" "marcher" "ivy*" "node*")))
 	   (not (running-on-windows)))
-  (start-process "unclutter" nil "unclutter"))
+  (launch-program "unclutter"))
 
 (use-package symon
   :ensure t
