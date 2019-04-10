@@ -613,7 +613,7 @@
 		    (lambda ()                                              
 		      (interactive)                                         
 		      (split-window-vertically)                             
-		      (other-window 1)))    
+		      (other-window 1)))
     (global-hl-line-mode t)
   #+END_SRC
 
