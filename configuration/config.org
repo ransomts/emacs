@@ -102,8 +102,8 @@
 
 	(setq diary-file "~/.emacs.d/org/schedule.org"
 	      org-agenda-files
-	      (directory-files (concat user-emacs-directory "org") nil
-			       "\\(?:\\(?:research\\|sc\\(?:hedule\\|ratch\\)\\|todo\\)\\.org\\)")
+	      (directory-files (concat user-emacs-directory "org") t
+			       "\\(?:\\(?:research\\|\\.*-gcal\\|schedule\\|scratch\\|todo\\)\\.org\\)")
 	      org-agenda-use-time-grid nil
 	      org-archive-location "~/.emacs.d/org/archive.org::* From %s"
 	      org-capture-after-finalize-hook nil
@@ -118,14 +118,14 @@
 				       "[ ] %?\n%A\nEntered on %T")
 				      ("n" "General notes" entry
 				       (file+headline "~/.emacs.d/org/scratch.org" "Notes")
-				       "* Note %?\n%T\n"))
+				       "* Note %?\n%T\n")
+				      ("a" "Appointment" entry (file  "~/.emacs.d/org/ransomtim8078-gcal.org" )
+				       "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n"))
 	      org-clock-sound t
 	      org-confirm-babel-evaluate nil
 	      org-datetree-add-timestamp 'inactive
 	      org-default-notes-file "~/.emacs.d/org/todo.org"
 	      org-directory "~/.emacs.d/org"
-	      org-gcal-client-secret "UwfWeXumob8oMLGTBs2D6D5j"
-	      org-gcal-dir "~/.emacs.d/org/org-gcal/"
 	      org-hide-leading-stars t
 	      org-highlight-latex-and-related '(latex)
 	      org-journal-dir "~/.emacs.d/org/journal"
@@ -576,6 +576,30 @@
       (use-package gnuplot :ensure t)
     #+END_SRC
 
+*** Google Calendar
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package org-gcal
+	:ensure t
+	:config
+	(setq org-gcal-client-id "819418314073-8pnmvge9jmpu6jf2hktbuo8m5gakuoeu.apps.googleusercontent.com"
+	      org-gcal-client-secret "lMo_aNdgaa-_dFWmzrBVi5VO"
+	      org-gcal-file-alist '(("ransomtim8078@gmail.com" .  "~/.emacs.d/org/ransomtim8078-gcal.org")
+				    ("tsranso@g.clemson.edu" .  "~/.emacs.d/org/tsranso-gcal.org")
+				    ("g.clemson.edu_h14th1n5kst3v1eq1mifc91bcg@group.calendar.google.com" . "~/.emacs.d/org/schedule.org")
+				    ("socclemson@gmail.com" . "~/.emacs.d/org/SoC-gcal.org")
+				    )))
+
+      (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync) ))
+      (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync) ))
+
+      (setq org-agenda-custom-commands
+	    '(("c" "Simple agenda view"
+	       ((agenda "")
+		(alltodo "")))))
+
+    #+END_SRC
+
 * Moving around
 
   Here are just about my only modifications to ordinary bindings. Mostly just convienience and intution things.
@@ -590,6 +614,15 @@
 		      (interactive)                                         
 		      (split-window-vertically)                             
 		      (other-window 1)))    
+    (global-hl-line-mode t)
+  #+END_SRC
+
+  Flashes the cursor when a long jump is acted
+  #+BEGIN_SRC emacs-lisp
+    (use-package beacon
+      :ensure t
+      :config
+      (beacon-mode 1))
   #+END_SRC
 
 ** focus follows mouse
@@ -681,33 +714,37 @@
 	   ("org" (or (mode . org-mode)
 		      (filename . "OrgMode")))
 	   ("erc" (mode . erc-mode))
-	   ("magit" (name . "magit\*"))
-	   ("subversion" (name . "\*svn"))
-	   ("helm" (mode . helm-major-mode))
-	   ("tramp" (name . "\*tramp\*"))
-	   ("eshell" (name . "\*eshell"))
-	   ("gnus" (or
-		    (mode . message-mode)
-		    (mode . bbdb-mode)
-		    (mode . mail-mode)
-		    (mode . gnus-group-mode)
-		    (mode . gnus-summary-mode)
-		    (mode . gnus-article-mode)
-		    (name . "^\\.bbdb$")
-		    (name . "^\\.newsrc-dribble")))
-	   ("help" (or (name . "\*Help\*")
-		       (name . "\*Apropos\*")
-		       (name . "\*info\*"))))))
-       (ibuffer-expert t)
-       (ibuffer-show-empty-filter-groups nil)
-       (ibuffer-formats
-	'((mark modified read-only " "
-		(name 30 30 :left :elide)
-		" "
-		(size-h 9 -1 :right)
-		" "
-		(mode 16 16 :left :elide)
-		" " filename-and-process))))
+	   ("transmission" (or
+			    (mode . Transmission)
+			    (mode . Transmission-Files)
+			    (mode . Transmission-Info))
+	    ("magit" (name . "magit\*"))
+	    ("subversion" (name . "\*svn"))
+	    ("helm" (mode . helm-major-mode))
+	    ("tramp" (name . "\*tramp\*"))
+	    ("eshell" (name . "\*eshell"))
+	    ("gnus" (or
+		     (mode . message-mode)
+		     (mode . bbdb-mode)
+		     (mode . mail-mode)
+		     (mode . gnus-group-mode)
+		     (mode . gnus-summary-mode)
+		     (mode . gnus-article-mode)
+		     (name . "^\\.bbdb$")
+		     (name . "^\\.newsrc-dribble")))
+	    ("help" (or (name . "\*Help\*")
+			(name . "\*Apropos\*")
+			(name . "\*info\*"))))))
+	(ibuffer-expert t)
+	(ibuffer-show-empty-filter-groups nil)
+	(ibuffer-formats
+	 '((mark modified read-only " "
+		 (name 30 30 :left :elide)
+		 " "
+		 (size-h 9 -1 :right)
+		 " "
+		 (mode 16 16 :left :elide)
+		 " " filename-and-process))))
    #+END_SRC
 *** ibuffer hooks
 
@@ -1029,6 +1066,10 @@
 			       "--output HDMI-1 --mode 1920x1080 --pos 1920x0 "
 			       "--output DP-2 --mode 1920x1080 --pos 3840x0 "
 			       "--output DP-1 --primary --mode 1920x1080 --pos 0x0")))))
+
+	(setq exwm-manage-configurations
+	      '(((equal exwm-instance-name "discord") workspace 2)
+		((equal exwm-instance-name "spotify") workspace 1)))
 
 	(add-hook 'exwm-manage-finish-hook
 		  (lambda ()
