@@ -27,6 +27,20 @@
  '(dired-omit-files "^\\..*~?$")
  '(dired-recursive-copies (quote always))
  '(dired-recursive-deletes (quote always))
+ '(emms-cache-get-function (quote emms-cache-get))
+ '(emms-cache-modified-function (quote emms-cache-dirty))
+ '(emms-cache-set-function (quote emms-cache-set))
+ '(emms-info-functions
+   (quote
+    (emms-info-mediainfo emms-info-mpd emms-info-cueinfo emms-info-ogginfo)) t)
+ '(emms-mode-line-cycle t t)
+ '(emms-mode-line-mode-line-function (quote emms-mode-line-cycle-mode-line-function) t)
+ '(emms-player-mpd-music-directory "/home/tsranso/Music" t)
+ '(emms-player-mplayer-command-name "mpv" t)
+ '(emms-player-next-function (quote emms-score-next-noerror))
+ '(emms-playlist-default-major-mode (quote emms-playlist-mode))
+ '(emms-playlist-update-track-function (quote emms-playlist-mode-update-track-function))
+ '(emms-track-description-function (quote emms-info-track-description))
  '(epa-pinentry-mode (quote loopback))
  '(erc-autojoin-channels-alist (quote (("freenode.net"))))
  '(erc-autojoin-mode nil)
@@ -64,6 +78,15 @@
  '(helm-dictionary-use-full-frame nil t)
  '(ibuffer-default-sorting-mode (quote major-mode))
  '(ibuffer-expert t)
+ '(ibuffer-formats
+   (quote
+    ((mark modified read-only " "
+	   (name 30 30 :left :elide)
+	   " "
+	   (size-h 9 -1 :right)
+	   " "
+	   (mode 16 16 :left :elide)
+	   " " filename-and-process))))
  '(ibuffer-saved-filter-groups
    (quote
     (("exwm"
@@ -81,10 +104,16 @@
        (name . "magit*"))
       ("subversion"
        (name . "*svn"))
+      ("customize"
+       (mode . Custom))
+      ("compilations"
+       (mode . Compilation))
       ("helm"
        (mode . helm-major-mode))
       ("tramp"
        (name . "*tramp*"))
+      ("eshell"
+       (name . "*eshell"))
       ("gnus"
        (or
 	(mode . message-mode)
@@ -103,16 +132,21 @@
  '(ibuffer-show-empty-filter-groups nil)
  '(inferior-lisp-program "sbcl" t)
  '(org-agenda-files
-   (directory-files (concat user-emacs-directory "org") t
-			       "\\(?:\\(?:research\\|\\.*-gcal\\|schedule\\|scratch\\|todo\\)\\.org\\)"))
+   (directory-files
+    (concat user-emacs-directory "org")
+    t "\\(?:\\(?:research\\|\\.*-gcal\\|schedule\\|scratch\\|todo\\)\\.org\\)"))
  '(package-enable-at-startup nil)
  '(package-selected-packages
    (quote
-    (hackernews spotify sx ob-async symon nov auto-package-update smartparens dad-joke gnuplot theme-changer smart-mode-line magit org-bullets exwm xelb page-breaks-line slime transmission pdf-tools material-theme helm-tramp helm-dictionary helm-bbdb emms dashboard)))
+    (dired-subtree hackernews spotify sx ob-async symon nov auto-package-update smartparens dad-joke gnuplot theme-changer smart-mode-line magit org-bullets exwm xelb page-breaks-line slime transmission pdf-tools material-theme helm-tramp helm-dictionary helm-bbdb emms dashboard)))
  '(slime-contribs (quote (slime-fancy)) t)
  '(sml/no-confirm-load-theme t)
  '(sml/theme (quote respectful))
- '(tooltip-mode nil))
+ '(tooltip-mode nil)
+ '(transmission-refresh-modes
+   (quote
+    (transmission-mode transmission-files-mode transmission-info-mode transmission-peers-mode)))
+ '(which-key-idle-delay 3.0))
  
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

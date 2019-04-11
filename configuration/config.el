@@ -14,6 +14,28 @@
 (defun running-on-windows ()
   (string= system-type "windows-nt"))
 
+(defun workspace-string-mappings (x y)
+  (if (= x 0) y
+    (if (<= x y) x (% (- x (% (+ 10 y) y)) y))))
+
+(defun number-to-monitor (x)
+  (let ((y (- x 1))
+	(host (shell-command-to-string "hostname")))
+    (cond ((string= host "tengen\n") (nth y '("HDMI-1" "DVI-D-1" "DP-1" "DP-2" "DP-3")))
+	  ((string= host "hoshi\n") (nth y '("DP-1" "HDMI-1" "DP-2"))))))
+
+(defun number-of-screens ()
+  (string-to-number
+   (shell-command-to-string
+    "xrandr --listactivemonitors | grep Monitors | cut -d ' ' -f2")))
+
+(defun flatten (list-of-lists)
+  (apply #'append list-of-lists))
+
+ (defun workspace-screen-mapping ()
+   (flatten (loop for workspace in '(1 2 3 4 5 6 7 8 9 0)
+		  collect (list workspace (number-to-monitor (workspace-string-mappings workspace (number-of-screens)))))))
+
 (mapc (lambda (dir) (make-directory (concat user-emacs-directory dir) t))
       '("org" "gnus" ".sx" "hackernews"))
 
@@ -91,8 +113,7 @@
 				 (file+headline "~/.emacs.d/org/scratch.org" "Notes")
 				 "* Note %?\n%T\n")
 				("a" "Appointment" entry (file  "~/.emacs.d/org/ransomtim8078-gcal.org" )
-				 "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")
-				)
+				 "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n"))
 	org-clock-sound t
 	org-confirm-babel-evaluate nil
 	org-datetree-add-timestamp 'inactive
@@ -430,8 +451,7 @@
 	org-gcal-file-alist '(("ransomtim8078@gmail.com" .  "~/.emacs.d/org/ransomtim8078-gcal.org")
 			      ("tsranso@g.clemson.edu" .  "~/.emacs.d/org/tsranso-gcal.org")
 			      ("g.clemson.edu_h14th1n5kst3v1eq1mifc91bcg@group.calendar.google.com" . "~/.emacs.d/org/schedule.org")
-			      ("socclemson@gmail.com" . "~/.emacs.d/org/SoC-gcal.org")
-			      )))
+			      ("socclemson@gmail.com" . "~/.emacs.d/org/SoC-gcal.org"))))
 
 (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync) ))
 (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync) ))
@@ -450,7 +470,7 @@
 		(lambda ()                                              
 		  (interactive)                                         
 		  (split-window-vertically)                             
-		  (other-window 1)))    
+		  (other-window 1)))
 (global-hl-line-mode t)
 
 (use-package beacon
@@ -481,80 +501,86 @@
 	      ("C-c C-b s" . hs-show-block)))
 
 (use-package ibuffer
-  :ensure t
-  :bind ("C-x C-b" . #'ibuffer)
-  :config
-  ;; Use human readable Size column instead of original one
-  (define-ibuffer-column size-h
-    (:name "Size" :inline t)
-    (cond
-     ((> (buffer-size) 1000000) (format "%7.1fM" (/ (buffer-size) 1000000.0)))
-     ((> (buffer-size) 100000) (format "%7.0fk" (/ (buffer-size) 1000.0)))
-     ((> (buffer-size) 1000) (format "%7.1fk" (/ (buffer-size) 1000.0)))
-     (t (format "%8d" (buffer-size)))))
+       :ensure t
+       :bind ("C-x C-b" . #'ibuffer)
+       :config
+       ;; Use human readable Size column instead of original one
+       (define-ibuffer-column size-h
+	 (:name "Size" :inline t)
+	 (cond
+	  ((> (buffer-size) 1000000) (format "%7.1fM" (/ (buffer-size) 1000000.0)))
+	  ((> (buffer-size) 100000) (format "%7.0fk" (/ (buffer-size) 1000.0)))
+	  ((> (buffer-size) 1000) (format "%7.1fk" (/ (buffer-size) 1000.0)))
+	  (t (format "%8d" (buffer-size)))))
 
-  ;; Modify the default ibuffer-formats
-  (setq ibuffer-formats
+       ;; Modify the default ibuffer-formats
+       (setq ibuffer-formats
+	     '((mark modified read-only " "
+		     (name 18 18 :left :elide)
+		     " "
+		     (size-h 9 -1 :right)
+		     " "
+		     (mode 16 16 :left :elide)
+		     " "
+		     filename-and-process)))
+
+       (setq mp/ibuffer-collapsed-groups (list "helm" "tramp"))
+
+       (defadvice ibuffer (after collapse-helm)
+	 (dolist (group mp/ibuffer-collapsed-groups)
+	   (progn
+	     (goto-char 1)
+	     (when (search-forward (concat "[ " group " ]") (point-max) t)
+	       (progn
+		 (move-beginning-of-line nil)
+		 (ibuffer-toggle-filter-group)))))
+	 (goto-char 1)
+	 (search-forward "[ " (point-max) t))
+
+       (ad-activate 'ibuffer)
+
+       :custom
+       (ibuffer-default-sorting-mode 'major-mode)
+       (ibuffer-saved-filter-groups
+	'(("exwm"
+	   ("exwm" (mode . exwm-mode))
+	   ("dired" (mode . dired-mode))
+	   ("org" (or (mode . org-mode)
+		      (filename . "OrgMode")))
+	   ("erc" (mode . erc-mode))
+	   ("magit" (name . "magit\*"))
+	   ("subversion" (name . "\*svn"))
+	   ("customize" (mode . Custom))
+	   ("compilations" (mode . Compilation))
+;	   ("transmission" (or
+;			    (mode . Transmission)
+;			    (mode . Transmission-Info)
+;			    (mode . Transmission-Files))
+	   ("helm" (mode . helm-major-mode))
+	   ("tramp" (name . "\*tramp\*"))
+	   ("eshell" (name . "\*eshell"))
+	   ("gnus" (or
+		    (mode . message-mode)
+		    (mode . bbdb-mode)
+		    (mode . mail-mode)
+		    (mode . gnus-group-mode)
+		    (mode . gnus-summary-mode)
+		    (mode . gnus-article-mode)
+		    (name . "^\\.bbdb$")
+		    (name . "^\\.newsrc-dribble")))
+	   ("help" (or (name . "\*Help\*")
+		       (name . "\*Apropos\*")
+		       (name . "\*info\*"))))))
+       (ibuffer-expert t)
+       (ibuffer-show-empty-filter-groups nil)
+       (ibuffer-formats
 	'((mark modified read-only " "
-		(name 18 18 :left :elide)
+		(name 30 30 :left :elide)
 		" "
 		(size-h 9 -1 :right)
 		" "
 		(mode 16 16 :left :elide)
-		" "
-		filename-and-process)))
-
-  (setq mp/ibuffer-collapsed-groups (list "helm" "tramp"))
-
-  (defadvice ibuffer (after collapse-helm)
-    (dolist (group mp/ibuffer-collapsed-groups)
-      (progn
-	(goto-char 1)
-	(when (search-forward (concat "[ " group " ]") (point-max) t)
-	  (progn
-	    (move-beginning-of-line nil)
-	    (ibuffer-toggle-filter-group)))))
-    (goto-char 1)
-    (search-forward "[ " (point-max) t))
-
-  (ad-activate 'ibuffer)
-
-  :custom
-  (ibuffer-default-sorting-mode 'major-mode)
-  (ibuffer-saved-filter-groups
-   '(("exwm"
-      ("exwm" (mode . exwm-mode))
-      ("dired" (mode . dired-mode))
-      ("org" (or (mode . org-mode)
-		 (filename . "OrgMode")))
-      ("erc" (mode . erc-mode))
-      ("magit" (name . "magit\*"))
-      ("subversion" (name . "\*svn"))
-      ("helm" (mode . helm-major-mode))
-      ("tramp" (name . "\*tramp\*"))
-      ("eshell" (name . "\*eshell"))
-      ("gnus" (or
-	       (mode . message-mode)
-	       (mode . bbdb-mode)
-	       (mode . mail-mode)
-	       (mode . gnus-group-mode)
-	       (mode . gnus-summary-mode)
-	       (mode . gnus-article-mode)
-	       (name . "^\\.bbdb$")
-	       (name . "^\\.newsrc-dribble")))
-      ("help" (or (name . "\*Help\*")
-		  (name . "\*Apropos\*")
-		  (name . "\*info\*"))))))
-  (ibuffer-expert t)
-  (ibuffer-show-empty-filter-groups nil)
-  (ibuffer-formats
-   '((mark modified read-only " "
-	   (name 30 30 :left :elide)
-	   " "
-	   (size-h 9 -1 :right)
-	   " "
-	   (mode 16 16 :left :elide)
-	   " " filename-and-process))))
+		" " filename-and-process))))
 
 (add-hook 'ibuffer-mode-hook
 	  (lambda ()
@@ -778,22 +804,21 @@ buffer is not visiting a file."
     (setq exwm-workspace-show-all-buffers t
 	  exwm-layout-show-all-buffers t)
 
-    (dotimes (i 10)
+    (setq exwm-workspace-number 10)
+    (dotimes (i exwm-workspace-number)
       (exwm-input-set-key (kbd (format "s-%d" i))
 			  `(lambda ()
 			     (interactive)
-			     (exwm-workspace-switch-create ,i))))
+			     (exwm-workspace-switch-create
+			     (min (+ 5 ,i) ,i)))))
 
     (push ?\C-q exwm-input-prefix-keys)
     (define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
 
     (require 'exwm-randr)
-    (when (running-on-hosts '("tengen"))
+    (setq exwm-randr-workspace-output-plist (workspace-screen-mapping))
 
-      (setq exwm-workspace-number 5
-	    exwm-randr-workspace-output-plist
-	    '(0 "DP-3" 1 "HDMI-1" 2 "DVI-D-1" 3 "DP-1" 4 "DP-2"
-		5 "DP-3" 6 "HDMI-1" 7 "DVI-D-1" 8 "DP-1" 9 "DP-2"))
+    (when (running-on-hosts '("tengen"))
       (add-hook 'exwm-randr-screen-change-hook
 		(lambda ()
 		  (start-process-shell-command
@@ -805,10 +830,6 @@ buffer is not visiting a file."
 			   "--output DP-1 --mode 1920x1200 --pos 1920x240 --rotate left "
 			   "--output DVI-D-1 --mode 1920x1080 --pos 0x1080 --rotate normal ")))))
     (when (running-on-hosts '("hoshi"))
-      (setq exwm-randr-workspace-output-plist
-	    '(1 "DP-1" 4 "HDMI-1" 7 "DP-2"
-		2 "DP-1" 5 "HDMI-1" 8 "DP-2"
-		3 "DP-1" 6 "HDMI-1" 9 "DP-2" 0 "DP-2"))
       (add-hook 'exwm-randr-screen-change-hook
 		(lambda ()
 		  (start-process-shell-command
@@ -819,11 +840,8 @@ buffer is not visiting a file."
 			   "--output DP-1 --primary --mode 1920x1080 --pos 0x0")))))
 
     (setq exwm-manage-configurations
-	  (quote
-	   (((equal exwm-instance-name "discord")
-	     workspace 2)
-	    ((equal exwm-instance-name "spotify")
-	     workspace 1))))
+	  '(((equal exwm-instance-name "discord") workspace 2)
+	    ((equal exwm-instance-name "spotify") workspace 1)))
 
     (add-hook 'exwm-manage-finish-hook
 	      (lambda ()
