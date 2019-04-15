@@ -497,8 +497,10 @@
 	:config
 	(dashboard-setup-startup-hook)
 	:custom
+	(show-week-agenda-p t)
 	(dashboard-items '((recents  . 5)
 			   (agenda . 5)
+			   (bookmarks . 5)
 			   (registers . 5))))
       ;; todo: make (todos . 5) source
     #+END_SRC
@@ -1067,7 +1069,7 @@
 		     ("s-d" . "discord")
 		     ("s-t" . "transmission-remote-gtk")
 		     ("s-s" . "spotify")
-		     ("s-<tab>" . "google-chrome-stable")
+		     ("s-<tab>" . "brave")
 		     ("<C-M-escape>" . "gnome-system-monitor")
 		     ("s-m" . "pavucontrol")
 		     ("s-<down>" . "amixer sset Master 5%-")
