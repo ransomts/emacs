@@ -159,6 +159,8 @@
 	      org-preview-latex-image-directory "~/.emacs.d/ltxpng/"
 	      org-refile-targets '((org-agenda-files :maxlevel . 2))
 	      org-refile-use-outline-path 'file
+	      org-src-fontify-natively t
+	      org-src-tab-acts-natively t
 	      org-startup-with-latex-preview t
 	      org-todo-keyword-faces
 	      '(("SOON"
@@ -310,7 +312,17 @@
 	(eshell-highlight-prompt nil)
 	(eshell-destroy-buffer-when-process-dies t)
 	(eshell-visual-commands
-	 '("vi" "vim" "screen" "top" "htop" "less" "more" "glances" "rtv" "ncdu" "alsamixer" "pacmixer" "nmon")))
+	 '("alsamixer"
+	   "glances"
+	   "htop"
+	   "less"
+	   "more"
+	   "ncdu" "nethogs" "nmon"
+	   "pacmixer"
+	   "radeontop" "rtv"
+	   "screen"
+	   "top"
+	   "vi" "vim")))
 
       (defun eshell-load-bash-aliases ()
 	"Reads bash aliases from Bash and inserts
