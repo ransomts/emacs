@@ -1081,7 +1081,7 @@
 		     ("s-d" . "discord")
 		     ("s-t" . "transmission-remote-gtk")
 		     ("s-s" . "spotify")
-		     ("s-<tab>" . "brave")
+		     ("s-<tab>" . "google-chrome-stable")
 		     ("<C-M-escape>" . "gnome-system-monitor")
 		     ("s-m" . "pavucontrol")
 		     ("s-<down>" . "amixer sset Master 5%-")
