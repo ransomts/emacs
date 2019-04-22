@@ -267,6 +267,8 @@
 	(dired-omit-files "^\\..*~?$")
 	(dired-recursive-copies 'always)
 	(dired-recursive-deletes 'always))
+
+     (global-set-key (kbd "C-c d") (lambda () (interactive) (dired default-directory)))
     #+END_SRC
 
 **** dired subtree
@@ -474,6 +476,8 @@
 	  :ensure t
 	  :unless (running-on-windows)
 	  :bind ("C-x g" . #'magit-status)))
+
+      (setq ediff-window-setup-function 'ediff-setup-windows-plain)
     #+END_SRC
 
 *** pdf
@@ -872,7 +876,7 @@
 	   (split-window-vertically))
 	 (switch-to-buffer nil)))
 
-     (global-set-key (kbd "C-x |") 'toggle-frame-split)
+     (global-set-key (kbd "C-c |") 'toggle-frame-split)
    #+END_SRC
 
 ** edit current buffer as root

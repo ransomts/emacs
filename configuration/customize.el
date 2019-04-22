@@ -6,6 +6,7 @@
  '(auto-package-update-delete-old-versions t)
  '(auto-package-update-interval 90)
  '(auto-package-update-prompt-before-update t)
+ '(auto-revert-interval 2)
  '(bbdb-dial-function
    (quote
     (closure
@@ -21,7 +22,12 @@
  '(custom-safe-themes
    (quote
     ("732b807b0543855541743429c9979ebfb363e27ec91e82f463c91e68c772f6e3" "c74e83f8aa4c78a121b52146eadb792c9facc5b1f02c917e3dbb454fca931223" "a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" default)))
- '(dashboard-items (quote ((recents . 5) (agenda . 5) (registers . 5))) t)
+ '(dashboard-items
+   (quote
+    ((recents . 5)
+     (agenda . 5)
+     (bookmarks . 5)
+     (registers . 5))) t)
  '(dired-listing-switches "-alh --no-group")
  '(dired-no-confirm (quote (byte-compile copy delete)))
  '(dired-omit-files "^\\..*~?$")
@@ -64,7 +70,7 @@
  '(eshell-prompt-function (quote my-eshell-prompt))
  '(eshell-visual-commands
    (quote
-    ("vi" "vim" "screen" "top" "htop" "less" "more" "rtv")))
+    ("alsamixer" "glances" "htop" "less" "more" "ncdu" "nethogs" "nmon" "pacmixer" "radeontop" "rtv" "screen" "top" "vi" "vim")))
  '(gnus-always-read-dribble-file t)
  '(gnus-blocked-images nil)
  '(gnus-directory "~/.emacs.d/gnus")
@@ -139,6 +145,7 @@
  '(package-selected-packages
    (quote
     (dired-subtree hackernews spotify sx ob-async symon nov auto-package-update smartparens dad-joke gnuplot theme-changer smart-mode-line magit org-bullets exwm xelb page-breaks-line slime transmission pdf-tools material-theme helm-tramp helm-dictionary helm-bbdb emms dashboard)))
+ '(show-week-agenda-p t t)
  '(slime-contribs (quote (slime-fancy)) t)
  '(sml/no-confirm-load-theme t)
  '(sml/theme (quote respectful))
