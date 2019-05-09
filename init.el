@@ -4,8 +4,8 @@
 
 (package-initialize)
 
-(setq custom-file "~/.emacs.d/lisp/customize.el")
+(setq custom-file "~/.emacs.d/configuration/customize.el")
 (load custom-file)
 
-(org-babel-load-file "/home/tsranso/.emacs.d/lisp/config.org")
+(org-babel-load-file "/home/tsranso/.emacs.d/configuration/config.org")
 

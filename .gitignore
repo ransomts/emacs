@@ -1,12 +1,12 @@
 **/epdfinfo
 **.elc
-lisp/config.el
+configuration/config.el
 recentf
 tramp
 .org-id-locations
 auto-save-list
 network-security.data
-
+**#**
 eshell
 emms
 bookmarks
@@ -21,3 +21,11 @@ Mail
 hackernews
 transient
 nov-places
+/#recentf#
+/history
+**config.el
+/.persistent-scratch
+/org-gcal/
+/request/
+
+/bbdb
