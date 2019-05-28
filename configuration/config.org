@@ -118,7 +118,7 @@
 	   (lisp . t)
 	   (makefile . t)
 	   (python . t)
-	   (shell . t)
+	   (sh . t)
 	   (sql . t)
 	   (sqlite . t)))
 
@@ -541,7 +541,7 @@
     #+BEGIN_SRC emacs-lisp
       (use-package spotify :ensure t
 	:if (running-on-hosts '("tengen" "hoshi" "atari" "joseki"))
-	:unless (running-on-windows)
+	:unless (or (running-on-windows) (running-on-hosts '("tengen-windows")))
 	:bind (("C-c s c" . #'spotify-current)
 	       ("C-c s SPC" . #'spotify-playpause)
 	       ("C-c s n" . #'spotify-next)
