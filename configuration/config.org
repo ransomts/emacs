@@ -703,6 +703,7 @@
   Flashes the cursor when a long jump is acted
   #+BEGIN_SRC emacs-lisp
     (use-package beacon
+      :if (display-graphic-p)
       :ensure t
       :config
       (beacon-mode 1))
