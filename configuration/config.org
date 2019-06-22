@@ -100,6 +100,14 @@
        ;;   )
      #+END_SRC
 
+*** elisp
+#+BEGIN_SRC emacs-lisp
+  (use-package elisp-mode
+    :bind
+    (("C-x C-e" . pp-eval-last-sexp)
+    ("<C-M-backspace>" . backward-kill-sexp))
+    :config (enable-paredit-mode))
+#+END_SRC
 *** org
     #+BEGIN_SRC emacs-lisp
       (use-package org
@@ -180,8 +188,7 @@
 	 ("C-c 2" . #'org-decrypt-entry)
 	 (:map org-mode-map
 	       (("C-c r" . #'org-archive-subtree)
-		("C-c C-r" . #'org-archive-subtree))))
-	:hook visual-line-mode)
+		("C-c C-r" . #'org-archive-subtree)))))
     #+END_SRC
 
 **** org exports
@@ -660,7 +667,12 @@
       (use-package gnuplot :ensure t)
     #+END_SRC
 
+*** deadgrep
 
+#+BEGIN_SRC emacs-lisp
+  (use-package deadgrep :ensure t
+    :bind ("C-c g" . #'deadgrep))
+#+END_SRC
 *** Google Calendar
 
     #+BEGIN_SRC emacs-lisp
@@ -687,6 +699,7 @@
 
   Here are just about my only modifications to ordinary bindings. Mostly just convienience and intution things.
   #+BEGIN_SRC emacs-lisp
+    (global-set-key (kbd "C-c u")   #'org-babel-detangle)
     (global-set-key (kbd "M-o")     #'other-window)
     (global-set-key (kbd "M-h")     #'backward-kill-word)                   
     (global-set-key (kbd "C-x k")   #'kill-this-buffer)                     
@@ -926,7 +939,7 @@
      ;;       column-number-mode t)
 
      (tooltip-mode 0)
-     (fringe-mode 1)
+     ;(fringe-mode 1)
      (tool-bar-mode 0)
      (menu-bar-mode 0)
      (scroll-bar-mode 0)
@@ -1214,6 +1227,6 @@
 ** emacs server
 
    #+BEGIN_SRC emacs-lisp
-     (when (running-on-hosts '("tengen" "joseki" "atari" "hoshi"))
+     (when (running-on-hosts '("tengen" "joseki" "atari" "hoshi" "tsranso-ThinkPad-T430s"))
 	   (server-start))
    #+END_SRC
