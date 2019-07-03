@@ -218,10 +218,9 @@
 **** org-ref
 
 #+BEGIN_SRC emacs-lisp
-
-(use-package org-ref :ensure t)
-(setq org-latex-pdf-process '("latexmk -pdflatex='%latex -shell-escape -interaction nonstopmode' -pdf -output-directory=%o -f %f"))
-
+  (use-package org-ref :ensure t)
+  (setq org-latex-pdf-process
+	'("latexmk -pdflatex='%latex -shell-escape -interaction nonstopmode' -pdf -output-directory=%o -f %f"))
 #+END_SRC
 **** async src blocks
      #+BEGIN_SRC emacs-lisp
