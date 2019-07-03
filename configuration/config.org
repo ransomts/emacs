@@ -272,9 +272,14 @@
 
 *** dired
     #+BEGIN_SRC emacs-lisp
+      (defun ransom/open-home ()
+	(interactive)
+	(dired (getenv "HOME")))
+
       (use-package dired+
 	:bind (:map dired-mode-map
 		    (("M-h" . #'dired-omit-mode)
+		     ("~" . #'ransom/open-home)
 		     ("u" . #'dired-up-directory)))
 	:custom
 	(dired-listing-switches "-alh --no-group")
@@ -283,7 +288,7 @@
 	(dired-recursive-copies 'always)
 	(dired-recursive-deletes 'always))
 
-     (global-set-key (kbd "C-c d") (lambda () (interactive) (dired default-directory)))
+      (global-set-key (kbd "C-c d") (lambda () (interactive) (dired default-directory)))
     #+END_SRC
 
 **** dired subtree
