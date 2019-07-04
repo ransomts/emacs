@@ -102,10 +102,14 @@
 
 *** elisp
 #+BEGIN_SRC emacs-lisp
+  (use-package paredit
+    :ensure t
+    :hook elisp-mode)
+
   (use-package elisp-mode
     :bind
     (("C-x C-e" . pp-eval-last-sexp)
-    ("<C-M-backspace>" . backward-kill-sexp))
+     ("<C-M-backspace>" . backward-kill-sexp))
     :config (enable-paredit-mode))
 #+END_SRC
 *** org
@@ -126,7 +130,7 @@
 	   (lisp . t)
 	   (makefile . t)
 	   (python . t)
-	   (sh . t)
+	   (shell . t)
 	   (sql . t)
 	   (sqlite . t)))
 
