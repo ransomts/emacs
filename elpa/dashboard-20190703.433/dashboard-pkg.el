@@ -1,4 +1,4 @@
-(define-package "dashboard" "20190702.1039" "A startup screen extracted from Spacemacs"
+(define-package "dashboard" "20190703.433" "A startup screen extracted from Spacemacs"
   '((emacs "25.3")
     (page-break-lines "0.11"))
   :keywords
