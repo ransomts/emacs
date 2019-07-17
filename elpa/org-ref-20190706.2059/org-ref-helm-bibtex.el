@@ -36,8 +36,8 @@
 (defvar org-ref-insert-cite-key)
 
 ;;; Code:
-(require 'helm-config)
 (require 'helm)
+(require 'helm-config)
 (require 'helm-bibtex)
 (require 'helm-utils)
 (require 'org-ref-helm)

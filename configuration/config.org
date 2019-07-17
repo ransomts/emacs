@@ -222,7 +222,7 @@
 **** org-ref
 
 #+BEGIN_SRC emacs-lisp
-  (use-package org-ref :ensure t)
+  (use-package org-ref :ensure t :after helm)
   (setq org-latex-pdf-process
 	'("latexmk -pdflatex='%latex -shell-escape -interaction nonstopmode' -pdf -output-directory=%o -f %f"))
 #+END_SRC
@@ -693,6 +693,7 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package org-gcal
+	:disabled
 	:ensure t
 	:config
 	(setq org-gcal-client-id "819418314073-8pnmvge9jmpu6jf2hktbuo8m5gakuoeu.apps.googleusercontent.com"
