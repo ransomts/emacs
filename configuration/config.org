@@ -338,7 +338,7 @@
 	(eshell-destroy-buffer-when-process-dies t)
 	(eshell-visual-commands
 	 '("alsamixer"
-	   "glances"
+	   "glances" "gtop"
 	   "htop"
 	   "less"
 	   "more"
@@ -394,6 +394,12 @@
 	:config
 	(auto-package-update-maybe))
     #+END_SRC
+*** dmenu
+    #+BEGIN_SRC emacs-lisp
+      (use-package dmenu
+	:ensure t
+	:bind (("s-x" . #'dmenu)))
+    #+END_SRC
 
 *** Dad-joke
 
@@ -433,6 +439,7 @@
 	(use-package helm
 	  :ensure t
 	  :bind (("M-x"   . #'helm-M-x)
+		 ("<menu>"   . #'helm-M-x)
 		 ("C-x b" . #'helm-buffers-list)
 		 ("C-x f" . #'helm-find-files)
 		 ("C-x C-f" . #'helm-find-files)
@@ -1048,7 +1055,7 @@
      (add-to-list 'tramp-remote-path "/home/tsranso/bin")
      (add-to-list 'tramp-remote-path "/home/tsranso/.local/bin")
      (add-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)
-
+     (global-auto-revert-mode 1)
    #+END_SRC
 
 * exwm
@@ -1070,14 +1077,15 @@
 	       (not (running-on-hosts '("login001" "marcher" "atari"))))
       (use-package xelb
 	:if (string= "exwm" (getenv "DESKTOP_SESSION"))
-	:ensure t)
+	;; :ensure t
+	)
 
       (use-package exwm
 	:if (string= "exwm" (getenv "DESKTOP_SESSION"))
 	:ensure t
 	:after (xelb)
 	:bind
-	(("s-x" . #'launch-program)
+	(("s-x" . #'dmenu)
 	 ("s-X" . #'launch-program-with-sudo)
 	 ("s-l" . #'lock-screen)
 	 ("s-w" . #'exwm-workplace-switch)
@@ -1202,9 +1210,9 @@
        ;; (start-process "" nil "xrdb" "-merge" "/home/tsranso/.config/urxvt/conf")
        (start-process "wifi applet" nil "nm-applet")
 
-       (when (running-on-wireless '("Torus Shaped Earth\n"))
-	 (launch-program "discord")
-	 (launch-program "spotify")
+       (when (running-on-wireless '("Torus Shaped Earth"))
+	 ;; (launch-program "discord")
+	 (launch-program "spotify --minimized")
 	 (launch-program "transmission-daemon")))
 
      (when (and (running-on-hosts '("tengen"))
@@ -1214,11 +1222,13 @@
      (when (and (running-on-hosts '("hoshi" "tengen"))
 		(not (running-on-windows)))
        (launch-program "discord")
-       (launch-program "spotify"))
+       (launch-program "spotify --minimized"))
 
      (when (and (running-on-hosts '("joseki" "hoshi" "tengen"))
 		(not (running-on-windows)))
        ;; (launch-program "redshift" "-l" "34.67:-82.84")
+       (launch-program "setxkbmap dvorak")
+       (launch-program "xmodmap ~/.Xmodmap")
        (launch-program "urxvtd")
        (launch-program "blueman-applet"))
 
@@ -1238,8 +1248,8 @@
    #+BEGIN_SRC emacs-lisp
      (use-package symon
        :ensure t
-       :bind
-       ("s-h" . symon-mode))
+       :bind ("s-h" . symon-mode)
+       :config (symon-mode))
    #+END_SRC
 ** emacs server
 

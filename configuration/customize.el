@@ -64,13 +64,13 @@
  '(erc-nick "tinhatcat")
  '(erc-prompt "<tinhatcat>")
  '(erc-sound-mode t)
- '(eshell-cmpl-ignore-case t)
- '(eshell-destroy-buffer-when-process-dies t)
- '(eshell-highlight-prompt nil)
- '(eshell-prompt-function (quote my-eshell-prompt))
+ '(eshell-cmpl-ignore-case t t)
+ '(eshell-destroy-buffer-when-process-dies t t)
+ '(eshell-highlight-prompt nil t)
+ '(eshell-prompt-function (quote my-eshell-prompt) t)
  '(eshell-visual-commands
    (quote
-    ("alsamixer" "glances" "htop" "less" "more" "ncdu" "nethogs" "nmon" "pacmixer" "radeontop" "rtv" "screen" "top" "vi" "vim")))
+    ("alsamixer" "glances" "htop" "less" "more" "ncdu" "nethogs" "nmon" "pacmixer" "radeontop" "rtv" "screen" "top" "vi" "vim")) t)
  '(gnus-always-read-dribble-file t t)
  '(gnus-blocked-images nil)
  '(gnus-directory "~/.emacs.d/gnus")
@@ -137,9 +137,7 @@
 	(name . "*info*")))))))
  '(ibuffer-show-empty-filter-groups nil)
  '(inferior-lisp-program "sbcl" t)
- '(org-agenda-files
-   (quote
-    ("/home/tsranso/.emacs.d/org/ransomtim8078-gcal.org" "/home/tsranso/.emacs.d/org/research.org" "/home/tsranso/.emacs.d/org/scratch.org" "/home/tsranso/.emacs.d/org/todo.org")))
+ '(org-agenda-files nil)
  '(package-enable-at-startup nil)
  '(package-selected-packages
    (quote
