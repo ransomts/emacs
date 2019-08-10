@@ -1,3 +1,9 @@
 [submodule "packages/emacs-which-key"]
 	path = packages/emacs-which-key
 	url = https://github.com/justbur/emacs-which-key.git
+[submodule "packages/xelb"]
+	path = packages/xelb
+	url = https://github.com/ch11ng/xelb.git
+[submodule "packages/exwm"]
+	path = packages/exwm
+	url = https://github.com/ch11ng/exwm.git

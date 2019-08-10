@@ -38,10 +38,10 @@
  '(emms-cache-set-function (quote emms-cache-set))
  '(emms-info-functions
    (quote
-    (emms-info-mediainfo emms-info-mpd emms-info-cueinfo emms-info-ogginfo)))
+    (emms-info-mediainfo emms-info-mpd emms-info-cueinfo emms-info-ogginfo)) t)
  '(emms-mode-line-cycle t t)
- '(emms-mode-line-mode-line-function (quote emms-mode-line-cycle-mode-line-function))
- '(emms-player-mpd-music-directory "/home/tsranso/Music")
+ '(emms-mode-line-mode-line-function (quote emms-mode-line-cycle-mode-line-function) t)
+ '(emms-player-mpd-music-directory "/home/tsranso/Music" t)
  '(emms-player-mplayer-command-name "mpv" t)
  '(emms-player-next-function (quote emms-score-next-noerror))
  '(emms-playlist-default-major-mode (quote emms-playlist-mode))
@@ -70,8 +70,8 @@
  '(eshell-prompt-function (quote my-eshell-prompt) t)
  '(eshell-visual-commands
    (quote
-    ("alsamixer" "glances" "htop" "less" "more" "ncdu" "nethogs" "nmon" "pacmixer" "radeontop" "rtv" "screen" "top" "vi" "vim")) t)
- '(gnus-always-read-dribble-file t t)
+    ("alsamixer" "glances" "gtop" "htop" "less" "more" "ncdu" "nethogs" "nmon" "pacmixer" "radeontop" "rtv" "screen" "top" "vi" "vim")) t)
+ '(gnus-always-read-dribble-file t)
  '(gnus-blocked-images nil)
  '(gnus-directory "~/.emacs.d/gnus")
  '(helm-dictionary-browser-function (quote browse-url-chrome))

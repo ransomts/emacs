@@ -266,7 +266,11 @@ Remote filesystem are generally mounted with sshfs."
   :type '(repeat string))
 
 (defcustom helm-browse-project-default-find-files-fn
-  #'helm-browse-project-walk-directory
+  (cond ((executable-find "rg")
+         #'helm-browse-project-rg-find-files)
+        ((executable-find "ag")
+         #'helm-browse-project-ag-find-files)
+        (t #'helm-browse-project-walk-directory))
   "The default function to retrieve files in a non-vc directory.
 
 A function that takes a directory name as only arg."
@@ -615,14 +619,6 @@ Going up one level works only when pattern is a directory endings with
 When nil always delete char backward."
   :group 'helm-files
   :type 'boolean)
-
-(defcustom helm-browse-project-ag-find-files-cmd
-  "ag --hidden -g '.*' %s"
-  "The command to list directories in `helm-browse-project-ag-find-files-cmd'.
-
-Use \"rg --files --hidden -g '.*' %s\" with ripgrep."
-  :type 'string
-  :group 'helm-files)
 
 ;; Internal.
 (defvar helm-find-files-doc-header " (\\<helm-find-files-map>\\[helm-find-files-up-one-level]: Go up one level)"
@@ -3625,7 +3621,7 @@ prefix arg, one prefix arg or two prefix arg."
       (let* ((mkds        (helm-marked-candidates :with-wildcard t))
              (candidate   (car mkds))
              (end         (point))
-             (tap         (helm-ff--fname-at-point))
+             (tap         (helm-ffap-guesser))
              (guess       (and (stringp tap)
                                (substring-no-properties tap)))
              (beg         (if guess (- (point) (length guess)) (point)))
@@ -4499,6 +4495,12 @@ Don't use it in your own code unless you know what you are doing.")
 (defvar helm--browse-project-cache (make-hash-table :test 'equal))
 (defvar helm-buffers-in-project-p)
 
+(defvar helm-browse-project-map
+  (let ((map (make-sparse-keymap)))
+    (set-keymap-parent map helm-generic-files-map)
+    (define-key map (kbd "M-g a") 'helm-browse-project-run-ag)
+    map))
+  
 (defun helm-browse-project-get-buffers (root-directory)
   (cl-loop for b in (helm-buffer-list)
            ;; FIXME: Why default-directory is root-directory
@@ -4525,58 +4527,104 @@ Don't use it in your own code unless you know what you are doing.")
    directory
    :directories nil :path 'full :skip-subdirs t))
 
+(defun helm-browse-project-find-files-1 (directory program)
+  "List files in DIRECTORY recursively with external PROGRAM."
+  (let ((cmd (cl-ecase program
+               (ag "ag --hidden -g '.*' %s")
+               (rg "rg --files --hidden -g '*' %s"))))
+    (with-temp-buffer
+      (call-process-shell-command
+       (format cmd directory)
+       nil t nil)
+      (mapcar (lambda (f) (expand-file-name f directory))
+              (split-string (buffer-string) "\n")))))
+
 (defun helm-browse-project-ag-find-files (directory)
   "A suitable function for `helm-browse-project-default-find-files-fn'.
+Use AG as backend."
+  (helm-browse-project-find-files-1 directory 'ag))
 
-Needs AG as backend."
-  (with-temp-buffer
-    (call-process-shell-command
-     (format helm-browse-project-ag-find-files-cmd directory)
-     nil t nil)
-    (mapcar (lambda (f) (expand-file-name f directory))
-            (split-string (buffer-string) "\n"))))
+(defun helm-browse-project-rg-find-files (directory)
+  "A suitable function for `helm-browse-project-default-find-files-fn'.
+Use RG as backend."
+  (helm-browse-project-find-files-1 directory 'rg))
+
+(defun helm-browse-project-ag (_candidate)
+  "helm-grep AG action for helm-browse-project."
+  (let ((dir (with-helm-buffer (helm-attr 'root-dir))))
+    (helm-grep-ag dir helm-current-prefix-arg)))
+
+(defun helm-browse-project-run-ag ()
+  "Runs helm-grep AG from helm-browse-project."
+  (interactive)
+  (with-helm-alive-p
+    (helm-exit-and-execute-action 'helm-browse-project-ag)))
+(put 'helm-browse-project-run-ag 'helm-only t)
+
+(defclass helm-browse-project-override-inheritor (helm-type-file) ())
+
+(defclass helm-browse-project-source (helm-source-in-buffer
+                                      helm-browse-project-override-inheritor)
+  ((root-dir :initarg :root-dir
+             :initform nil
+             :custom 'file)
+   (match-part :initform
+               (lambda (c)
+                 (if (with-helm-buffer
+                       helm-ff-transformer-show-only-basename)
+                     (helm-basename c) c)))
+   (filter-one-by-one :initform
+                      (lambda (c)
+                        (if (with-helm-buffer
+                              helm-ff-transformer-show-only-basename)
+                            (cons (propertize (helm-basename c)
+                                              'face 'helm-ff-file)
+                                  c)
+                          (propertize c 'face 'helm-ff-file)))))
+  "Class to define a source in helm-browse-project handling non VC
+handled directories.")
+
+(defmethod helm--setup-source :after ((source helm-browse-project-override-inheritor))
+  (let ((actions (slot-value source 'action)))
+    (setf (slot-value source 'action)
+          (helm-append-at-nth
+           (symbol-value actions)
+           '(("Grep project with AG `M-g a, C-u select type'" . helm-browse-project-ag))
+           7))
+    (setf (slot-value source 'keymap) helm-browse-project-map)))
 
 (defun helm-browse-project-find-files (directory &optional refresh)
+  "Browse non VC handled directory DIRECTORY."
   (when refresh (remhash directory helm--browse-project-cache))
   (unless (gethash directory helm--browse-project-cache)
     (puthash directory (funcall helm-browse-project-default-find-files-fn
                                 directory)
              helm--browse-project-cache))
   (helm :sources `(,(helm-browse-project-build-buffers-source directory)
-                   ,(helm-build-in-buffer-source "Browse project"
-                     :data (gethash directory helm--browse-project-cache)
-                     :header-name (lambda (name)
-                                    (format
-                                     "%s (%s)"
-                                     name (abbreviate-file-name directory)))
-                     :match-part (lambda (c)
-                                   (if (with-helm-buffer
-                                         helm-ff-transformer-show-only-basename)
-                                       (helm-basename c) c))
-                     :filter-one-by-one
-                     (lambda (c)
-                       (if (with-helm-buffer
-                             helm-ff-transformer-show-only-basename)
-                           (cons (propertize (helm-basename c)
-                                             'face 'helm-ff-file)
-                                 c)
-                           (propertize c 'face 'helm-ff-file)))
-                     :keymap helm-generic-files-map
-                     :action 'helm-type-file-actions))
+                   ,(helm-make-source "Browse project"
+                        'helm-browse-project-source
+                        :root-dir directory
+                        :data (gethash directory helm--browse-project-cache)
+                        :header-name
+                        (lambda (name)
+                          (format
+                           "%s (%s)"
+                           name (abbreviate-file-name directory)))))
         :ff-transformer-show-only-basename nil
         :buffer "*helm browse project*"))
 
 (defvar helm-browse-project-history nil)
 
 ;;;###autoload
-(defun helm-projects-history ()
-  (interactive)
+(defun helm-projects-history (arg)
+  (interactive "P")
   (helm :sources
         (helm-build-sync-source "Project history"
           :candidates helm-browse-project-history
           :action (lambda (candidate)
                     (with-helm-default-directory candidate
-                        (helm-browse-project nil))))
+                        (helm-browse-project
+                         (or arg helm-current-prefix-arg)))))
         :buffer "*helm browse project history*"))
 
 ;;;###autoload
@@ -4597,6 +4645,7 @@ Needed dependencies for VCS:
 and
 <https://github.com/emacs-helm/helm-ls-hg>."
   (interactive "P")
+  (require 'helm-x-files)
   (let ((helm-type-buffer-actions
          (remove (assoc "Browse project from buffer"
                         helm-type-buffer-actions)

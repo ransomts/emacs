@@ -294,7 +294,7 @@ You can set your own list of commands with
 (autoload 'helm-projects-history "helm-files" "\
 
 
-\(fn)" t nil)
+\(fn ARG)" t nil)
 
 (autoload 'helm-browse-project "helm-files" "\
 Preconfigured helm to browse projects.
