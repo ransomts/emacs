@@ -45,9 +45,9 @@
     (defun flatten (list-of-lists)
       (apply #'append list-of-lists))
 
-     (defun workspace-screen-mapping ()
-       (flatten (loop for workspace in '(1 2 3 4 5 6 7 8 9 0)
-		      collect (list workspace (number-to-monitor (workspace-string-mappings workspace (number-of-screens)))))))
+    (defun workspace-screen-mapping ()
+      (flatten (loop for workspace in '(1 2 3 4 5 6 7 8 9 0)
+		     collect (list workspace (number-to-monitor (workspace-string-mappings workspace (number-of-screens)))))))
   #+END_SRC
 
   I use syncthing to move some of the 'live' files emacs uses between machines. If I'm on a machine that hasn't had these folders made, create them.
@@ -101,17 +101,17 @@
      #+END_SRC
 
 *** elisp
-#+BEGIN_SRC emacs-lisp
-  (use-package paredit
-    :ensure t
-    :hook elisp-mode)
+    #+BEGIN_SRC emacs-lisp
+      (use-package paredit
+	:ensure t
+	:hook elisp-mode)
 
-  (use-package elisp-mode
-    :bind
-    (("C-x C-e" . pp-eval-last-sexp)
-     ("<C-M-backspace>" . backward-kill-sexp))
-    :config (enable-paredit-mode))
-#+END_SRC
+      (use-package elisp-mode
+	:bind
+	(("C-x C-e" . pp-eval-last-sexp)
+	 ("<C-M-backspace>" . backward-kill-sexp))
+	:config (enable-paredit-mode))
+    #+END_SRC
 *** org
     #+BEGIN_SRC emacs-lisp
       (use-package org
@@ -218,14 +218,14 @@
 			("\\paragraph{%s}" . "\\paragraph*{%s}")
 			("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
      #+END_SRC
-
 **** org-ref
 
-#+BEGIN_SRC emacs-lisp
-  (use-package org-ref :ensure t :after helm)
-  (setq org-latex-pdf-process
-	'("latexmk -pdflatex='%latex -shell-escape -interaction nonstopmode' -pdf -output-directory=%o -f %f"))
-#+END_SRC
+     #+BEGIN_SRC emacs-lisp
+       (use-package org-ref :ensure t :after (helm helm-config))
+       (setq org-latex-pdf-process
+	     '("latexmk -pdflatex='%latex -shell-escape -interaction nonstopmode' -pdf -output-directory=%o -f %f"))
+     #+END_SRC
+
 **** async src blocks
      #+BEGIN_SRC emacs-lisp
        (use-package ob-async
@@ -315,7 +315,7 @@
 			     "#e0f7fa"
 			   "#1c1f26"))
 	      (host (file-remote-p default-directory 'host)))
-					      ;(host (nth 1 (split-string (eshell/pwd) ":"))))
+	  ;; (host (nth 1 (split-string (eshell/pwd) ":"))))
 	  (concat
 	   (with-face (concat (eshell/pwd) " ") :background header-bg)
 	   (with-face (format-time-string "(%H:%M) " (current-time)) :background header-bg :foreground "#888")
@@ -378,7 +378,7 @@
 	  (if (get-buffer "bash-aliases")(kill-buffer "bash-aliases"))
 	  (if (get-buffer "bash-errors")(kill-buffer "bash-errors"))))
 
-      ;(add-hook 'eshell-mode-hook 'eshell-load-bash-aliases)
+      ;; (add-hook 'eshell-mode-hook 'eshell-load-bash-aliases)
     #+END_SRC
 
 ** External
@@ -692,12 +692,12 @@
 
 *** deadgrep
 
-#+BEGIN_SRC emacs-lisp
-  (use-package deadgrep
-    :disabled
-    ;; :ensure t
-    :bind ("C-c g" . #'deadgrep))
-#+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (use-package deadgrep
+	:disabled
+	;; :ensure t
+	:bind ("C-c g" . #'deadgrep))
+    #+END_SRC
 *** Google Calendar
 
     #+BEGIN_SRC emacs-lisp
@@ -789,87 +789,87 @@
 ** ibuffer
 
    #+BEGIN_SRC emacs-lisp
-	  (use-package ibuffer
-	    :ensure t
-	    :bind ("C-x C-b" . #'ibuffer)
-	    :config
-	    ;; Use human readable Size column instead of original one
-	    (define-ibuffer-column size-h
-	      (:name "Size" :inline t)
-	      (cond
-	       ((> (buffer-size) 1000000) (format "%7.1fM" (/ (buffer-size) 1000000.0)))
-	       ((> (buffer-size) 100000) (format "%7.0fk" (/ (buffer-size) 1000.0)))
-	       ((> (buffer-size) 1000) (format "%7.1fk" (/ (buffer-size) 1000.0)))
-	       (t (format "%8d" (buffer-size)))))
+     (use-package ibuffer
+       :ensure t
+       :bind ("C-x C-b" . #'ibuffer)
+       :config
+       ;; Use human readable Size column instead of original one
+       (define-ibuffer-column size-h
+	 (:name "Size" :inline t)
+	 (cond
+	  ((> (buffer-size) 1000000) (format "%7.1fM" (/ (buffer-size) 1000000.0)))
+	  ((> (buffer-size) 100000) (format "%7.0fk" (/ (buffer-size) 1000.0)))
+	  ((> (buffer-size) 1000) (format "%7.1fk" (/ (buffer-size) 1000.0)))
+	  (t (format "%8d" (buffer-size)))))
 
-	    ;; Modify the default ibuffer-formats
-	    (setq ibuffer-formats
-		  '((mark modified read-only " "
-			  (name 18 18 :left :elide)
-			  " "
-			  (size-h 9 -1 :right)
-			  " "
-			  (mode 16 16 :left :elide)
-			  " "
-			  filename-and-process)))
-
-	    (setq mp/ibuffer-collapsed-groups (list "helm" "tramp"))
-
-	    (defadvice ibuffer (after collapse-helm)
-	      (dolist (group mp/ibuffer-collapsed-groups)
-		(progn
-		  (goto-char 1)
-		  (when (search-forward (concat "[ " group " ]") (point-max) t)
-		    (progn
-		      (move-beginning-of-line nil)
-		      (ibuffer-toggle-filter-group)))))
-	      (goto-char 1)
-	      (search-forward "[ " (point-max) t))
-
-	    (ad-activate 'ibuffer)
-
-	    :custom
-	    (ibuffer-default-sorting-mode 'major-mode)
-	    (ibuffer-saved-filter-groups
-	     '(("exwm"
-		("exwm" (mode . exwm-mode))
-		("dired" (mode . dired-mode))
-		("org" (or (mode . org-mode)
-			   (filename . "OrgMode")))
-		("erc" (mode . erc-mode))
-		("magit" (name . "magit\*"))
-		("subversion" (name . "\*svn"))
-		("customize" (mode . Custom))
-		("compilations" (mode . Compilation))
-     ;	   ("transmission" (or
-     ;			    (mode . Transmission)
-     ;			    (mode . Transmission-Info)
-     ;			    (mode . Transmission-Files))
-		("helm" (mode . helm-major-mode))
-		("tramp" (name . "\*tramp\*"))
-		("eshell" (name . "\*eshell"))
-		("gnus" (or
-			 (mode . message-mode)
-			 (mode . bbdb-mode)
-			 (mode . mail-mode)
-			 (mode . gnus-group-mode)
-			 (mode . gnus-summary-mode)
-			 (mode . gnus-article-mode)
-			 (name . "^\\.bbdb$")
-			 (name . "^\\.newsrc-dribble")))
-		("help" (or (name . "\*Help\*")
-			    (name . "\*Apropos\*")
-			    (name . "\*info\*"))))))
-	    (ibuffer-expert t)
-	    (ibuffer-show-empty-filter-groups nil)
-	    (ibuffer-formats
+       ;; Modify the default ibuffer-formats
+       (setq ibuffer-formats
 	     '((mark modified read-only " "
-		     (name 30 30 :left :elide)
+		     (name 18 18 :left :elide)
 		     " "
 		     (size-h 9 -1 :right)
 		     " "
 		     (mode 16 16 :left :elide)
-		     " " filename-and-process))))
+		     " "
+		     filename-and-process)))
+
+       (setq mp/ibuffer-collapsed-groups (list "helm" "tramp"))
+
+       (defadvice ibuffer (after collapse-helm)
+	 (dolist (group mp/ibuffer-collapsed-groups)
+	   (progn
+	     (goto-char 1)
+	     (when (search-forward (concat "[ " group " ]") (point-max) t)
+	       (progn
+		 (move-beginning-of-line nil)
+		 (ibuffer-toggle-filter-group)))))
+	 (goto-char 1)
+	 (search-forward "[ " (point-max) t))
+
+       (ad-activate 'ibuffer)
+
+       :custom
+       (ibuffer-default-sorting-mode 'major-mode)
+       (ibuffer-saved-filter-groups
+	'(("exwm"
+	   ("exwm" (mode . exwm-mode))
+	   ("dired" (mode . dired-mode))
+	   ("org" (or (mode . org-mode)
+		      (filename . "OrgMode")))
+	   ("erc" (mode . erc-mode))
+	   ("magit" (name . "magit\*"))
+	   ("subversion" (name . "\*svn"))
+	   ("customize" (mode . Custom))
+	   ("compilations" (mode . Compilation))
+	   ;; ("transmission" (or
+			    ;; (mode . Transmission)
+			    ;; (mode . Transmission-Info)
+			    ;; (mode . Transmission-Files))
+	   ("helm" (mode . helm-major-mode))
+	   ("tramp" (name . "\*tramp\*"))
+	   ("eshell" (name . "\*eshell"))
+	   ("gnus" (or
+		    (mode . message-mode)
+		    (mode . bbdb-mode)
+		    (mode . mail-mode)
+		    (mode . gnus-group-mode)
+		    (mode . gnus-summary-mode)
+		    (mode . gnus-article-mode)
+		    (name . "^\\.bbdb$")
+		    (name . "^\\.newsrc-dribble")))
+	   ("help" (or (name . "\*Help\*")
+		       (name . "\*Apropos\*")
+		       (name . "\*info\*"))))))
+       (ibuffer-expert t)
+       (ibuffer-show-empty-filter-groups nil)
+       (ibuffer-formats
+	'((mark modified read-only " "
+		(name 30 30 :left :elide)
+		" "
+		(size-h 9 -1 :right)
+		" "
+		(mode 16 16 :left :elide)
+		" " filename-and-process))))
    #+END_SRC
 
 *** ibuffer hooks
@@ -965,7 +965,7 @@
      ;;       column-number-mode t)
 
      (tooltip-mode 0)
-     ;(fringe-mode 1)
+     ;; (fringe-mode 1)
      (tool-bar-mode 0)
      (menu-bar-mode 0)
      (scroll-bar-mode 0)
@@ -1160,7 +1160,7 @@
 			      `(lambda ()
 				 (interactive)
 				 (exwm-workspace-switch-create
-				 (min (+ 5 ,i) ,i)))))
+				  (min (+ 5 ,i) ,i)))))
 
 	(push ?\C-q exwm-input-prefix-keys)
 	(define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
@@ -1257,5 +1257,5 @@
 
    #+BEGIN_SRC emacs-lisp
      (when (running-on-hosts '("tengen" "joseki" "atari" "hoshi" "tsranso-ThinkPad-T430s"))
-	   (server-start))
+       (server-start))
    #+END_SRC
