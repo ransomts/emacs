@@ -11,7 +11,7 @@
   Just a couple of functions to help sort what machine and network the config is being loaded on. So long as the emacs version is >24 I think this should be sufficient to use filter packages and settings between setups.
   #+BEGIN_SRC emacs-lisp
     (defun running-on-hosts (hosts)
-      (member*
+      (cl-member
        (car (split-string ; split the hostname on '.' for complex hostnames
 	     (car (split-string ; remove trailing newline from `hostname`
 		   (shell-command-to-string "hostname") "\n")) "\\."))
@@ -311,7 +311,7 @@
 	`(propertize ,str 'face (list ,@properties)))
 
       (defun my-eshell-prompt ()
-	(let ((header-bg (if (find 'material-light custom-enabled-themes)
+	(let ((header-bg (if (member 'material-light custom-enabled-themes)
 			     "#e0f7fa"
 			   "#1c1f26"))
 	      (host (file-remote-p default-directory 'host)))
