@@ -34,7 +34,11 @@
     (defun number-to-monitor (x)
       (let ((y (- x 1))
 	    (host (shell-command-to-string "hostname")))
-	(cond ((string= host "tengen\n") (nth y '("HDMI-1" "DVI-D-1" "DP-1" "DP-2" "DP-3")))
+	(cond ((string= host "tengen\n")
+	       (nth y
+		    '("HDMI-A-0" "DisplayPort-0" "DisplayPort-1" "DisplayPort-3" "DisplayPort-4" "DVI-D-0")
+		    ;; '("HDMI-1" "DVI-D-1" "DP-1" "DP-2" "DP-3")
+		    ))
 	      ((string= host "hoshi\n") (nth y '("DP-1" "HDMI-1" "DP-2"))))))
 
     (defun number-of-screens ()
@@ -46,7 +50,7 @@
       (apply #'append list-of-lists))
 
     (defun workspace-screen-mapping ()
-      (flatten (loop for workspace in '(1 2 3 4 5 6 7 8 9 0)
+      (flatten (cl-loop for workspace in '(1 2 3 4 5 6 7 8 9 0)
 		     collect (list workspace (number-to-monitor (workspace-string-mappings workspace (number-of-screens)))))))
   #+END_SRC
 
@@ -344,9 +348,9 @@
 	   "more"
 	   "ncdu" "nethogs" "nmon"
 	   "pacmixer"
-	   "radeontop" "rtv"
+	   "radeontop"
 	   "screen"
-	   "top"
+	   "top" "tuir"
 	   "vi" "vim")))
 
       (defun eshell-load-bash-aliases ()
@@ -1168,17 +1172,28 @@
 	(require 'exwm-randr)
 	(setq exwm-randr-workspace-output-plist (workspace-screen-mapping))
 
+(when nil
 	(when (running-on-hosts '("tengen"))
 	  (add-hook 'exwm-randr-screen-change-hook
 		    (lambda ()
 		      (start-process-shell-command
 		       "xrandr" nil
+		       ;; (concat "xrandr "
+		       ;; 	       "--output HDMI-1 --mode 1920x1080 --pos 0x0 --rotate normal "
+		       ;; 	       "--output DP-3 --mode 1920x1200 --pos 4320x624 --rotate normal "
+		       ;; 	       "--output DP-2 --mode 1920x1200 --pos 3120x240 --rotate left "
+		       ;; 	       "--output DP-1 --mode 1920x1200 --pos 1920x240 --rotate left "
+		       ;; 	       "--output DVI-D-1 --mode 1920x1080 --pos 0x1080 --rotate normal ")
 		       (concat "xrandr "
-			       "--output HDMI-1 --mode 1920x1080 --pos 0x0 --rotate normal "
-			       "--output DP-3 --mode 1920x1200 --pos 4320x624 --rotate normal "
-			       "--output DP-2 --mode 1920x1200 --pos 3120x240 --rotate left "
-			       "--output DP-1 --mode 1920x1200 --pos 1920x240 --rotate left "
-			       "--output DVI-D-1 --mode 1920x1080 --pos 0x1080 --rotate normal ")))))
+			       "--output HDMI-A-0 --mode 1920x1080 --pos 0x240 --rotate left "
+			       "--output DVI-D-0 --mode 1920x1080 --pos 4920x240 --rotate left "
+			       "--output DisplayPort-0 --primary --mode 1920x1080 --pos 3000x1080 --rotate normal "
+			       "--output DisplayPort-1 --mode 1920x1080 --pos 1080x0 --rotate normal "
+			       "--output DisplayPort-2 --off "
+			       "--output DisplayPort-3 --mode 1920x1080 --pos 3000x0 --rotate normal "
+			       "--output  DisplayPort-4 --mode 1920x1080 --pos 1080x1080 --rotate normal")
+		       ))))
+)
 	(when (running-on-hosts '("hoshi"))
 	  (add-hook 'exwm-randr-screen-change-hook
 		    (lambda ()
@@ -1223,8 +1238,9 @@
 
      (when (and (running-on-hosts '("hoshi" "tengen"))
 		(not (running-on-windows)))
-       (launch-program "discord")
-       (launch-program "spotify --minimized"))
+       ;; (launch-program "discord")
+       ;; (launch-program "spotify --minimized")
+)
 
      (when (and (running-on-hosts '("joseki" "hoshi" "tengen"))
 		(not (running-on-windows)))
