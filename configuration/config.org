@@ -68,6 +68,21 @@
 ** Built In
 *** gnus
 
+    #+BEGIN_SRC emacs-lisp :tangle ~/.gnus
+      (setq user-mail-address "tsranso@g.clemson.edu"
+	    user-full-name "Tim Ransom")
+
+      (setq gnus-select-method
+	    '(nnimap "gmail"
+		     (nnimap-address "imap.gmail.com")  ; it could also be imap.googlemail.com if that's your server.
+		     (nnimap-server-port "imaps")
+		     (nnimap-stream ssl)))
+
+      (setq smtpmail-smtp-server "smtp.gmail.com"
+	    smtpmail-smtp-service 587
+	    gnus-ignored-newsgroups "^to\\.\\|^[0-9. ]+\\( \\|$\\)\\|^[\"]\"[#'()]")
+    #+END_SRC
+
     I use gnus mostly as an rss reader, but have the email there too if I want to fire off a quick note.
     #+BEGIN_SRC emacs-lisp
       (use-package gnus
@@ -86,7 +101,20 @@
 	 gnus-sum-thread-tree-leaf-with-other "├► "
 	 gnus-sum-thread-tree-root ""
 	 gnus-sum-thread-tree-single-leaf "╰► "
-	 gnus-sum-thread-tree-vertical "│"))
+	 gnus-sum-thread-tree-vertical "│")
+	(gnus-add-configuration
+	 '(article
+	   (horizontal 1.0
+		       (vertical 50 (group 1.0))
+		       (vertical 1.0
+				 (summary 0.16 point)
+				 (article 1.0)))))
+
+	(gnus-add-configuration
+	 '(summary
+	   (horizontal 1.0
+		       (vertical 50 (group 1.0))
+		       (vertical 1.0 (summary 1.0 point))))))
       (add-hook 'gnus-group-mode-hook 'gnus-topic-mode)
     #+END_SRC
 
@@ -346,7 +374,7 @@
 	   "pacmixer"
 	   "radeontop" "rtv"
 	   "screen"
-	   "top"
+	   "top" "tuir"
 	   "vi" "vim")))
 
       (defun eshell-load-bash-aliases ()
@@ -840,6 +868,7 @@
 	   ("magit" (name . "magit\*"))
 	   ("subversion" (name . "\*svn"))
 	   ("customize" (mode . Custom))
+	   ("PDF" (mode . PDFView-mode))
 	   ("compilations" (mode . Compilation))
 	   ;; ("transmission" (or
 			    ;; (mode . Transmission)
