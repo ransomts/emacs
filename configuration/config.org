@@ -426,6 +426,13 @@
 	:config
 	(auto-package-update-maybe))
     #+END_SRC
+*** emoji support
+    #+BEGIN_SRC emacs-lisp
+      (use-package emojify
+	:ensure t
+	:config
+	(global-emojify-mode))
+    #+END_SRC
 *** dmenu
     #+BEGIN_SRC emacs-lisp
       (use-package dmenu
@@ -1189,19 +1196,20 @@
 
 	(setq exwm-workspace-number 10)
 	(dotimes (i exwm-workspace-number)
-	  (exwm-input-set-key (kbd (format "s-%d" i))
-			      `(lambda ()
-				 (interactive)
-				 (exwm-workspace-switch-create
-				  (min (+ 5 ,i) ,i)))))
+	  (exwm-input-set-key (kbd (format "s-%d" i)) `(lambda () (interactive) (exwm-workspace-switch-create (min (+ 5 ,i) ,i))))
+	  (exwm-input-set-key (kbd (format "<s-kp-%d>" i)) `(lambda () (interactive) (exwm-workspace-switch-create (min (+ 5 ,i) ,i)))))
 
 	(push ?\C-q exwm-input-prefix-keys)
 	(define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
 
+	(start-process-shell-command "Gnome Settings Daemon" nil "/usr/lib/gsd-xsettings")
+	(start-process-shell-command "Configure screens" nil "/home/tsranso/.screenlayout/tengen.sh")
+	(start-process-shell-command "Caps lock control" nil "xmodmap ~/.Xmodmap")
+
+
 	(require 'exwm-randr)
 	(setq exwm-randr-workspace-output-plist (workspace-screen-mapping))
 
-(when nil
 	(when (running-on-hosts '("tengen"))
 	  (add-hook 'exwm-randr-screen-change-hook
 		    (lambda ()
@@ -1214,15 +1222,14 @@
 		       ;; 	       "--output DP-1 --mode 1920x1200 --pos 1920x240 --rotate left "
 		       ;; 	       "--output DVI-D-1 --mode 1920x1080 --pos 0x1080 --rotate normal ")
 		       (concat "xrandr "
-			       "--output HDMI-A-0 --mode 1920x1080 --pos 0x240 --rotate left "
-			       "--output DVI-D-0 --mode 1920x1080 --pos 4920x240 --rotate left "
-			       "--output DisplayPort-0 --primary --mode 1920x1080 --pos 3000x1080 --rotate normal "
-			       "--output DisplayPort-1 --mode 1920x1080 --pos 1080x0 --rotate normal "
-			       "--output DisplayPort-2 --off "
-			       "--output DisplayPort-3 --mode 1920x1080 --pos 3000x0 --rotate normal "
-			       "--output  DisplayPort-4 --mode 1920x1080 --pos 1080x1080 --rotate normal")
-		       ))))
-)
+			       "--output DisplayPort-0 --off "
+			       "--output DisplayPort-1 --mode 1920x1200 --pos 1080x0 --rotate normal "
+			       "--output DisplayPort-2 --primary --mode 1920x1200 --pos 3000x1200 --rotate normal "
+			       "--output HDMI-A-0 --mode 1920x1080 --pos 0x480 --rotate left "
+			       "--output DVI-D-0 --mode 1920x1080 --pos 4920x480 --rotate left "
+			       "--output DisplayPort-3 --mode 1920x1200 --pos 3000x0 --rotate normal "
+			       "--output DisplayPort-4 --mode 1920x1200 --pos 1080x1200 --rotate normal")))))
+
 	(when (running-on-hosts '("hoshi"))
 	  (add-hook 'exwm-randr-screen-change-hook
 		    (lambda ()
