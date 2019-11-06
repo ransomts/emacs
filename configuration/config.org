@@ -106,6 +106,28 @@
 	 gnus-sum-thread-tree-root ""
 	 gnus-sum-thread-tree-single-leaf "╰► "
 	 gnus-sum-thread-tree-vertical "│")
+	;; (gnus-demon-add-handler 'gnus-demon-scan-news 2 t) ; this does a call to gnus-group-get-new-news - maybe too simple
+
+	(defun gnus-demon-scan-news-3 ()
+	  (let ((win (current-window-configuration))
+		(gnus-read-active-file 'some)
+		(gnus-check-new-newsgroups nil)
+		(gnus-verbose 2)
+		(gnus-verbose-backends 5)
+		(level 3)
+		)
+	    (message "check-mail: %s" (format-time-string "%H:%M:%S"))
+	    (while-no-input
+	      (unwind-protect
+		  (save-window-excursion
+		    (when (gnus-alive-p)
+		      (with-current-buffer gnus-group-buffer
+			(gnus-group-get-new-news level))))
+		(set-window-configuration win)))))
+
+	(setq gnus-demon-timestep 10)
+	(gnus-demon-add-handler 'gnus-demon-scan-news-3 12 1)
+
 	(gnus-add-configuration
 	 '(article
 	   (horizontal 1.0
@@ -121,16 +143,6 @@
 		       (vertical 1.0 (summary 1.0 point))))))
       (add-hook 'gnus-group-mode-hook 'gnus-topic-mode)
     #+END_SRC
-
-**** TODO scan daemon
-     #+BEGIN_SRC emacs-lisp
-       ;; (use-package gnus-demon
-       ;;   :ensure t
-       ;;   :hook
-       ;;   (gnus-demon-add-handler #'gnus-demon-scan-news 2 nil)
-       ;;   (message "from hook")
-       ;;   )
-     #+END_SRC
 
 *** elisp
     #+BEGIN_SRC emacs-lisp
@@ -363,6 +375,8 @@
       (use-package eshell
 	:bind ("C-x e" . #'eshell)
 	:custom
+	(eshell-destroy-buffer-when-process-dies t)
+	(eshell-history-size 1000000)
 	(eshell-prompt-function 'my-eshell-prompt)
 	(eshell-highlight-prompt nil)
 	(eshell-cmpl-ignore-case t)
@@ -411,6 +425,26 @@
 	  (if (get-buffer "bash-errors")(kill-buffer "bash-errors"))))
 
       ;; (add-hook 'eshell-mode-hook 'eshell-load-bash-aliases)
+    #+END_SRC
+
+*** tramp
+    #+BEGIN_SRC emacs-lisp
+(require 'tramp)
+      (add-to-list 'tramp-remote-path "/home/tsranso/bin")
+      (add-to-list 'tramp-remote-path "/home/tsranso/.local/bin")
+ ;; cache file-name forever
+ (setq remote-file-name-inhibit-cache nil)
+
+ ;; make sure vc stuff is not making tramp slower
+ (setq vc-ignore-dir-regexp
+	(format "%s\\|%s"
+		vc-ignore-dir-regexp
+		tramp-file-name-regexp))
+
+ ;; not sure why we have this? just cargo-culting from an answer I saw
+ ;; online.
+ (setq tramp-verbose 1)
+
     #+END_SRC
 
 ** External
@@ -691,7 +725,16 @@
 	   (kdeconnect-send-sms
 	    (read-string "Enter message: ")
 	    (string-to-int
-	     (replace-regexp-in-string "[() -]" "" phone-number))))))
+	     (replace-regexp-in-string "[() -]" "" phone-number)))))
+	:config
+	(bbdb-initialize 'gnus 'message)
+	(bbdb-insinuate-message)
+	(add-hook 'gnus-startup-hook 'bbdb-insinuate-gnus)
+	(setq
+	 bbdb-offer-save 1
+	 bbdb-use-pop-up t
+	 bbdb-electric-p t
+	 bbdb-popup-target-lines  1))
     #+END_SRC
 
 *** slime
@@ -708,6 +751,7 @@
 *** smart mode line
     #+BEGIN_SRC emacs-lisp
       (use-package smart-mode-line
+	:disabled
 	:ensure t
 	:custom
 	(sml/theme 'respectful)
@@ -715,6 +759,21 @@
 	:config
 	(sml/setup)
 	(setq sml/name-width 30))
+    #+END_SRC
+
+*** space mode line
+    #+BEGIN_SRC emacs-lisp
+      (use-package spaceline
+	:ensure t)
+
+      (use-package spaceline-config
+	:ensure spaceline
+	:config
+	(spaceline-helm-mode 1)
+	(spaceline-emacs-theme)
+	(spaceline-toggle-org-clock-on)
+	(spaceline-toggle-minor-modes-off)
+	(spaceline-toggle-version-control-off))
     #+END_SRC
 
 *** cmake
@@ -852,7 +911,7 @@
 		     " "
 		     filename-and-process)))
 
-       (setq mp/ibuffer-collapsed-groups (list "helm" "tramp"))
+       (setq mp/ibuffer-collapsed-groups (list "helm" "tramp" "process bufs"))
 
        (defadvice ibuffer (after collapse-helm)
 	 (dolist (group mp/ibuffer-collapsed-groups)
@@ -879,12 +938,15 @@
 	   ("magit" (name . "magit\*"))
 	   ("subversion" (name . "\*svn"))
 	   ("customize" (mode . Custom))
-	   ("PDF" (mode . PDFView-mode))
+	   ("man pages" (mode . Man))
+	   ("process bufs" (mode . comint-mode))
+	   ("PDF" (or (mode . PDFView-mode)
+		      (mode . PDFView)))
 	   ("compilations" (mode . Compilation))
 	   ;; ("transmission" (or
-			    ;; (mode . Transmission)
-			    ;; (mode . Transmission-Info)
-			    ;; (mode . Transmission-Files))
+	   ;; (mode . Transmission)
+	   ;; (mode . Transmission-Info)
+	   ;; (mode . Transmission-Files))
 	   ("helm" (mode . helm-major-mode))
 	   ("tramp" (name . "\*tramp\*"))
 	   ("eshell" (name . "\*eshell"))
@@ -1094,8 +1156,6 @@
 	   message-directory "~/.emacs.d/Mail/"
 					     ;tramp-histfile-override "/dev/null" nil (tramp)
 	   )
-     (add-to-list 'tramp-remote-path "/home/tsranso/bin")
-     (add-to-list 'tramp-remote-path "/home/tsranso/.local/bin")
      (add-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)
      (global-auto-revert-mode 1)
    #+END_SRC
@@ -1116,7 +1176,7 @@
       (shell-command "/usr/local/bin/lock.sh"))
 
     (when (and (>= (string-to-number emacs-version) 24.4)
-	       (not (running-on-hosts '("login001" "marcher" "atari"))))
+	       (not (running-on-hosts '("login001" "marcher"))))
       (use-package xelb
 	:if (string= "exwm" (getenv "DESKTOP_SESSION"))
 	;; :ensure t
@@ -1174,9 +1234,9 @@
 		     ("<print>" . "scrot")
 		     ("<XF86MonBrightnessUp>" . "light -A 10")
 		     ("<XF86MonBrightnessDown>" . "light -U 10")
-		     ("<XF86AudioMute>"."amixer -c 0 set Master toggle")
-		     ("<XF86AudioLowerVolume>" . "amixer -c 0 sset Master 5%-")
-		     ("<XF86AudioRaiseVolume>" . "amixer -c 0 set Master unmute; amixer -c 0 sset Master 5%+")))
+		     ("<XF86AudioMute>"."amixer set Master toggle")
+		     ("<XF86AudioLowerVolume>" . "amixer sset Master 5%-")
+		     ("<XF86AudioRaiseVolume>" . "amixer set Master unmute; amixer sset Master 5%+")))
 	  (let ((f (lambda () (interactive)
 		     (save-window-excursion
 		       (start-process-shell-command "" nil (cdr k))))))
@@ -1204,7 +1264,7 @@
 
 	(start-process-shell-command "Gnome Settings Daemon" nil "/usr/lib/gsd-xsettings")
 	(start-process-shell-command "Configure screens" nil "/home/tsranso/.screenlayout/tengen.sh")
-	(start-process-shell-command "Caps lock control" nil "xmodmap ~/.Xmodmap")
+	;(start-process-shell-command "Caps lock control" nil "xmodmap ~/.Xmodmap")
 
 
 	(require 'exwm-randr)
@@ -1215,12 +1275,6 @@
 		    (lambda ()
 		      (start-process-shell-command
 		       "xrandr" nil
-		       ;; (concat "xrandr "
-		       ;; 	       "--output HDMI-1 --mode 1920x1080 --pos 0x0 --rotate normal "
-		       ;; 	       "--output DP-3 --mode 1920x1200 --pos 4320x624 --rotate normal "
-		       ;; 	       "--output DP-2 --mode 1920x1200 --pos 3120x240 --rotate left "
-		       ;; 	       "--output DP-1 --mode 1920x1200 --pos 1920x240 --rotate left "
-		       ;; 	       "--output DVI-D-1 --mode 1920x1080 --pos 0x1080 --rotate normal ")
 		       (concat "xrandr "
 			       "--output DisplayPort-0 --off "
 			       "--output DisplayPort-1 --mode 1920x1200 --pos 1080x0 --rotate normal "
@@ -1274,9 +1328,8 @@
 
      (when (and (running-on-hosts '("hoshi" "tengen"))
 		(not (running-on-windows)))
-       ;; (launch-program "discord")
-       ;; (launch-program "spotify --minimized")
-)
+       (launch-program "discord")
+       (launch-program "spotify --minimized"))
 
      (when (and (running-on-hosts '("joseki" "hoshi" "tengen"))
 		(not (running-on-windows)))
