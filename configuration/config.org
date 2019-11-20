@@ -35,6 +35,7 @@
       (let ((y (- x 1))
 	    (host (shell-command-to-string "hostname")))
 	(cond ((string= host "tengen\n") (nth y '("HDMI-1" "DVI-D-1" "DP-1" "DP-2" "DP-3")))
+	      ((string= host "atari\n") (nth y '("DP2" "DP1")))
 	      ((string= host "hoshi\n") (nth y '("DP-1" "HDMI-1" "DP-2"))))))
 
     (defun number-of-screens ()
@@ -102,6 +103,28 @@
 	 gnus-sum-thread-tree-root ""
 	 gnus-sum-thread-tree-single-leaf "╰► "
 	 gnus-sum-thread-tree-vertical "│")
+	;; (gnus-demon-add-handler 'gnus-demon-scan-news 2 t) ; this does a call to gnus-group-get-new-news - maybe too simple
+
+	(defun gnus-demon-scan-news-3 ()
+	  (let ((win (current-window-configuration))
+		(gnus-read-active-file 'some)
+		(gnus-check-new-newsgroups nil)
+		(gnus-verbose 2)
+		(gnus-verbose-backends 5)
+		(level 3)
+		)
+	    (message "check-mail: %s" (format-time-string "%H:%M:%S"))
+	    (while-no-input
+	      (unwind-protect
+		  (save-window-excursion
+		    (when (gnus-alive-p)
+		      (with-current-buffer gnus-group-buffer
+			(gnus-group-get-new-news level))))
+		(set-window-configuration win)))))
+
+	(setq gnus-demon-timestep 10)
+	(gnus-demon-add-handler 'gnus-demon-scan-news-3 12 1)
+
 	(gnus-add-configuration
 	 '(article
 	   (horizontal 1.0
@@ -118,16 +141,6 @@
       (add-hook 'gnus-group-mode-hook 'gnus-topic-mode)
     #+END_SRC
 
-**** TODO scan daemon
-     #+BEGIN_SRC emacs-lisp
-       ;; (use-package gnus-demon
-       ;;   :ensure t
-       ;;   :hook
-       ;;   (gnus-demon-add-handler #'gnus-demon-scan-news 2 nil)
-       ;;   (message "from hook")
-       ;;   )
-     #+END_SRC
-
 *** elisp
     #+BEGIN_SRC emacs-lisp
       (use-package paredit
@@ -143,84 +156,85 @@
 *** org
     #+BEGIN_SRC emacs-lisp
       (use-package org
-	:config
-	(org-babel-do-load-languages
-	 'org-babel-load-languages
-	 '(
-	   (awk . t)
-	   (C . t)
-	   (ditaa . t)
-	   (dot . t)
-	   (emacs-lisp . t)
-	   (gnuplot . t)
-	   (haskell . t)
-	   (java . t)
-	   (lisp . t)
-	   (makefile . t)
-	   (python . t)
-	   (shell . t)
-	   (sql . t)
-	   (sqlite . t)))
+	      :config
+	      (org-babel-do-load-languages
+	       'org-babel-load-languages
+	       '(
+		 (awk . t)
+		 (C . t)
+		 (ditaa . t)
+		 (dot . t)
+		 (emacs-lisp . t)
+		 (gnuplot . t)
+		 (haskell . t)
+		 (java . t)
+		 (lisp . t)
+		 (makefile . t)
+		 (python . t)
+		 (shell . t)
+		 (sql . t)
+		 (sqlite . t)))
 
-	(require 'org-crypt)
-	(org-crypt-use-before-save-magic)
+	      (require 'org-crypt)
+	      (org-crypt-use-before-save-magic)
 
-	(setq diary-file "~/.emacs.d/org/schedule.org"
-	      org-agenda-files
-	      (directory-files (concat user-emacs-directory "org") t
-			       "\\(?:\\(?:research\\|\\.*-gcal\\|schedule\\|scratch\\|todo\\)\\.org\\)")
-	      org-agenda-use-time-grid nil
-	      org-archive-location "~/.emacs.d/org/archive.org::* From %s"
-	      org-capture-after-finalize-hook nil
-	      org-capture-templates '(("t" "Todo" entry
-				       (file+headline "~/.emacs.d/org/todo.org" "Tasks")
-				       "* TODO %?\nEntered on %T\n%i\n%a")
-				      ("e" "Event" entry
-				       (file "~/.emacs.d/org/schedule.org")
-				       "* %?\nDate %^t")
-				      ("b" "Fix Bug" checkitem
-				       (file+headline "~/.emacs.d/org/todo.org" "Bugs")
-				       "[ ] %?\n%A\nEntered on %T")
-				      ("n" "General notes" entry
-				       (file+headline "~/.emacs.d/org/scratch.org" "Notes")
-				       "* Note %?\n%T\n")
-				      ("a" "Appointment" entry (file  "~/.emacs.d/org/ransomtim8078-gcal.org" )
-				       "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n"))
-	      org-clock-sound t
-	      org-confirm-babel-evaluate nil
-	      org-datetree-add-timestamp 'inactive
-	      org-default-notes-file "~/.emacs.d/org/todo.org"
-	      org-directory "~/.emacs.d/org"
-	      org-hide-leading-stars t
-	      org-highlight-latex-and-related '(latex)
-	      org-journal-dir "~/.emacs.d/org/journal"
-	      org-log-done 'time
-	      org-outline-path-complete-in-steps nil
-	      org-preview-latex-image-directory "~/.emacs.d/ltxpng/"
-	      org-refile-targets '((org-agenda-files :maxlevel . 2))
-	      org-refile-use-outline-path 'file
-	      org-src-fontify-natively t
-	      org-src-tab-acts-natively t
-	      org-startup-with-latex-preview t
-	      org-todo-keyword-faces
-	      '(("SOON"
-		 :foreground "blue"
-		 :background "sky blue"
-		 :weight bold)
-		("DONE"
-		 :foreground "darkseagreen4"
-		 :background "darkseagreen2"
-		 :weight bold))
-	      org-todo-keywords '((sequence "TODO" "SOON" "DONE")))
+	      (setq diary-file "~/.emacs.d/org/schedule.org"
+		    org-agenda-files
+		    (directory-files (concat user-emacs-directory "org") t
+				     "\\(?:\\(?:research\\|\\.*-gcal\\|schedule\\|scratch\\|todo\\)\\.org\\)")
+		    org-agenda-use-time-grid nil
+		    org-archive-location "~/.emacs.d/org/archive.org::* From %s"
+		    org-capture-after-finalize-hook nil
+		    org-capture-templates '(("t" "Todo" entry
+					     (file+headline "~/.emacs.d/org/todo.org" "Tasks")
+					     "* TODO %?\nEntered on %T\n%i\n%a")
+					    ("e" "Event" entry
+					     (file "~/.emacs.d/org/schedule.org")
+					     "* %?\nDate %^t")
+					    ("b" "Fix Bug" checkitem
+					     (file+headline "~/.emacs.d/org/todo.org" "Bugs")
+					     "[ ] %?\n%A\nEntered on %T")
+					    ("n" "General notes" entry
+					     (file+headline "~/.emacs.d/org/scratch.org" "Notes")
+					     "* Note %?\n%T\n")
+					    ("a" "Appointment" entry (file  "~/.emacs.d/org/ransomtim8078-gcal.org" )
+					     "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n"))
+		    org-clock-sound t
+		    org-confirm-babel-evaluate nil
+		    org-datetree-add-timestamp 'inactive
+		    org-default-notes-file "~/.emacs.d/org/todo.org"
+		    org-directory "~/.emacs.d/org"
+		    org-hide-leading-stars t
+		    org-highlight-latex-and-related '(latex)
+		    org-journal-dir "~/.emacs.d/org/journal"
+		    org-log-done 'time
+		    org-outline-path-complete-in-steps nil
+		    org-preview-latex-image-directory "~/.emacs.d/ltxpng/"
+		    org-refile-targets '((org-agenda-files :maxlevel . 2))
+		    org-refile-use-outline-path 'file
+		    org-src-fontify-natively t
+		    org-src-tab-acts-natively t
+		    org-startup-with-latex-preview t
+		    org-todo-keyword-faces
+		    '(("SOON"
+		       :foreground "blue"
+		       :background "sky blue"
+		       :weight bold)
+		      ("DONE"
+		       :foreground "darkseagreen4"
+		       :background "darkseagreen2"
+		       :weight bold))
+		    org-todo-keywords '((sequence "TODO" "SOON" "DONE")))
 
-	:bind
-	(("C-c a" . #'org-agenda)
-	 ("C-c c" . #'org-capture)
-	 ("C-c 1" . #'org-encrypt-entry)
-	 ("C-c 2" . #'org-decrypt-entry)
-	 (:map org-mode-map
-	       (("C-c r" . #'org-archive-subtree)
-		("C-c C-r" . #'org-archive-subtree)))))
+	      :bind
+	      (("C-c a" . #'org-agenda)
+	       ("C-c c" . #'org-capture)
+	       ("C-c 1" . #'org-encrypt-entry)
+	       ("C-c 2" . #'org-decrypt-entry)
+	       (:map org-mode-map
+		     (("C-c r" . #'org-archive-subtree)
+		      ("C-c C-r" . #'org-archive-subtree)))))
+
     #+END_SRC
 
 **** org exports
@@ -248,10 +262,30 @@
      #+END_SRC
 **** org-ref
 
+     This needs the [[file:~/Documents/references.bib][references.bib]] file to be generated by zotero. Just export the entire library as bibtex there.
+
      #+BEGIN_SRC emacs-lisp
-       (use-package org-ref :ensure t :after (helm helm-config))
-       (setq org-latex-pdf-process
-	     '("latexmk -pdflatex='%latex -shell-escape -interaction nonstopmode' -pdf -output-directory=%o -f %f"))
+       (use-package org-ref :ensure t :after org
+	 :config
+	 (setq org-latex-pdf-process
+	       '("latexmk -pdflatex='%latex -shell-escape -interaction nonstopmode' -pdf -output-directory=%o -f %f")
+	       ;; org-ref-pdf-directory "./references/"
+	       org-ref-bibliography-notes "~/Documents/notes.org"
+	       org-ref-default-bibliography '("~/Documents/references.bib"))
+
+	 (setq bibtex-completion-pdf-field "file")
+	 (setq bibtex-completion-bibliography '("~/Documents/references.bib"))
+
+	 (defun my/org-ref-open-pdf-at-point ()
+	   "Open the pdf for bibtex key under point if it exists."
+	   (interactive)
+	   (let* ((results (org-ref-get-bibtex-key-and-file))
+		  (key (car results))
+		  (pdf-file (car (bibtex-completion-find-pdf key))))
+	     (if (file-exists-p pdf-file)
+		 (org-open-file pdf-file)
+	       (message "No PDF found for %s" key))))
+	 (setq org-ref-open-pdf-function 'my/org-ref-open-pdf-at-point))
      #+END_SRC
 
 **** async src blocks
@@ -359,6 +393,8 @@
       (use-package eshell
 	:bind ("C-x e" . #'eshell)
 	:custom
+	(eshell-destroy-buffer-when-process-dies t)
+	(eshell-history-size 1000000)
 	(eshell-prompt-function 'my-eshell-prompt)
 	(eshell-highlight-prompt nil)
 	(eshell-cmpl-ignore-case t)
@@ -407,6 +443,26 @@
 	  (if (get-buffer "bash-errors")(kill-buffer "bash-errors"))))
 
       ;; (add-hook 'eshell-mode-hook 'eshell-load-bash-aliases)
+    #+END_SRC
+
+*** tramp
+    #+BEGIN_SRC emacs-lisp
+      (require 'tramp)
+	    (add-to-list 'tramp-remote-path "/home/tsranso/bin")
+	    (add-to-list 'tramp-remote-path "/home/tsranso/.local/bin")
+       ;; cache file-name forever
+       (setq remote-file-name-inhibit-cache nil)
+
+       ;; make sure vc stuff is not making tramp slower
+       (setq vc-ignore-dir-regexp
+	      (format "%s\\|%s"
+		      vc-ignore-dir-regexp
+		      tramp-file-name-regexp))
+
+       ;; not sure why we have this? just cargo-culting from an answer I saw
+       ;; online.
+       (setq tramp-verbose 1)
+
     #+END_SRC
 
 ** External
@@ -680,7 +736,16 @@
 	   (kdeconnect-send-sms
 	    (read-string "Enter message: ")
 	    (string-to-int
-	     (replace-regexp-in-string "[() -]" "" phone-number))))))
+	     (replace-regexp-in-string "[() -]" "" phone-number)))))
+	:config
+	(bbdb-initialize 'gnus 'message)
+	(bbdb-insinuate-message)
+	(add-hook 'gnus-startup-hook 'bbdb-insinuate-gnus)
+	(setq
+	 bbdb-offer-save 1
+	 bbdb-use-pop-up t
+	 bbdb-electric-p t
+	 bbdb-popup-target-lines  1))
     #+END_SRC
 
 *** slime
@@ -694,16 +759,19 @@
 	(slime-contribs '(slime-fancy)))
     #+END_SRC
 
-*** smart mode line
+*** space mode line
     #+BEGIN_SRC emacs-lisp
-      (use-package smart-mode-line
-	:ensure t
-	:custom
-	(sml/theme 'respectful)
-	(sml/no-confirm-load-theme t)
+      (use-package spaceline
+	:ensure t)
+
+      (use-package spaceline-config
+	:ensure spaceline
 	:config
-	(sml/setup)
-	(setq sml/name-width 30))
+	(spaceline-helm-mode 1)
+	(spaceline-emacs-theme)
+	(spaceline-toggle-org-clock-on)
+	(spaceline-toggle-minor-modes-off)
+	(spaceline-toggle-version-control-off))
     #+END_SRC
 
 *** cmake
@@ -841,7 +909,7 @@
 		     " "
 		     filename-and-process)))
 
-       (setq mp/ibuffer-collapsed-groups (list "helm" "tramp"))
+       (setq mp/ibuffer-collapsed-groups (list "helm" "tramp" "process bufs"))
 
        (defadvice ibuffer (after collapse-helm)
 	 (dolist (group mp/ibuffer-collapsed-groups)
@@ -868,12 +936,15 @@
 	   ("magit" (name . "magit\*"))
 	   ("subversion" (name . "\*svn"))
 	   ("customize" (mode . Custom))
-	   ("PDF" (mode . PDFView-mode))
+	   ("man pages" (mode . Man))
+	   ("process bufs" (mode . comint-mode))
+	   ("PDF" (or (mode . PDFView-mode)
+		      (mode . PDFView)))
 	   ("compilations" (mode . Compilation))
 	   ;; ("transmission" (or
-			    ;; (mode . Transmission)
-			    ;; (mode . Transmission-Info)
-			    ;; (mode . Transmission-Files))
+	   ;; (mode . Transmission)
+	   ;; (mode . Transmission-Info)
+	   ;; (mode . Transmission-Files))
 	   ("helm" (mode . helm-major-mode))
 	   ("tramp" (name . "\*tramp\*"))
 	   ("eshell" (name . "\*eshell"))
@@ -945,7 +1016,7 @@
 	   (split-window-vertically))
 	 (switch-to-buffer nil)))
 
-     (global-set-key (kbd "C-c |") 'toggle-frame-split)
+     (global-set-key (kbd "C-x |") 'toggle-frame-split)
    #+END_SRC
 
 ** edit current buffer as root
@@ -1083,8 +1154,6 @@
 	   message-directory "~/.emacs.d/Mail/"
 					     ;tramp-histfile-override "/dev/null" nil (tramp)
 	   )
-     (add-to-list 'tramp-remote-path "/home/tsranso/bin")
-     (add-to-list 'tramp-remote-path "/home/tsranso/.local/bin")
      (add-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)
      (global-auto-revert-mode 1)
    #+END_SRC
@@ -1105,7 +1174,7 @@
       (shell-command "/usr/local/bin/lock.sh"))
 
     (when (and (>= (string-to-number emacs-version) 24.4)
-	       (not (running-on-hosts '("login001" "marcher" "atari"))))
+	       (not (running-on-hosts '("login001" "marcher"))))
       (use-package xelb
 	:if (string= "exwm" (getenv "DESKTOP_SESSION"))
 	;; :ensure t
@@ -1163,9 +1232,9 @@
 		     ("<print>" . "scrot")
 		     ("<XF86MonBrightnessUp>" . "light -A 10")
 		     ("<XF86MonBrightnessDown>" . "light -U 10")
-		     ("<XF86AudioMute>"."amixer -c 0 set Master toggle")
-		     ("<XF86AudioLowerVolume>" . "amixer -c 0 sset Master 5%-")
-		     ("<XF86AudioRaiseVolume>" . "amixer -c 0 set Master unmute; amixer -c 0 sset Master 5%+")))
+		     ("<XF86AudioMute>"."amixer set Master toggle")
+		     ("<XF86AudioLowerVolume>" . "amixer sset Master 5%-")
+		     ("<XF86AudioRaiseVolume>" . "amixer set Master unmute; amixer sset Master 5%+")))
 	  (let ((f (lambda () (interactive)
 		     (save-window-excursion
 		       (start-process-shell-command "" nil (cdr k))))))
@@ -1194,6 +1263,10 @@
 	(push ?\C-q exwm-input-prefix-keys)
 	(define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
 
+	(start-process-shell-command "Gnome settings daemon" nil "/usr/lib/gsd-xsettings")
+	(start-process-shell-command "Configure caps lock" nil "xmodmap ~/.xmodmap")
+	(start-process-shell-command "Screen layout" nil "~/.screenlayout/atari.sh")
+
 	(require 'exwm-randr)
 	(setq exwm-randr-workspace-output-plist (workspace-screen-mapping))
 
@@ -1208,6 +1281,16 @@
 			       "--output DP-2 --mode 1920x1200 --pos 3120x240 --rotate left "
 			       "--output DP-1 --mode 1920x1200 --pos 1920x240 --rotate left "
 			       "--output DVI-D-1 --mode 1920x1080 --pos 0x1080 --rotate normal ")))))
+
+	(when (running-on-hosts '("atari"))
+	  (add-hook 'exwm-randr-screen-change-hook
+		    (lambda ()
+		      (start-process-shell-command
+		       "xrandr" nil
+		       (concat "xrandr "
+			       "--output DP1 --primary --mode 2560x1440 --pos 1080x480 "
+			       "--output DP2 --mode 1920x1080 --pos 0x0 --rotate left")))))
+
 	(when (running-on-hosts '("hoshi"))
 	  (add-hook 'exwm-randr-screen-change-hook
 		    (lambda ()
