@@ -38,10 +38,10 @@
  '(emms-cache-set-function (quote emms-cache-set))
  '(emms-info-functions
    (quote
-    (emms-info-mediainfo emms-info-mpd emms-info-cueinfo emms-info-ogginfo)) t)
+    (emms-info-mediainfo emms-info-mpd emms-info-cueinfo emms-info-ogginfo)))
  '(emms-mode-line-cycle t t)
- '(emms-mode-line-mode-line-function (quote emms-mode-line-cycle-mode-line-function) t)
- '(emms-player-mpd-music-directory "/home/tsranso/Music" t)
+ '(emms-mode-line-mode-line-function (quote emms-mode-line-cycle-mode-line-function))
+ '(emms-player-mpd-music-directory "/home/tsranso/Music")
  '(emms-player-mplayer-command-name "mpv" t)
  '(emms-player-next-function (quote emms-score-next-noerror))
  '(emms-playlist-default-major-mode (quote emms-playlist-mode))
@@ -143,14 +143,14 @@
        (or
 	(name . "*Help*")
 	(name . "*Apropos*")
-	(name . "*info*")))))) t)
- '(ibuffer-show-empty-filter-groups nil t)
+	(name . "*info*")))))))
+ '(ibuffer-show-empty-filter-groups nil)
  '(inferior-lisp-program "sbcl" t)
  '(org-agenda-files nil)
  '(package-enable-at-startup nil)
  '(package-selected-packages
    (quote
-    (spaceline emojify calfw calfw-gcal calfw-ical calfw-org which-key beacon org-gcal deadgrep cmake-mode hydra org-ref dired-subtree hackernews spotify sx ob-async symon nov auto-package-update smartparens dad-joke gnuplot theme-changer smart-mode-line magit org-bullets exwm xelb page-breaks-line slime transmission pdf-tools material-theme helm-tramp helm-dictionary helm-bbdb emms dashboard)))
+    (wiki-summary spaceline emojify calfw calfw-gcal calfw-ical calfw-org which-key beacon org-gcal deadgrep cmake-mode hydra org-ref dired-subtree hackernews spotify sx ob-async symon nov auto-package-update smartparens dad-joke gnuplot theme-changer smart-mode-line magit org-bullets exwm xelb page-breaks-line slime transmission pdf-tools material-theme helm-tramp helm-dictionary helm-bbdb emms dashboard)))
  '(show-week-agenda-p t t)
  '(slime-contribs (quote (slime-fancy)) t)
  '(sml/no-confirm-load-theme t)
