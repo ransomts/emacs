@@ -241,6 +241,38 @@
 
     #+END_SRC
 
+**** update gnome memo with active clock
+
+     Requires gnome desktop with [[https://extensions.gnome.org/extension/974/short-memo/][short-memo]] installed, and the [[https://chrome.google.com/webstore/detail/gnome-shell-integration/gphhapmejobijbbhgpjhcjognlahblep][google chrome gnome integration extension]].
+
+     #+BEGIN_SRC emacs-lisp
+       (add-hook
+	'org-mode-hook
+	(lambda ()
+
+	  ;; Org clock string to Gnome top bar. Needs :
+	  ;; https://extensions.gnome.org/extension/974/short-memo/
+	  (defun current-task-to-status ()
+	    (interactive)
+	    (if (fboundp 'org-clocking-p)
+		(if (org-clocking-p)
+		    (call-process "dconf" nil nil nil "write"
+				  "/org/gnome/shell/extensions/short-memo/message"
+				  (concat "'" (org-clock-get-clock-string) "'"))
+		  (call-process "dconf" nil nil nil "write"
+				"/org/gnome/shell/extensions/short-memo/message"
+				"'No active clock'"))))
+	  ;; update clock message every minute
+	  (run-with-timer 0 60 'current-task-to-status)
+
+	  ;; update clock immediately on clock-in / clock-out
+	  (defun my-org-clock-message (old-function &rest arguments)
+	    (apply old-function arguments)
+	    (current-task-to-status))
+	  (advice-add #'org-clock-in :around #'my-org-clock-message)
+	  (advice-add #'org-clock-out :around #'my-org-clock-message)))
+     #+END_SRC
+
 **** org exports
      #+BEGIN_SRC emacs-lisp
        (use-package ox-hugo
