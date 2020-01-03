@@ -38,10 +38,10 @@
  '(emms-cache-set-function (quote emms-cache-set))
  '(emms-info-functions
    (quote
-    (emms-info-mediainfo emms-info-mpd emms-info-cueinfo emms-info-ogginfo)))
+    (emms-info-mediainfo emms-info-mpd emms-info-cueinfo emms-info-ogginfo)) t)
  '(emms-mode-line-cycle t t)
- '(emms-mode-line-mode-line-function (quote emms-mode-line-cycle-mode-line-function))
- '(emms-player-mpd-music-directory "/home/tsranso/Music")
+ '(emms-mode-line-mode-line-function (quote emms-mode-line-cycle-mode-line-function) t)
+ '(emms-player-mpd-music-directory "/home/tsranso/Music" t)
  '(emms-player-mplayer-command-name "mpv" t)
  '(emms-player-next-function (quote emms-score-next-noerror))
  '(emms-playlist-default-major-mode (quote emms-playlist-mode))
@@ -64,14 +64,14 @@
  '(erc-nick "tinhatcat")
  '(erc-prompt "<tinhatcat>")
  '(erc-sound-mode t)
- '(eshell-cmpl-ignore-case t t)
- '(eshell-destroy-buffer-when-process-dies t t)
- '(eshell-highlight-prompt nil t)
- '(eshell-history-size 1000000 t)
- '(eshell-prompt-function (quote my-eshell-prompt) t)
+ '(eshell-cmpl-ignore-case t)
+ '(eshell-destroy-buffer-when-process-dies t)
+ '(eshell-highlight-prompt nil)
+ '(eshell-history-size 1000000)
+ '(eshell-prompt-function (quote my-eshell-prompt))
  '(eshell-visual-commands
    (quote
-    ("alsamixer" "glances" "gtop" "htop" "less" "more" "ncdu" "nethogs" "nmon" "pacmixer" "radeontop" "screen" "top" "tuir" "vi" "vim")) t)
+    ("alsamixer" "glances" "gtop" "htop" "less" "more" "ncdu" "nethogs" "nmon" "pacmixer" "radeontop" "screen" "top" "tuir" "vi" "vim")))
  '(gnus-always-read-dribble-file t)
  '(gnus-blocked-images nil)
  '(gnus-directory "~/.emacs.d/gnus")
@@ -143,14 +143,15 @@
        (or
 	(name . "*Help*")
 	(name . "*Apropos*")
-	(name . "*info*")))))))
- '(ibuffer-show-empty-filter-groups nil)
+	(name . "*info*")))))) t)
+ '(ibuffer-show-empty-filter-groups nil t)
  '(inferior-lisp-program "sbcl" t)
  '(org-agenda-files nil)
  '(package-enable-at-startup nil)
  '(package-selected-packages
    (quote
-    (wiki-summary spaceline emojify calfw calfw-gcal calfw-ical calfw-org which-key beacon org-gcal deadgrep cmake-mode hydra org-ref dired-subtree hackernews spotify sx ob-async symon nov auto-package-update smartparens dad-joke gnuplot theme-changer smart-mode-line magit org-bullets exwm xelb page-breaks-line slime transmission pdf-tools material-theme helm-tramp helm-dictionary helm-bbdb emms dashboard)))
+    (org-journal helm-org-clock visual-fill-column spaceline emojify calfw calfw-gcal calfw-ical calfw-org which-key beacon org-gcal deadgrep cmake-mode hydra org-ref dired-subtree hackernews spotify sx ob-async symon nov auto-package-update smartparens dad-joke gnuplot theme-changer smart-mode-line magit org-bullets exwm xelb page-breaks-line slime transmission pdf-tools material-theme helm-tramp helm-dictionary helm-bbdb emms dashboard)))
+ '(revert-without-query (quote ("$*\\\\.pdf")))
  '(show-week-agenda-p t t)
  '(slime-contribs (quote (slime-fancy)) t)
  '(sml/no-confirm-load-theme t)
