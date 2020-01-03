@@ -728,13 +728,15 @@
 
     Great way to interact with git. Not much config needed, just a global keybinding to pop open the status.
     #+BEGIN_SRC emacs-lisp
-      (when (>= (string-to-number emacs-version) 25.1)
-	(use-package magit
-	  :ensure t
-	  :unless (running-on-windows)
-	  :bind ("C-x g" . #'magit-status)))
+(when (>= (string-to-number emacs-version) 25.1)
+  (use-package magit
+    :ensure t
+    :unless (running-on-windows)
+    :bind ("C-x g" . #'magit-status)
+    :config
+    (remove-hook 'server-switch-hook 'magit-commit-diff)))
 
-      (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+(setq ediff-window-setup-function 'ediff-setup-windows-plain)
     #+END_SRC
 
 *** pdf
