@@ -143,14 +143,14 @@
        (or
 	(name . "*Help*")
 	(name . "*Apropos*")
-	(name . "*info*")))))) t)
- '(ibuffer-show-empty-filter-groups nil t)
+	(name . "*info*")))))))
+ '(ibuffer-show-empty-filter-groups nil)
  '(inferior-lisp-program "sbcl" t)
  '(org-agenda-files nil)
  '(package-enable-at-startup nil)
  '(package-selected-packages
    (quote
-    (org-journal helm-org-clock visual-fill-column spaceline emojify calfw calfw-gcal calfw-ical calfw-org which-key beacon org-gcal deadgrep cmake-mode hydra org-ref dired-subtree hackernews spotify sx ob-async symon nov auto-package-update smartparens dad-joke gnuplot theme-changer smart-mode-line magit org-bullets exwm xelb page-breaks-line slime transmission pdf-tools material-theme helm-tramp helm-dictionary helm-bbdb emms dashboard)))
+    (interleave helm-google org-journal helm-org-clock visual-fill-column spaceline emojify calfw calfw-gcal calfw-ical calfw-org which-key beacon org-gcal deadgrep cmake-mode hydra org-ref dired-subtree hackernews spotify sx ob-async symon nov auto-package-update smartparens dad-joke gnuplot theme-changer smart-mode-line magit org-bullets exwm xelb page-breaks-line slime transmission pdf-tools material-theme helm-tramp helm-dictionary helm-bbdb emms dashboard)))
  '(revert-without-query (quote ("$*\\\\.pdf")))
  '(show-week-agenda-p t t)
  '(slime-contribs (quote (slime-fancy)) t)

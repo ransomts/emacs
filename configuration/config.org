@@ -73,76 +73,86 @@
 ** Built In
 *** gnus
 
-    #+BEGIN_SRC emacs-lisp :tangle ~/.gnus
-      (setq user-mail-address "tsranso@g.clemson.edu"
-	    user-full-name "Tim Ransom")
+    #+BEGIN_SRC emacs-lisp :tangle ~/.gnus :comments both
+(setq user-mail-address "tsranso@g.clemson.edu"
+      user-full-name "Tim Ransom")
 
-      (setq gnus-select-method
-	    '(nnimap "gmail"
-		     (nnimap-address "imap.gmail.com")  ; it could also be imap.googlemail.com if that's your server.
-		     (nnimap-server-port "imaps")
-		     (nnimap-stream ssl)))
+(setq gnus-select-method
+      '(nnimap "gmail"
+	       ;; 	       (nnimap-address "imap.gmail.com")  ; it could also be imap.googlemail.com if that's your server.
+ 	       (nnimap-server-port "imaps")
+	       ))
+(setq gnus-secondary-select-methods '((nnimap "work"
+					      (nnimap-server-port "imaps")
+					      (nnimap-stream ssl)
+                                              (nnimap-address "imap.gmail.com"))
+				      (nnimap "home"
+					      (nnimap-server-port "imaps")
+					      (nnimap-stream ssl)
+                                              (nnimap-address "imap.gmail.com"))))
 
-      (setq smtpmail-smtp-server "smtp.gmail.com"
-	    smtpmail-smtp-service 587
-	    gnus-ignored-newsgroups "^to\\.\\|^[0-9. ]+\\( \\|$\\)\\|^[\"]\"[#'()]")
+(setq smtpmail-smtp-server "smtp.gmail.com"
+      smtpmail-smtp-service 587
+      gnus-ignored-newsgroups "^to\\.\\|^[0-9. ]+\\( \\|$\\)\\|^[\"]\"[#'()]")
     #+END_SRC
 
     I use gnus mostly as an rss reader, but have the email there too if I want to fire off a quick note.
     #+BEGIN_SRC emacs-lisp
-      (use-package gnus
-	:bind ("C-M-g" . #'gnus)
-	:custom
-	(gnus-always-read-dribble-file t)
-	(gnus-directory "~/.emacs.d/gnus")
-	:config
-	(setq-default
-	 gnus-summary-line-format "%U%R%z %(%&user-date; %[%-23,23f%]  %B%s%)\n"
-	 gnus-user-date-format-alist '((t . "%m-%d %H:%M"))
-	 gnus-summary-thread-gathering-function 'gnus-gather-threads-by-references
-	 gnus-thread-sort-functions '(gnus-thread-sort-by-date)
-	 gnus-sum-thread-tree-false-root ""
-	 gnus-sum-thread-tree-indent " "
-	 gnus-sum-thread-tree-leaf-with-other "├► "
-	 gnus-sum-thread-tree-root ""
-	 gnus-sum-thread-tree-single-leaf "╰► "
-	 gnus-sum-thread-tree-vertical "│")
-	;; (gnus-demon-add-handler 'gnus-demon-scan-news 2 t) ; this does a call to gnus-group-get-new-news - maybe too simple
+(use-package gnus
+  :bind ("C-M-g" . #'gnus)
+  :custom
+  (gnus-always-read-dribble-file t)
+  (gnus-directory "~/.emacs.d/gnus")
+  :config
+  (setq-default
+   gnus-summary-line-format "%U%R%z %(%&user-date; %[%-23,23f%]  %B%s%)\n"
+   gnus-user-date-format-alist '((t . "%m-%d %H:%M"))
+   gnus-summary-thread-gathering-function 'gnus-gather-threads-by-references
+   gnus-thread-sort-functions '(gnus-thread-sort-by-date)
+   gnus-sum-thread-tree-false-root ""
+   gnus-sum-thread-tree-indent " "
+   gnus-sum-thread-tree-leaf-with-other "├► "
+   gnus-sum-thread-tree-root ""
+   gnus-sum-thread-tree-single-leaf "╰► "
+   gnus-sum-thread-tree-vertical "│")
+  ;; (gnus-demon-add-handler 'gnus-demon-scan-news 2 t) ; this does a call to gnus-group-get-new-news - maybe too simple
 
-	(defun gnus-demon-scan-news-3 ()
-	  (let ((win (current-window-configuration))
-		(gnus-read-active-file 'some)
-		(gnus-check-new-newsgroups nil)
-		(gnus-verbose 2)
-		(gnus-verbose-backends 5)
-		(level 3)
-		)
-	    (message "check-mail: %s" (format-time-string "%H:%M:%S"))
-	    (while-no-input
-	      (unwind-protect
-		  (save-window-excursion
-		    (when (gnus-alive-p)
-		      (with-current-buffer gnus-group-buffer
-			(gnus-group-get-new-news level))))
-		(set-window-configuration win)))))
+  (defun gnus-demon-scan-news-3 ()
+    (let ((win (current-window-configuration))
+	  (gnus-read-active-file 'some)
+	  (gnus-check-new-newsgroups nil)
+	  (gnus-verbose 2)
+	  (gnus-verbose-backends 5)
+	  (level 3)
+	  )
+      (message "check-mail: %s" (format-time-string "%H:%M:%S"))
+      (while-no-input
+	(unwind-protect
+	    (save-window-excursion
+	      (when (gnus-alive-p)
+		(with-current-buffer gnus-group-buffer
+		  (gnus-group-get-new-news level))))
+	  (set-window-configuration win)))))
 
-	(setq gnus-demon-timestep 10)
-	(gnus-demon-add-handler 'gnus-demon-scan-news-3 12 1)
+  (setq gnus-demon-timestep 10)
+  (gnus-demon-add-handler 'gnus-demon-scan-news-3 12 1)
 
-	(gnus-add-configuration
-	 '(article
-	   (horizontal 1.0
-		       (vertical 50 (group 1.0))
-		       (vertical 1.0
-				 (summary 0.16 point)
-				 (article 1.0)))))
+  (gnus-add-configuration
+   '(article
+     (horizontal 1.0
+		 (vertical 50 (group 1.0))
+		 (vertical 1.0
+			   (summary 0.16 point)
+			   (article 1.0)))))
 
-	(gnus-add-configuration
-	 '(summary
-	   (horizontal 1.0
-		       (vertical 50 (group 1.0))
-		       (vertical 1.0 (summary 1.0 point))))))
-      (add-hook 'gnus-group-mode-hook 'gnus-topic-mode)
+  (gnus-add-configuration
+   '(summary
+     (horizontal 1.0
+		 (vertical 50 (group 1.0))
+		 (vertical 1.0 (summary 1.0 point))))))
+(add-hook 'gnus-group-mode-hook 'gnus-topic-mode)
+(setq gnus-fetch-old-headers t)
+
     #+END_SRC
 
 *** elisp
@@ -189,62 +199,66 @@
      (sqlite . t)))
 
   (require 'org-crypt)
-  (org-crypt-use-before-save-magic))
+  (org-crypt-use-before-save-magic)
 
-(setq diary-file "~/.emacs.d/org/schedule.org"
-      org-agenda-files
+  (setq diary-file "~/.emacs.d/org/schedule.org"
+	org-agenda-files
+	(directory-files (concat user-emacs-directory "org") t
+			 "\\(?:\\(?:research\\|\\.*-gcal\\|schedule\\|scratch\\|todo\\)\\.org\\)")
+	org-agenda-use-time-grid nil
+	org-archive-location "~/.emacs.d/org/archive.org::* From %s"
+	org-capture-after-finalize-hook nil
+	org-capture-templates '(("t" "Todo" entry
+				 (file+headline "~/.emacs.d/org/todo.org" "Tasks")
+				 "* TODO %?\nEntered on %T\n%i\n%a")
+				("e" "Event" entry
+				 (file "~/.emacs.d/org/schedule.org")
+				 "* %?\nDate %^t")
+				("b" "Fix Bug" checkitem
+				 (file+headline "~/.emacs.d/org/todo.org" "Bugs")
+				 "[ ] %?\n%A\nEntered on %T")
+				("n" "General notes" entry
+				 (file+headline "~/.emacs.d/org/scratch.org" "Notes")
+				 "* Note %?\n%T\n")
+				("a" "Appointment" entry (file  "~/.emacs.d/org/ransomtim8078-gcal.org" )
+				 "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n"))
+	org-return-follows-link t
+	org-clock-sound t
+	org-log-note-clock-out t
+	org-clock-in-resume t
+	org-clock-out-remove-zero-time-clocks t
+	org-clock-out-when-done t
+	org-clock-persist t
+	org-clock-persist-query-resume nil
+	org-src-preserve-indentation t
+	org-confirm-babel-evaluate nil
+	org-datetree-add-timestamp 'inactive
+	org-default-notes-file "~/.emacs.d/org/todo.org"
+	org-directory "~/.emacs.d/org"
+	org-hide-leading-stars t
+	org-highlight-latex-and-related '(latex)
+	org-log-done 'time
+	org-outline-path-complete-in-steps nil
+	org-preview-latex-image-directory "~/.emacs.d/ltxpng/"
+	org-refile-targets '((org-agenda-files :maxlevel . 2))
+	org-refile-use-outline-path 'file
+	org-src-fontify-natively t
+	org-src-tab-acts-natively t
+	org-startup-with-latex-preview t
+	org-todo-keyword-faces
+	'(("SOON"
+	   :foreground "blue"
+	   :background "sky blue"
+	   :weight bold)
+	  ("DONE"
+	   :foreground "darkseagreen4"
+	   :background "darkseagreen2"
+	   :weight bold))
+	org-todo-keywords '((sequence "TODO" "SOON" "DONE"))))
+
+(setq org-agenda-files
       (directory-files (concat user-emacs-directory "org") t
-		       "\\(?:\\(?:research\\|\\.*-gcal\\|schedule\\|scratch\\|todo\\)\\.org\\)")
-      org-agenda-use-time-grid nil
-      org-archive-location "~/.emacs.d/org/archive.org::* From %s"
-      org-capture-after-finalize-hook nil
-      org-capture-templates '(("t" "Todo" entry
-			       (file+headline "~/.emacs.d/org/todo.org" "Tasks")
-			       "* TODO %?\nEntered on %T\n%i\n%a")
-			      ("e" "Event" entry
-			       (file "~/.emacs.d/org/schedule.org")
-			       "* %?\nDate %^t")
-			      ("b" "Fix Bug" checkitem
-			       (file+headline "~/.emacs.d/org/todo.org" "Bugs")
-			       "[ ] %?\n%A\nEntered on %T")
-			      ("n" "General notes" entry
-			       (file+headline "~/.emacs.d/org/scratch.org" "Notes")
-			       "* Note %?\n%T\n")
-			      ("a" "Appointment" entry (file  "~/.emacs.d/org/ransomtim8078-gcal.org" )
-			       "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n"))
-      org-return-follows-link t
-      org-clock-sound t
-      org-log-note-clock-out t
-      org-clock-in-resume t
-      org-clock-out-remove-zero-time-clocks t
-      org-clock-out-when-done t
-      org-clock-persist t
-      org-clock-persist-query-resume nil
-      org-src-preserve-indentation t
-      org-confirm-babel-evaluate nil
-      org-datetree-add-timestamp 'inactive
-      org-default-notes-file "~/.emacs.d/org/todo.org"
-      org-directory "~/.emacs.d/org"
-      org-hide-leading-stars t
-      org-highlight-latex-and-related '(latex)
-      org-log-done 'time
-      org-outline-path-complete-in-steps nil
-      org-preview-latex-image-directory "~/.emacs.d/ltxpng/"
-      org-refile-targets '((org-agenda-files :maxlevel . 2))
-      org-refile-use-outline-path 'file
-      org-src-fontify-natively t
-      org-src-tab-acts-natively t
-      org-startup-with-latex-preview t
-      org-todo-keyword-faces
-      '(("SOON"
-	 :foreground "blue"
-	 :background "sky blue"
-	 :weight bold)
-	("DONE"
-	 :foreground "darkseagreen4"
-	 :background "darkseagreen2"
-	 :weight bold))
-      org-todo-keywords '((sequence "TODO" "SOON" "DONE")))
+		       "\\(?:\\(?:research\\|\\.*-gcal\\|schedule\\|scratch\\|todo\\)\\.org\\)"))
     #+END_SRC
 
 **** Journaling
