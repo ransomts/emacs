@@ -30,3 +30,6 @@ nov-places
 
 /bbdb
 /elpa/*
+dmenu-items
+.last-package-update-day
+/.cask/

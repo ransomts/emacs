@@ -799,8 +799,7 @@
 	(show-week-agenda-p t)
 	(dashboard-items '((recents  . 5)
 			   (agenda . 5)
-			   (bookmarks . 5)
-			   (registers . 5))))
+			   (bookmarks . 5))))
       ;; todo: make (todos . 5) source
     #+END_SRC
 
