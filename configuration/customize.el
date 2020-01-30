@@ -38,10 +38,10 @@
  '(emms-cache-set-function (quote emms-cache-set))
  '(emms-info-functions
    (quote
-    (emms-info-mediainfo emms-info-mpd emms-info-cueinfo emms-info-ogginfo)))
+    (emms-info-mediainfo emms-info-mpd emms-info-cueinfo emms-info-ogginfo)) t)
  '(emms-mode-line-cycle t t)
- '(emms-mode-line-mode-line-function (quote emms-mode-line-cycle-mode-line-function))
- '(emms-player-mpd-music-directory "/home/tsranso/Music")
+ '(emms-mode-line-mode-line-function (quote emms-mode-line-cycle-mode-line-function) t)
+ '(emms-player-mpd-music-directory "/home/tsranso/Music" t)
  '(emms-player-mplayer-command-name "mpv" t)
  '(emms-player-next-function (quote emms-score-next-noerror))
  '(emms-playlist-default-major-mode (quote emms-playlist-mode))
@@ -147,7 +147,9 @@
 	(name . "*info*")))))) t)
  '(ibuffer-show-empty-filter-groups nil t)
  '(inferior-lisp-program "sbcl" t)
- '(org-agenda-files nil)
+ '(org-agenda-files
+   (quote
+    ("/home/tsranso/.emacs.d/org/SoC-gcal.org" "/home/tsranso/.emacs.d/org/ransomtim8078-gcal.org" "/home/tsranso/.emacs.d/org/research.org" "/home/tsranso/.emacs.d/org/schedule.org" "/home/tsranso/.emacs.d/org/scratch.org" "/home/tsranso/.emacs.d/org/todo.org" "/home/tsranso/.emacs.d/org/tsranso-gcal.org")))
  '(org-noter-default-notes-file-names (quote ("~/.emacs.d/org/reading.org")))
  '(org-noter-notes-search-path (quote ("~/.emacs.d/org/")))
  '(package-enable-at-startup nil)

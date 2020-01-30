@@ -203,8 +203,13 @@
 
   (setq diary-file "~/.emacs.d/org/schedule.org"
 	org-agenda-files
-	(directory-files (concat user-emacs-directory "org") t
-			 "\\(?:\\(?:research\\|\\.*-gcal\\|schedule\\|scratch\\|todo\\)\\.org\\)")
+	'("/home/tsranso/.emacs.d/org/SoC-gcal.org"
+	  "/home/tsranso/.emacs.d/org/ransomtim8078-gcal.org"
+	  "/home/tsranso/.emacs.d/org/research.org"
+	  "/home/tsranso/.emacs.d/org/schedule.org"
+	  "/home/tsranso/.emacs.d/org/scratch.org"
+	  "/home/tsranso/.emacs.d/org/todo.org"
+	  "/home/tsranso/.emacs.d/org/tsranso-gcal.org")
 	org-agenda-use-time-grid nil
 	org-archive-location "~/.emacs.d/org/archive.org::* From %s"
 	org-capture-after-finalize-hook nil
@@ -255,10 +260,6 @@
 	   :background "darkseagreen2"
 	   :weight bold))
 	org-todo-keywords '((sequence "TODO" "SOON" "DONE"))))
-
-(setq org-agenda-files
-      (directory-files (concat user-emacs-directory "org") t
-		       "\\(?:\\(?:research\\|\\.*-gcal\\|schedule\\|scratch\\|todo\\)\\.org\\)"))
     #+END_SRC
 
 **** Journaling
@@ -999,8 +1000,9 @@
 				    ("g.clemson.edu_h14th1n5kst3v1eq1mifc91bcg@group.calendar.google.com" . "~/.emacs.d/org/schedule.org")
 				    ("socclemson@gmail.com" . "~/.emacs.d/org/SoC-gcal.org")))
 
-	(add-hook 'org-agenda-mode-hook (lambda () (org-gcal-fetch) ))
-	(add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-fetch) )))
+	;; (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-fetch) ))
+	;; (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-fetch) ))
+	)
 
       (setq org-agenda-custom-commands
 	    '(("c" "Simple agenda view"
