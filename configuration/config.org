@@ -989,9 +989,9 @@
 
     #+BEGIN_SRC emacs-lisp
       (use-package org-gcal
-	:disabled
 	:ensure t
 	:config
+
 	(setq org-gcal-client-id "819418314073-8pnmvge9jmpu6jf2hktbuo8m5gakuoeu.apps.googleusercontent.com"
 	      org-gcal-client-secret "lMo_aNdgaa-_dFWmzrBVi5VO"
 	      org-gcal-file-alist '(("ransomtim8078@gmail.com" .  "~/.emacs.d/org/ransomtim8078-gcal.org")
@@ -999,8 +999,8 @@
 				    ("g.clemson.edu_h14th1n5kst3v1eq1mifc91bcg@group.calendar.google.com" . "~/.emacs.d/org/schedule.org")
 				    ("socclemson@gmail.com" . "~/.emacs.d/org/SoC-gcal.org")))
 
-	(add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync) ))
-	(add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync) )))
+	(add-hook 'org-agenda-mode-hook (lambda () (org-gcal-fetch) ))
+	(add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-fetch) )))
 
       (setq org-agenda-custom-commands
 	    '(("c" "Simple agenda view"
