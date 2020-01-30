@@ -153,7 +153,7 @@
  '(package-enable-at-startup nil)
  '(package-selected-packages
    (quote
-    (wiki-summary org-noter zotxt spaceline helm-google org-journal helm-org-clock visual-fill-column emojify calfw calfw-gcal calfw-ical calfw-org which-key beacon org-gcal deadgrep cmake-mode hydra org-ref dired-subtree hackernews spotify sx ob-async symon nov auto-package-update smartparens dad-joke gnuplot theme-changer smart-mode-line magit org-bullets exwm xelb page-breaks-line slime transmission material-theme helm-tramp helm-dictionary helm-bbdb emms dashboard)))
+    (org-noter zotxt spaceline helm-google org-journal helm-org-clock visual-fill-column emojify calfw calfw-gcal calfw-ical calfw-org which-key beacon org-gcal deadgrep cmake-mode hydra org-ref dired-subtree hackernews spotify sx ob-async symon nov auto-package-update smartparens dad-joke gnuplot theme-changer smart-mode-line magit org-bullets exwm xelb page-breaks-line slime transmission material-theme helm-tramp helm-dictionary helm-bbdb emms dashboard)))
  '(revert-without-query (quote ("$*\\\\.pdf")))
  '(show-week-agenda-p t t)
  '(slime-contribs (quote (slime-fancy)) t)
