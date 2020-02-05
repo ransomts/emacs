@@ -1,2 +1,0 @@
-;;; -*- no-byte-compile: t -*-
-(define-package "helm-dictionary" "20191110.2202" "Helm source for looking up dictionaries" '((helm "1.5.5")) :commit "6a21ac1ba424ffa87b3b3e1b53d0fdd529844a28" :authors '(("Titus von der Malsburg" . "malsburg@posteo.de") ("Michael Heerdegen" . "michael_heerdegen@web.de")) :maintainer '("Titus von der Malsburg" . "malsburg@posteo.de") :url "https://github.com/emacs-helm/helm-dictionary")
