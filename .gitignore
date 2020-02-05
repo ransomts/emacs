@@ -11,6 +11,7 @@ elpa/*
 elpa/gnupg/pubring.gpg
 emms
 **/epdfinfo
+emojis
 erc_log
 eshell
 gnus
