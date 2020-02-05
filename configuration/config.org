@@ -178,7 +178,16 @@
    (:map org-mode-map
 	 (("C-c r" . #'org-archive-subtree)
 	  ("C-c C-r" . #'org-archive-subtree))))
-
+  :custom
+  (org-agenda-files
+   
+   '("/home/tsranso/.emacs.d/org/SoC-gcal.org" 
+     "/home/tsranso/.emacs.d/org/ransomtim8078-gcal.org" 
+     "/home/tsranso/.emacs.d/org/research.org" 
+     "/home/tsranso/.emacs.d/org/schedule.org" 
+     "/home/tsranso/.emacs.d/org/scratch.org" 
+     "/home/tsranso/.emacs.d/org/todo.org" 
+     "/home/tsranso/.emacs.d/org/tsranso-gcal.org"))
   :config
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -413,7 +422,11 @@
      #+END_SRC
 **** org-noter
 #+BEGIN_SRC emacs-lisp
-(use-package org-noter :ensure t)
+(use-package org-noter
+  :ensure t
+  :custom
+  (org-noter-default-notes-file-names '("~/.emacs.d/org/reading.org"))
+  (org-noter-notes-search-path '("~/.emacs.d/org/")))
 #+END_SRC
 
 **** org-ref
@@ -431,7 +444,7 @@
 
 	 (setq bibtex-completion-pdf-field "file")
 	 (setq bibtex-completion-bibliography '("~/Documents/references.bib"))
-	 (setq revert-without-query (quote ("$*\\.pdf")))
+	 
   
 	 (defun my/org-ref-open-pdf-at-point ()
 	   "Open the pdf for bibtex key under point if it exists."
@@ -570,7 +583,7 @@
 	   "top" "tuir"
 	   "vi" "vim")))
 
-      (defun eshell-load-bash-aliases ()
+      (defun eshell-load--aliases ()
 	"Reads bash aliases from Bash and inserts
       them into the list of eshell aliases."
 	(interactive)
@@ -765,15 +778,16 @@
 
 *** pdf
     #+BEGIN_SRC emacs-lisp
-      (use-package pdf-tools
-	:ensure t
-	:unless (or (string= nil (getenv "DESKTOP_SESSION")) 
-		    (running-on-hosts '("login001")))
-	:load-path "site-lisp/pdf-tools/lisp"
-	:magic ("%PDF" . pdf-view-mode)
-	:config
-	(pdf-tools-install)
-	(setq pdf-misc-print-programm "/usr/bin/gtklp"))
+(use-package pdf-tools
+  :ensure t
+  :unless (running-on-hosts '("login001"))
+  :load-path "site-lisp/pdf-tools/lisp"
+  :magic ("%PDF" . pdf-view-mode)
+  :custom
+  (revert-without-query (quote ("$*\\.pdf")))
+  :config
+  (pdf-tools-install)
+  (setq pdf-misc-print-programm "/usr/bin/gtklp"))
     #+END_SRC
 
 *** epub
@@ -792,7 +806,7 @@
     #+BEGIN_SRC emacs-lisp
       (use-package dashboard
 	:ensure t
-	:if (getenv "DESKTOP_SESSION")
+	;; :if (getenv "DESKTOP_SESSION")
 	:config
 	(dashboard-setup-startup-hook)
 	:custom
@@ -1128,7 +1142,7 @@
 	   ("magit" (name . "magit\*"))
 	   ("subversion" (name . "\*svn"))
 	   ("customize" (mode . Custom))
-	   ("man pages" (mode . Man))
+	   ("man pages" (mode . Man-mode))
 	   ("process bufs" (mode . comint-mode))
 	   ("PDF" (or (mode . PDFView-mode)
 		      (mode . PDFView)))
@@ -1349,6 +1363,12 @@
      (add-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)
      (global-auto-revert-mode 1)
    #+END_SRC
+
+These are things that have popped up in my [[file:customize.el][customize.el]] that I probably added through the customize interface rather than use-package.
+#+BEGIN_SRC emacs-lisp
+(setq helm-completion-style 'emacs
+      epa-pinentry-mode 'loopback)
+#+END_SRC
 
 * exwm
 
