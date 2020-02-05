@@ -7,3 +7,6 @@
 [submodule "packages/exwm"]
 	path = packages/exwm
 	url = https://github.com/ch11ng/exwm.git
+[submodule "packages/use-package"]
+	path = packages/use-package
+	url = https://github.com/jwiegley/use-package.git
