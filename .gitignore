@@ -5,7 +5,7 @@ bookmarks
 .cask/
 **config.el
 configuration/config.el
-/dmenu-items
+dmenu-items
 **.elc
 elpa/*
 elpa/gnupg/pubring.gpg
@@ -15,7 +15,7 @@ erc_log
 eshell
 gnus
 hackernews
-/history
+history
 .last-package-update-day
 ltxpng
 Mail
@@ -32,3 +32,5 @@ request/
 tramp
 transient
 url
+emojis/
+quicklisp

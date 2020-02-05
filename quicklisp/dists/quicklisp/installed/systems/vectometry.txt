@@ -1,1 +1,0 @@
-dists/quicklisp/software/vecto-1.5/vectometry/vectometry.asd
