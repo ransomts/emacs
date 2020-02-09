@@ -596,6 +596,11 @@
 #+BEGIN_SRC emacs-lisp
 (use-package org-mime :ensure t)
 
+(use-package w3m :ensure t
+  :disabled
+  :config
+  (setq w3m-default-desplay-inline-images t))
+
 (use-package mu4e
   :bind ("C-M-m" . #'mu4e)
   :custom
@@ -609,17 +614,19 @@
 
   ;; (mu4e-compose-in-new-frame t)
 
+
   :config
   (setq mu4e-get-mail-command "mbsync -c ~/.mbsyncrc -a"
 	mu4e-html2text-command "w3m -T text/html" ;;using the default mu4e-shr2text
 	mu4e-view-prefer-html t
-	mu4e-update-interval 180
+	mu4e-update-interval 300
 	mu4e-headers-auto-update t
 	mu4e-compose-signature-auto-include nil
 	mu4e-compose-format-flowed t)
   ;; to view selected message in the browser, no signin, just html mail
   (add-to-list 'mu4e-view-actions
 	       '("ViewInBrowser" . mu4e-action-view-in-browser) t)
+
   ;; enable inline images
   (setq mu4e-view-show-images t)
   ;; use imagemagick, if available
@@ -682,7 +689,7 @@
 (setq mu4e-contexts
       (list
        (make-mu4e-context
-	:name "Personal" ;;for acc1-gmail
+	:name "Personal"
 	:enter-func (lambda () (mu4e-message "Entering context personal"))
 	:leave-func (lambda () (mu4e-message "Leaving context personal"))
 	:match-func (lambda (msg)
@@ -691,14 +698,14 @@
 			 msg '(:from :to :cc :bcc) "ransomtim8078@gmail.com")))
 	:vars '((user-mail-address . "ransomtim8078@gmail.com")
 		(user-full-name . "Tim Ransom")
-		(mu4e-sent-folder . "/acc1-gmail/[acc1].Sent Mail")
-		(mu4e-drafts-folder . "/acc1-gmail/[acc1].drafts")
-		(mu4e-trash-folder . "/acc1-gmail/[acc1].Bin")
+		(mu4e-sent-folder . "/ransomtim8078/[ransomtim8078].Sent Mail")
+		(mu4e-drafts-folder . "/ransomtim8078/[ransomtim8078].drafts")
+		(mu4e-trash-folder . "/ransomtim8078/[ransomtim8078].Bin")
 		(mu4e-compose-signature . (concat "Formal Signature\n" "Emacs 25, org-mode 9, mu4e 1.0\n"))
 		(mu4e-compose-format-flowed . t)
-		(smtpmail-queue-dir . "~/.emacs.d/Maildir/acc1-gmail/queue/cur")
+		(smtpmail-queue-dir . "~/.emacs.d/Maildir/ransomtim8078/queue/cur")
 		(message-send-mail-function . smtpmail-send-it)
-		(smtpmail-smtp-user . "acc1")
+		(smtpmail-smtp-user . "ransomtim8078")
 		(smtpmail-starttls-credentials . (("smtp.gmail.com" 587 nil nil)))
 		(smtpmail-auth-credentials . (expand-file-name "~/.authinfo.gpg"))
 		(smtpmail-default-smtp-server . "smtp.gmail.com")
@@ -706,15 +713,15 @@
 		(smtpmail-smtp-service . 587)
 		(smtpmail-debug-info . t)
 		(smtpmail-debug-verbose . t)
-		(mu4e-maildir-shortcuts . ( ("/acc1-gmail/INBOX"            . ?i)
-					    ("/acc1-gmail/[acc1].Sent Mail" . ?s)
-					    ("/acc1-gmail/[acc1].Bin"       . ?t)
-					    ("/acc1-gmail/[acc1].All Mail"  . ?a)
-					    ("/acc1-gmail/[acc1].Starred"   . ?r)
-					    ("/acc1-gmail/[acc1].drafts"    . ?d)
+		(mu4e-maildir-shortcuts . ( ("/ransomtim8078/INBOX"            . ?i)
+					    ("/ransomtim8078/[ransomtim8078].Sent Mail" . ?s)
+					    ("/ransomtim8078/[ransomtim8078].Bin"       . ?t)
+					    ("/ransomtim8078/[ransomtim8078].All Mail"  . ?a)
+					    ("/ransomtim8078/[ransomtim8078].Starred"   . ?r)
+					    ("/ransomtim8078/[ransomtim8078].drafts"    . ?d)
 					    ))))
        (make-mu4e-context
-	:name "Clemson" ;;for acc2-gmail
+	:name "Clemson"
 	:enter-func (lambda () (mu4e-message "Entering context work"))
 	:leave-func (lambda () (mu4e-message "Leaving context work"))
 	:match-func (lambda (msg)
@@ -723,14 +730,14 @@
 			 msg '(:from :to :cc :bcc) "tsranso@g.clemson.edu")))
 	:vars '((user-mail-address . "tsranso@g.clemson.edu")
 		(user-full-name . "Tim Ransom")
-		(mu4e-sent-folder . "/acc2-gmail/[acc2].Sent Mail")
-		(mu4e-drafts-folder . "/acc2-gmail/[acc2].drafts")
-		(mu4e-trash-folder . "/acc2-gmail/[acc2].Trash")
+		(mu4e-sent-folder . "/tsranso/[tsranso].Sent Mail")
+		(mu4e-drafts-folder . "/tsranso/[tsranso].drafts")
+		(mu4e-trash-folder . "/tsranso/[tsranso].Trash")
 		(mu4e-compose-signature . (concat "Informal Signature\n" "Emacs is awesome!\n"))
 		(mu4e-compose-format-flowed . t)
-		(smtpmail-queue-dir . "~/.emacs.d/Maildir/acc2-gmail/queue/cur")
+		(smtpmail-queue-dir . "~/.emacs.d/Maildir/tsranso/queue/cur")
 		(message-send-mail-function . smtpmail-send-it)
-		(smtpmail-smtp-user . "acc2")
+		(smtpmail-smtp-user . "tsranso")
 		(smtpmail-starttls-credentials . (("smtp.gmail.com" 587 nil nil)))
 		(smtpmail-auth-credentials . (expand-file-name "~/.authinfo.gpg"))
 		(smtpmail-default-smtp-server . "smtp.gmail.com")
@@ -738,12 +745,12 @@
 		(smtpmail-smtp-service . 587)
 		(smtpmail-debug-info . t)
 		(smtpmail-debug-verbose . t)
-		(mu4e-maildir-shortcuts . ( ("/acc2-gmail/INBOX"            . ?i)
-					    ("/acc2-gmail/[acc2].Sent Mail" . ?s)
-					    ("/acc2-gmail/[acc2].Trash"     . ?t)
-					    ("/acc2-gmail/[acc2].All Mail"  . ?a)
-					    ("/acc2-gmail/[acc2].Starred"   . ?r)
-					    ("/acc2-gmail/[acc2].drafts"    . ?d)
+		(mu4e-maildir-shortcuts . ( ("/tsranso/INBOX"            . ?i)
+					    ("/tsranso/[tsranso].Sent Mail" . ?s)
+					    ("/tsranso/[tsranso].Trash"     . ?t)
+					    ("/tsranso/[tsranso].All Mail"  . ?a)
+					    ("/tsranso/[tsranso].Starred"   . ?r)
+					    ("/tsranso/[tsranso].drafts"    . ?d)
 					    ))))))
 #+END_SRC
 
@@ -1454,24 +1461,26 @@
 
 ** misc
    #+BEGIN_SRC emacs-lisp
-     (global-set-key (kbd "<f6>")    #'calc)
-     (global-set-key (kbd "<f7>")    #'calendar)
-     ;; (global-set-key (kbd "C-c C-c") #'compile)
-     (global-set-key (kbd "C-c r")   #'revert-buffer)
-     (global-set-key (kbd "\C-z")    #'bury-buffer)
-     (global-set-key (kbd "\C-c v")  #'visual-line-mode)
-     (global-set-key (kbd "\C-c t")  #'toggle-truncate-lines)
+(global-set-key (kbd "<f6>")    #'calc)
+(global-set-key (kbd "<f7>")    #'calendar)
+;; (global-set-key (kbd "C-c C-c") #'compile)
+(global-set-key (kbd "C-c r")   #'revert-buffer)
+(global-set-key (kbd "\C-z")    #'bury-buffer)
+(global-set-key (kbd "\C-c v")  #'visual-line-mode)
+(global-set-key (kbd "\C-c t")  #'toggle-truncate-lines)
 
-     (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
-	   async-bytecomp-package-mode t
-	   gdb-many-windows t
-	   large-file-warning-threshold 500000000
-	   send-mail-function 'smtpmail-send-it
-	   message-directory "~/.emacs.d/Mail/"
-					     ;tramp-histfile-override "/dev/null" nil (tramp)
-	   )
-     (add-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)
-     (global-auto-revert-mode 1)
+(setq TeX-view-program-selection '((output-pdf "PDF Tools"))
+      async-bytecomp-package-mode t
+      gdb-many-windows t
+      large-file-warning-threshold 500000000
+      send-mail-function 'smtpmail-send-it
+      message-directory "~/.emacs.d/Mail/"
+					;tramp-histfile-override "/dev/null" nil (tramp)
+      )
+(add-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)
+(global-auto-revert-mode 1)
+(setq bookmark-default-file "~/.emacs.d/org/bookmarks")
+(setq bbdb-file "~/.emacs.d/org/bbdb")
    #+END_SRC
 
 These are things that have popped up in my [[file:customize.el][customize.el]] that I probably added through the customize interface rather than use-package.
@@ -1657,7 +1666,8 @@ These are things that have popped up in my [[file:customize.el][customize.el]] t
      (when (and (running-on-hosts '("hoshi" "tengen"))
 		(not (running-on-windows)))
        (launch-program "discord")
-       (launch-program "spotify --minimized"))
+       ;; (launch-program "spotify --minimized")
+       )
 
      (when (and (running-on-hosts '("joseki" "hoshi" "tengen"))
 		(not (running-on-windows)))
