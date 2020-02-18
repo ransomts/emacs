@@ -58,7 +58,7 @@
   I use syncthing to move some of the 'live' files emacs uses between machines. If I'm on a machine that hasn't had these folders made, create them.
   #+BEGIN_SRC emacs-lisp
 (mapc (lambda (dir) (make-directory (concat user-emacs-directory dir) t))
-      '("org" "gnus" ".sx" "hackernews"))
+      '("org" "emms" "gnus" ".sx" "hackernews"))
   #+END_SRC
 
   One last bootstrap, gotta load up use-package for good load times. This also adds any directories that might not be available through the usual methods like dired+.
@@ -202,6 +202,8 @@
 	org-src-fontify-natively t
 	org-src-tab-acts-natively t
 	org-startup-with-latex-preview t
+	org-latex-listings 'minted
+	org-latex-packages-alist '(("" "minted"))
 	org-todo-keyword-faces
 	'(("SOON"
 	   :foreground "blue"
@@ -619,7 +621,7 @@
   (setq mu4e-get-mail-command "mbsync -c ~/.mbsyncrc -a"
 	mu4e-html2text-command "w3m -T text/html" ;;using the default mu4e-shr2text
 	mu4e-view-prefer-html t
-	mu4e-update-interval 300
+	mu4e-update-interval 1200
 	mu4e-headers-auto-update t
 	mu4e-compose-signature-auto-include nil
 	mu4e-compose-format-flowed t)
