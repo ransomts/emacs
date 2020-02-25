@@ -1580,6 +1580,7 @@
 		 ("s-d" . "discord")
 		 ("s-t" . "transmission-remote-gtk")
 		 ("s-s" . "spotify")
+		 ("s-z" . "zotero")
 		 ("s-<tab>" . "google-chrome-stable")
 		 ("<C-M-escape>" . "gnome-system-monitor")
 		 ("s-m" . "pavucontrol")
@@ -1622,20 +1623,6 @@
 
     (require 'exwm-randr)
     (setq exwm-randr-workspace-output-plist (workspace-screen-mapping))
-
-    (when (running-on-hosts '("tengen"))
-      (add-hook 'exwm-randr-screen-change-hook
-		(lambda ()
-		  (start-process-shell-command
-		   "xrandr" nil
-		   (concat "xrandr "
-			   "--output DisplayPort-0 --off "
-			   "--output DisplayPort-1 --mode 1920x1200 --pos 1080x0 --rotate normal "
-			   "--output DisplayPort-2 --primary --mode 1920x1200 --pos 3000x1200 --rotate normal "
-			   "--output HDMI-A-0 --mode 1920x1080 --pos 0x480 --rotate left "
-			   "--output DVI-D-0 --mode 1920x1080 --pos 4920x480 --rotate left "
-			   "--output DisplayPort-3 --mode 1920x1200 --pos 3000x0 --rotate normal "
-			   "--output DisplayPort-4 --mode 1920x1200 --pos 1080x1200 --rotate normal")))))
 
     (when (running-on-hosts '("atari"))
       (add-hook 'exwm-randr-screen-change-hook
