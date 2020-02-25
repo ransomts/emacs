@@ -36,11 +36,9 @@
 	(host (shell-command-to-string "hostname")))
     (cond ((string= host "tengen\n")
 	   (nth y
-		'("HDMI-A-0" "DisplayPort-0" "DisplayPort-1" "DisplayPort-3" "DisplayPort-4" "DVI-D-0")
-		;; '("HDMI-1" "DVI-D-1" "DP-1" "DP-2" "DP-3")
+		'("HDMI-A-0" "DisplayPort-0" "DisplayPort-3" "DisplayPort-1" "DisplayPort-4" "DVI-D-0")
 		))
-	  ((string= host "atari\n") (nth y '("DP2" "DP1")))
-	  ((string= host "hoshi\n") (nth y '("DP-1" "HDMI-1" "DP-2"))))))
+	  ((string= host "atari\n") (nth y '("DP2" "DP1"))))))
 
 (defun number-of-screens ()
   (string-to-number
@@ -1602,7 +1600,7 @@
     (dolist (k '(
 		 ("s-," . "alternate-screen")
 		 ("s-<return>" . "kitty")
-		 ("s-p" . "nemo")
+		 ("s-p" . "nautilus")
 		 ("s-d" . "discord")
 		 ("s-t" . "transmission-remote-gtk")
 		 ("s-s" . "spotify")
@@ -1643,7 +1641,7 @@
     (define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
 
     (start-process-shell-command "Gnome Settings Daemon" nil "/usr/lib/gsd-xsettings")
-    (start-process-shell-command "Configure screens" nil "/home/tsranso/.screenlayout/layout.sh")
+    (start-process-shell-command "Configure screens" nil "/home/tsranso/.screenlayout/all-screens.sh")
     (start-process-shell-command "Caps lock control" nil "xmodmap ~/.Xmodmap")
 
     (require 'exwm-randr)
@@ -1669,18 +1667,16 @@
 		  (start-process-shell-command
 		   "xrandr" nil
 		   (concat "xrandr "
-			   "--output DP1 --primary --mode 2560x1440 --pos 1080x480 "
+			   "--output DP1 --primary --mode 2560x1440 --pos 1080x225 --rotate normal "
 			   "--output DP2 --mode 1920x1080 --pos 0x0 --rotate left")))))
 
-    (when (running-on-hosts '("hoshi"))
+    (when (running-on-hosts '("joseki"))
       (add-hook 'exwm-randr-screen-change-hook
 		(lambda ()
 		  (start-process-shell-command
 		   "xrandr" nil
 		   (concat "xrandr "
-			   "--output HDMI-1 --mode 1920x1080 --pos 1920x0 "
-			   "--output DP-2 --mode 1920x1080 --pos 3840x0 "
-			   "--output DP-1 --primary --mode 1920x1080 --pos 0x0")))))
+			   "--output LVDS1 --primary --mode 1600x900 --pos 0x0 --rotate normal")))))
 
     (setq exwm-manage-configurations
 	  '(((equal exwm-instance-name "discord") workspace 2)
