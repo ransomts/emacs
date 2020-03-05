@@ -456,6 +456,8 @@
   (erc-list-mode t)
   (erc-log-channels-directory "~/.emacs.d/erc_log")
   (erc-log-mode t)
+  (erc-rename-buffers t)
+  (erc-autojoin-channels-alist '(("freenode.net" "#emacs")))
   (erc-log-write-after-insert t)
   (erc-log-write-after-send t)
   (erc-modules
@@ -466,6 +468,21 @@
   (erc-nick "tinhatcat")
   (erc-prompt "<tinhatcat>")
   (erc-sound-mode t))
+
+;; This causes ERC to connect to the Freenode network upon hitting
+;; C-c i f.  Replace MYNICK with your IRC nick.
+(global-set-key "\C-cif" (lambda () (interactive)
+			   (erc :server "irc.freenode.net" :port "6667"
+				:nick "tinhatcat")))
+
+;; This causes ERC to connect to the IRC server on your own machine (if
+;; you have one) upon hitting C-c i l.  Replace MYNICK with your IRC
+;; nick.  Often, people like to run bitlbee (http://bitlbee.org/) as an
+;; AIM/Jabber/MSN to IRC gateway, so that they can use ERC to chat with
+;; people on those networks.
+(global-set-key "\C-cil" (lambda () (interactive)
+			   (erc :server "localhost" :port "6667"
+				:nick "tinhatcat")))
 
 (use-package erc-twitch
   :disabled
@@ -549,7 +566,7 @@
      "ncdu" "nethogs" "nmon"
      "pacmixer"
      "radeontop"
-     "screen"
+     "screen" "spt"
      "top" "tuir"
      "vi" "vim")))
 
@@ -981,15 +998,22 @@
 
     #+BEGIN_SRC emacs-lisp
 (use-package spotify :ensure t
-  :if (running-on-hosts '("tengen" "hoshi" "atari" "joseki"))
-  :unless (or (running-on-windows) (running-on-hosts '("tengen-windows")))
-  :bind (("C-c s c" . #'spotify-current)
-	 ("C-c s SPC" . #'spotify-playpause)
-	 ("C-c s n" . #'spotify-next)
-	 ("C-c s p" . #'spotify-previous))
   :config
   (spotify-enable-song-notifications))
     #+END_SRC
+
+
+    This one lets us search and control playback
+#+BEGIN_SRC emacs-lisp
+(use-package helm-spotify-plus :ensure t
+  :bind
+  (("C-c s s" .   #'helm-spotify-plus)  ;; s for SEARCH
+   ("C-c s f" .   #'helm-spotify-plus-next)
+   ("C-c s b" .   #'helm-spotify-plus-previous)
+   ("C-c s p" .   #'helm-spotify-plus-play)
+   ("C-c s SPC" . #'helm-spotify-plus-toggle-play-pause)
+   ("C-c s g" .   #'helm-spotify-plus-pause)))
+#+END_SRC
 
 *** hackernews
 
@@ -1583,6 +1607,7 @@
 		 ("s-d" . "discord")
 		 ("s-t" . "transmission-remote-gtk")
 		 ("s-s" . "spotify")
+		 ("s-z" . "zotero")
 		 ("s-<tab>" . "google-chrome-stable")
 		 ("<C-M-escape>" . "gnome-system-monitor")
 		 ("s-m" . "pavucontrol")
@@ -1625,20 +1650,6 @@
 
     (require 'exwm-randr)
     (setq exwm-randr-workspace-output-plist (workspace-screen-mapping))
-
-    (when (running-on-hosts '("tengen"))
-      (add-hook 'exwm-randr-screen-change-hook
-		(lambda ()
-		  (start-process-shell-command
-		   "xrandr" nil
-		   (concat "xrandr "
-			   "--output DisplayPort-0 --off "
-			   "--output DisplayPort-1 --mode 1920x1200 --pos 1080x0 --rotate normal "
-			   "--output DisplayPort-2 --primary --mode 1920x1200 --pos 3000x1200 --rotate normal "
-			   "--output HDMI-A-0 --mode 1920x1080 --pos 0x480 --rotate left "
-			   "--output DVI-D-0 --mode 1920x1080 --pos 4920x480 --rotate left "
-			   "--output DisplayPort-3 --mode 1920x1200 --pos 3000x0 --rotate normal "
-			   "--output DisplayPort-4 --mode 1920x1200 --pos 1080x1200 --rotate normal")))))
 
     (when (running-on-hosts '("atari"))
       (add-hook 'exwm-randr-screen-change-hook
