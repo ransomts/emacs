@@ -148,6 +148,7 @@
      (lisp . t)
      (makefile . t)
      (python . t)
+     (scheme . t)
      (shell . t)
      (sql . t)
      (sqlite . t)))
@@ -223,9 +224,11 @@
 **** org brain
 
 #+BEGIN_SRC emacs-lisp
-(use-package org-brain :ensure t
+(use-package org-brain
+  :ensure t
   :init
   (setq org-brain-path "~/.emacs.d/org/brain")
+  :bind ("C-c b" . #'org-brain-visualize)
   :config
   (setq org-id-track-globally t)
   (setq org-id-locations-file "~/.emacs.d/.org-id-locations")
@@ -370,7 +373,13 @@
    (advice-add #'org-clock-in :around #'my-org-clock-message)
    (advice-add #'org-clock-out :around #'my-org-clock-message)))
      #+END_SRC
+**** geiser for scheme babel
 
+#+BEGIN_SRC emacs-lisp
+(use-package geiser :ensure t
+  :custom
+  (geiser-active-implementations '(mit)))
+#+END_SRC
 **** org exports
      #+BEGIN_SRC emacs-lisp
 (use-package ox-hugo
@@ -627,6 +636,11 @@
 
 ** External
 
+*** haskell mode
+#+BEGIN_SRC emacs-lisp
+(use-package haskell-mode :ensure t)
+#+END_SRC
+
 *** Package updater
     #+BEGIN_SRC emacs-lisp
 (use-package auto-package-update
@@ -723,7 +737,8 @@
 
 (setq message-kill-buffer-on-exit t)
 
-(require 'org-mu4e)
+(use-package org-mu4e
+  :load-path "packages/mu/mu4e")
 
 ;; convert org mode to HTML automatically
 (setq org-mu4e-convert-to-html t)
@@ -918,7 +933,7 @@
     :ensure t
     :bind (("<f8>" . #'helm-dictionary))
     :custom
-    (helm-dictionary-browser-function 'browse-url-chrome)
+    (helm-dictionary-browser-function 'browse-url-firefox)
     (helm-dictionary-database "/usr/share/dict/words")
     (helm-dictionary-online-dicts
      '(("wiktionary" . "http://en.wiktionary.org/wiki/%s")
@@ -1490,8 +1505,8 @@
    #+BEGIN_SRC emacs-lisp
 (if  (running-on-windows)
     (setq browse-url-browser-function 'eww-browse-url)
-  (setq browse-url-browser-function 'browse-url-chrome
-	browse-url-chrome-arguments '("--new-window")))
+  (setq browse-url-browser-function 'browse-url-firefox
+	browse-url-firefox-arguments '("--new-window")))
    #+END_SRC
 
 ** doc view
@@ -1612,7 +1627,7 @@
 		 ("s-t" . "transmission-remote-gtk")
 		 ("s-s" . "spotify")
 		 ("s-z" . "zotero")
-		 ("s-<tab>" . "google-chrome-stable")
+		 ("s-<tab>" . "firefox")
 		 ("<C-M-escape>" . "gnome-system-monitor")
 		 ("s-m" . "pavucontrol")
 		 ("s-<down>" . "amixer sset Master 5%-")
