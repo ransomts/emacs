@@ -69,31 +69,35 @@
 
 * Packages
 ** Built In
-*** gnus
-
-
-    I use gnus mostly as an rss reader, but have the email there too if I want to fire off a quick note.
+*** rss with newsticker
     #+BEGIN_SRC emacs-lisp
-(use-package gnus
-  :bind ("C-M-g" . #'gnus)
+(use-package newsticker
+  :bind ("C-c n" . #'newsticker-treeview)
   :custom
-  (gnus-always-read-dribble-file t)
-  (gnus-directory "~/.emacs.d/gnus")
-  :config
-  (setq-default
-   gnus-summary-line-format "%U%R%z %(%&user-date; %[%-23,23f%]  %B%s%)\n"
-   gnus-user-date-format-alist '((t . "%m-%d %H:%M"))
-   gnus-summary-thread-gathering-function 'gnus-gather-threads-by-references
-   gnus-thread-sort-functions '(gnus-thread-sort-by-date)
-   gnus-sum-thread-tree-false-root ""
-   gnus-sum-thread-tree-indent " "
-   gnus-sum-thread-tree-leaf-with-other "├► "
-   gnus-sum-thread-tree-root ""
-   gnus-sum-thread-tree-single-leaf "╰► "
-   gnus-sum-thread-tree-vertical "│"))
-
-(setq gnus-fetch-old-headers t)
-
+  (newsticker-url-list
+   '(("National Hurricane Center GIS Data (Atlantic)"
+      "https://www.nhc.noaa.gov/gis-at.xml" nil nil nil)
+     ("PHD Comics"
+      "http://phdcomics.com/gradfeed.php" nil nil nil)
+     ("Poorly Drawn Lines"
+      "http://www.poorlydrawnlines.com/feed/" nil nil nil)
+     ("Saturday Morning Breakfast Cereal"
+      "http://www.smbc-comics.com/rss.php" nil nil nil)
+     ("xkcd.com"
+      "https://xkcd.com/rss.xml" nil nil nil)
+     ("Things in Squares"
+      "http://www.thingsinsquares.com/feed/" nil nil nil)
+     ("News | TOP500 Supercomputer Sites"
+      "https://www.top500.org/news/feeds/rss/" nil nil nil)
+     ("Scott the Woz"
+      "https://www.youtube.com/feeds/videos.xml?channel_id=UC4rqhyiTs7XyuODcECvuiiQ" nil nil nil)
+     ("Bon Appetit"
+      "https://www.youtube.com/feeds/videos.xml?channel_id=UCbpMy0Fg74eXXkvxJrtEn3w" nil nil nil)
+     ("Game Grumps"
+      "https://www.youtube.com/feeds/videos.xml?channel_id=UC9CuvdOVfMPvKCiwdGKL3cQ" nil nil nil)
+     ("r/emacs"
+      "https://reddit-top-rss.herokuapp.com/?subreddit=emacs&threshold=50&view=rss"
+      nil nil nil))))
     #+END_SRC
 
 *** elisp
