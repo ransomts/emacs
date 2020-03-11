@@ -4,6 +4,7 @@
 
 (package-initialize)
 
+
 (setq custom-file "~/.emacs.d/configuration/customize.el")
 (load custom-file)
 

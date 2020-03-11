@@ -69,31 +69,35 @@
 
 * Packages
 ** Built In
-*** gnus
-
-
-    I use gnus mostly as an rss reader, but have the email there too if I want to fire off a quick note.
+*** rss with newsticker
     #+BEGIN_SRC emacs-lisp
-(use-package gnus
-  :bind ("C-M-g" . #'gnus)
+(use-package newsticker
+  :bind ("C-c n" . #'newsticker-treeview)
   :custom
-  (gnus-always-read-dribble-file t)
-  (gnus-directory "~/.emacs.d/gnus")
-  :config
-  (setq-default
-   gnus-summary-line-format "%U%R%z %(%&user-date; %[%-23,23f%]  %B%s%)\n"
-   gnus-user-date-format-alist '((t . "%m-%d %H:%M"))
-   gnus-summary-thread-gathering-function 'gnus-gather-threads-by-references
-   gnus-thread-sort-functions '(gnus-thread-sort-by-date)
-   gnus-sum-thread-tree-false-root ""
-   gnus-sum-thread-tree-indent " "
-   gnus-sum-thread-tree-leaf-with-other "├► "
-   gnus-sum-thread-tree-root ""
-   gnus-sum-thread-tree-single-leaf "╰► "
-   gnus-sum-thread-tree-vertical "│"))
-
-(setq gnus-fetch-old-headers t)
-
+  (newsticker-url-list
+   '(("National Hurricane Center GIS Data (Atlantic)"
+      "https://www.nhc.noaa.gov/gis-at.xml" nil nil nil)
+     ("PHD Comics"
+      "http://phdcomics.com/gradfeed.php" nil nil nil)
+     ("Poorly Drawn Lines"
+      "http://www.poorlydrawnlines.com/feed/" nil nil nil)
+     ("Saturday Morning Breakfast Cereal"
+      "http://www.smbc-comics.com/rss.php" nil nil nil)
+     ("xkcd.com"
+      "https://xkcd.com/rss.xml" nil nil nil)
+     ("Things in Squares"
+      "http://www.thingsinsquares.com/feed/" nil nil nil)
+     ("News | TOP500 Supercomputer Sites"
+      "https://www.top500.org/news/feeds/rss/" nil nil nil)
+     ("Scott the Woz"
+      "https://www.youtube.com/feeds/videos.xml?channel_id=UC4rqhyiTs7XyuODcECvuiiQ" nil nil nil)
+     ("Bon Appetit"
+      "https://www.youtube.com/feeds/videos.xml?channel_id=UCbpMy0Fg74eXXkvxJrtEn3w" nil nil nil)
+     ("Game Grumps"
+      "https://www.youtube.com/feeds/videos.xml?channel_id=UC9CuvdOVfMPvKCiwdGKL3cQ" nil nil nil)
+     ("r/emacs"
+      "https://reddit-top-rss.herokuapp.com/?subreddit=emacs&threshold=50&view=rss"
+      nil nil nil))))
     #+END_SRC
 
 *** elisp
@@ -144,6 +148,7 @@
      (lisp . t)
      (makefile . t)
      (python . t)
+     (scheme . t)
      (shell . t)
      (sql . t)
      (sqlite . t)))
@@ -172,6 +177,8 @@
 				("b" "Fix Bug" checkitem
 				 (file+headline "~/.emacs.d/org/todo.org" "Bugs")
 				 "[ ] %?\n%A\nEntered on %T")
+				("c" "Clipboard" entry (file+headline "~/.emacs.d/org/todo.org" "Collect")
+				 "* TODO %^{Description}\n\n:PROPERTIES:\n:CREATED:\nAdded from Clipboard: %U\n\n:END:\n\n%x\n")
 				("n" "General notes" entry
 				 (file+headline "~/.emacs.d/org/scratch.org" "Notes")
 				 "* Note %?\n%T\n")
@@ -217,9 +224,11 @@
 **** org brain
 
 #+BEGIN_SRC emacs-lisp
-(use-package org-brain :ensure t
+(use-package org-brain
+  :ensure t
   :init
   (setq org-brain-path "~/.emacs.d/org/brain")
+  :bind ("C-c b" . #'org-brain-visualize)
   :config
   (setq org-id-track-globally t)
   (setq org-id-locations-file "~/.emacs.d/.org-id-locations")
@@ -364,7 +373,13 @@
    (advice-add #'org-clock-in :around #'my-org-clock-message)
    (advice-add #'org-clock-out :around #'my-org-clock-message)))
      #+END_SRC
+**** geiser for scheme babel
 
+#+BEGIN_SRC emacs-lisp
+(use-package geiser :ensure t
+  :custom
+  (geiser-active-implementations '(mit)))
+#+END_SRC
 **** org exports
      #+BEGIN_SRC emacs-lisp
 (use-package ox-hugo
@@ -621,6 +636,11 @@
 
 ** External
 
+*** haskell mode
+#+BEGIN_SRC emacs-lisp
+(use-package haskell-mode :ensure t)
+#+END_SRC
+
 *** Package updater
     #+BEGIN_SRC emacs-lisp
 (use-package auto-package-update
@@ -717,7 +737,8 @@
 
 (setq message-kill-buffer-on-exit t)
 
-(require 'org-mu4e)
+(use-package org-mu4e
+  :load-path "packages/mu/mu4e")
 
 ;; convert org mode to HTML automatically
 (setq org-mu4e-convert-to-html t)
@@ -760,6 +781,7 @@
 					    ("/ransomtim8078/[ransomtim8078].Bin"       . ?t)
 					    ("/ransomtim8078/[ransomtim8078].All Mail"  . ?a)
 					    ("/ransomtim8078/[ransomtim8078].Starred"   . ?r)
+					    ("/ransomtim8078/[ransomtim8078].People/Katie"   . ?k)
 					    ("/ransomtim8078/[ransomtim8078].drafts"    . ?d)
 					    ))))
        (make-mu4e-context
@@ -911,7 +933,7 @@
     :ensure t
     :bind (("<f8>" . #'helm-dictionary))
     :custom
-    (helm-dictionary-browser-function 'browse-url-chrome)
+    (helm-dictionary-browser-function 'browse-url-firefox)
     (helm-dictionary-database "/usr/share/dict/words")
     (helm-dictionary-online-dicts
      '(("wiktionary" . "http://en.wiktionary.org/wiki/%s")
@@ -1483,8 +1505,8 @@
    #+BEGIN_SRC emacs-lisp
 (if  (running-on-windows)
     (setq browse-url-browser-function 'eww-browse-url)
-  (setq browse-url-browser-function 'browse-url-chrome
-	browse-url-chrome-arguments '("--new-window")))
+  (setq browse-url-browser-function 'browse-url-firefox
+	browse-url-firefox-arguments '("--new-window")))
    #+END_SRC
 
 ** doc view
@@ -1605,7 +1627,7 @@
 		 ("s-t" . "transmission-remote-gtk")
 		 ("s-s" . "spotify")
 		 ("s-z" . "zotero")
-		 ("s-<tab>" . "google-chrome-stable")
+		 ("s-<tab>" . "firefox")
 		 ("<C-M-escape>" . "gnome-system-monitor")
 		 ("s-m" . "pavucontrol")
 		 ("s-<down>" . "amixer sset Master 5%-")
@@ -1672,7 +1694,7 @@
     (add-hook 'exwm-manage-finish-hook
 	      (lambda ()
 		(when (and exwm-class-name
-			   (string= exwm-class-name "urxvt"))
+			   (string= exwm-class-name "kitty"))
 		  (exwm-input-set-local-simulation-keys '(([?\C-c ?\C-c] . ?\C-c))))))
 
     (exwm-randr-enable)
@@ -1707,8 +1729,7 @@
 	   (not (running-on-windows)))
   ;; (launch-program "redshift" "-l" "34.67:-82.84")
   (launch-program "setxkbmap dvorak")
-  (launch-program "xmodmap ~/.Xmodmap")
-  (launch-program "urxvtd")
+  (launch-program "xmodmap /home/tsranso/.Xmodmap")
   (launch-program "blueman-applet"))
 
 ;; (when (not (running-on-hosts '("atari" "login*" "marcher" "tengen" "ivy*" "node*")))
