@@ -482,6 +482,10 @@
 			   (erc :server "localhost" :port "6667"
 				:nick "tinhatcat")))
 
+(use-package erc-image :ensure t :after erc)
+
+(use-package erc-youtube :ensure t :after erc)
+
 (use-package erc-twitch
   :disabled
   :after erc
@@ -566,7 +570,8 @@
      "radeontop"
      "screen" "spt"
      "top" "tuir"
-     "vi" "vim")))
+     "vi" "vim"
+     "watch")))
 
 (defun eshell-load--aliases ()
   "Reads bash aliases from Bash and inserts
