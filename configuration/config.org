@@ -134,6 +134,7 @@
      "/home/tsranso/.emacs.d/org/todo.org" 
      "/home/tsranso/.emacs.d/org/tsranso-gcal.org"))
   :config
+  (require 'org-tempo)
   (org-babel-do-load-languages
    'org-babel-load-languages
    '(
@@ -635,7 +636,10 @@
     #+END_SRC
 
 ** External
-
+*** disk usage
+#+begin_src emacs-lisp
+(use-package disk-usage :ensure t)
+#+end_src
 *** haskell mode
 #+BEGIN_SRC emacs-lisp
 (use-package haskell-mode :ensure t)
@@ -894,7 +898,7 @@
     #+END_SRC
 **** helm-google
      #+BEGIN_SRC emacs-lisp
-(use-package 'helm-google :ensure t :disabled)
+(use-package 'helm-google :ensure t)
      #+END_SRC
 
 **** tramp
@@ -1075,25 +1079,22 @@
 *** emms
     #+BEGIN_SRC emacs-lisp
 (use-package emms
+  :disabled
   :if (running-on-hosts '("joseki" "tengen"))
   :ensure t
   :custom
-  (emms-cache-get-function 'emms-cache-get)
-  (emms-cache-modified-function 'emms-cache-dirty)
-  (emms-cache-set-function 'emms-cache-set)
   (emms-info-functions '(emms-info-mediainfo
 			 emms-info-mpd emms-info-cueinfo
 			 emms-info-ogginfo))
-  (emms-mode-line-cycle t)
-  (emms-mode-line-mode-line-function 'emms-mode-line-cycle-mode-line-function)
-  (emms-player-mpd-music-directory "/home/tsranso/Music")
-  (emms-player-mplayer-command-name "mpv")
-  (emms-player-next-function 'emms-score-next-noerror)
-  (emms-playlist-default-major-mode 'emms-playlist-mode)
-  (emms-playlist-update-track-function 'emms-playlist-mode-update-track-function)
-  (emms-track-description-function 'emms-info-track-description))
+  (emms-source-file-default-directory "~/Music/"))
     #+END_SRC
 
+**** emms mediainfo
+#+begin_src emacs-lisp
+(use-package emms-info-mediainfo
+  :after emms
+  :ensure t)
+#+end_src
 *** bbdb
 
     #+BEGIN_SRC emacs-lisp
