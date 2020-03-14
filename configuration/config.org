@@ -97,7 +97,49 @@
       "https://www.youtube.com/feeds/videos.xml?channel_id=UC9CuvdOVfMPvKCiwdGKL3cQ" nil nil nil)
      ("r/emacs"
       "https://reddit-top-rss.herokuapp.com/?subreddit=emacs&threshold=50&view=rss"
-      nil nil nil))))
+      nil nil nil)
+     ("NPR news"
+      "https://www.npr.org/rss/rss.php?id=1001"
+      nil nil nil)
+     ("BBC News - Americas: World Edition"
+      "http://newsrss.bbc.co.uk/rss/newsonline_world_edition/americas/rss.xml"
+      nil nil nil)
+     ("NPR Topics: Education"
+      "http://www.npr.org/rss/rss.php?id=1013"
+      nil nil nil)
+     ("U.S. Department of Education"
+      "https://www.ed.gov/feed"
+      nil nil nil)
+     ("AP Top Science News"
+      "http://hosted.ap.org/lineups/SCIENCEHEADS-rss_2.0.xml?SITE=OHLIM&SECTION=HOME"
+      nil nil nil)
+     ("ScienceDaily Headlines"
+      "http://feeds.sciencedaily.com/sciencedaily"
+      nil nil nil)
+     ("news@nature.com"
+      "http://feeds.nature.com/nature/rss/current"
+      nil nil nil)
+     ("NASA Image of the Day"
+      "https://www.nasa.gov/rss/dyn/lg_image_of_the_day.rss"
+      nil nil nil)
+     ("Wired Top Stories" "http://feeds.wired.com/wired/index"
+      nil nil nil)
+     ("New York Times - Technology" "http://feeds.nytimes.com/nyt/rss/Technology"
+      nil nil nil)
+     ("NPR: Technology" "http://www.npr.org/rss/rss.php?id=1019"
+      nil nil nil)
+     ;; ("Carolina Hurricanes News"
+     ;;  "https://www.nhl.com/hurricanes/news/rss.xml"
+     ;;  nil nil nil)
+     ;; ("Blue Jackets News"
+     ;;  "https://www.nhl.com/bluejackets/news/rss.xml"
+     ;;  nil nil nil)
+     ;; ("Flyers News"
+     ;;  "https://www.nhl.com/flyers/news/rss.xml"
+     ;;  nil nil nil)
+     ("NHL News" "http://www.nhl.com/rss/news.xml"
+      nil nil nil)
+     )))
     #+END_SRC
 
 *** elisp
