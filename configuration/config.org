@@ -72,7 +72,14 @@
 *** rss with newsticker
     #+BEGIN_SRC emacs-lisp
 (use-package newsticker
-  :bind ("C-c n" . #'newsticker-treeview)
+  :init
+  (defun tim/browse-nt-text ()
+    (interactive)
+    (let ((browse-url-browser-function 'eww-browse-url))
+      (newsticker-treeview-browse-url)))
+  :bind (("C-c n" . #'newsticker-treeview)
+	 :map newsticker-treeview-item-mode-map
+	 ("t" . tim/browse-nt-text))
   :custom
   (newsticker-url-list
    '(("National Hurricane Center GIS Data (Atlantic)"
@@ -96,38 +103,29 @@
      ("Game Grumps"
       "https://www.youtube.com/feeds/videos.xml?channel_id=UC9CuvdOVfMPvKCiwdGKL3cQ" nil nil nil)
      ("r/emacs"
-      "https://reddit-top-rss.herokuapp.com/?subreddit=emacs&threshold=50&view=rss"
-      nil nil nil)
+      "https://reddit-top-rss.herokuapp.com/?subreddit=emacs&threshold=50&view=rss"  nil nil nil)
      ("NPR news"
-      "https://www.npr.org/rss/rss.php?id=1001"
-      nil nil nil)
+      "https://www.npr.org/rss/rss.php?id=1001" nil nil nil)
      ("BBC News - Americas: World Edition"
-      "http://newsrss.bbc.co.uk/rss/newsonline_world_edition/americas/rss.xml"
-      nil nil nil)
+      "http://newsrss.bbc.co.uk/rss/newsonline_world_edition/americas/rss.xml" nil nil nil)
      ("NPR Topics: Education"
-      "http://www.npr.org/rss/rss.php?id=1013"
-      nil nil nil)
+      "http://www.npr.org/rss/rss.php?id=1013" nil nil nil)
      ("U.S. Department of Education"
-      "https://www.ed.gov/feed"
-      nil nil nil)
+      "https://www.ed.gov/feed" nil nil nil)
      ("AP Top Science News"
-      "http://hosted.ap.org/lineups/SCIENCEHEADS-rss_2.0.xml?SITE=OHLIM&SECTION=HOME"
-      nil nil nil)
+      "http://hosted.ap.org/lineups/SCIENCEHEADS-rss_2.0.xml?SITE=OHLIM&SECTION=HOME" nil nil nil)
      ("ScienceDaily Headlines"
-      "http://feeds.sciencedaily.com/sciencedaily"
-      nil nil nil)
+      "http://feeds.sciencedaily.com/sciencedaily" nil nil nil)
      ("news@nature.com"
-      "http://feeds.nature.com/nature/rss/current"
-      nil nil nil)
+      "http://feeds.nature.com/nature/rss/current" nil nil nil)
      ("NASA Image of the Day"
-      "https://www.nasa.gov/rss/dyn/lg_image_of_the_day.rss"
-      nil nil nil)
-     ("Wired Top Stories" "http://feeds.wired.com/wired/index"
-      nil nil nil)
-     ("New York Times - Technology" "http://feeds.nytimes.com/nyt/rss/Technology"
-      nil nil nil)
-     ("NPR: Technology" "http://www.npr.org/rss/rss.php?id=1019"
-      nil nil nil)
+      "https://www.nasa.gov/rss/dyn/lg_image_of_the_day.rss" nil nil nil)
+     ("Wired Top Stories"
+      "http://feeds.wired.com/wired/index" nil nil nil)
+     ("New York Times - Technology"
+      "http://feeds.nytimes.com/nyt/rss/Technology" nil nil nil)
+     ("NPR: Technology"
+      "http://www.npr.org/rss/rss.php?id=1019" nil nil nil)
      ;; ("Carolina Hurricanes News"
      ;;  "https://www.nhl.com/hurricanes/news/rss.xml"
      ;;  nil nil nil)
@@ -137,9 +135,10 @@
      ;; ("Flyers News"
      ;;  "https://www.nhl.com/flyers/news/rss.xml"
      ;;  nil nil nil)
-     ("NHL News" "http://www.nhl.com/rss/news.xml"
-      nil nil nil)
-     )))
+     ("NHL News" "http://www.nhl.com/rss/news.xml" nil nil nil)
+     ))
+  :config
+  (newsticker-start))
     #+END_SRC
 
 *** elisp
@@ -451,6 +450,8 @@
 (use-package org-noter
   :ensure t
   :custom
+  (org-noter-auto-save-last-location t)
+  (org-noter-always-create-frame nil)
   (org-noter-default-notes-file-names '("~/.emacs.d/org/reading.org"))
   (org-noter-notes-search-path '("~/.emacs.d/org/")))
      #+END_SRC
@@ -777,7 +778,8 @@
 	      (visual-line-mode)
 	      (org-mu4e-compose-org-mode)
 	      (use-hard-newlines -1)
-	      (flyspell-mode))))
+	      (flyspell-mode)))
+  (mu4e-update-mail-and-index t))
 
 (require 'smtpmail)
 
@@ -1056,6 +1058,7 @@
     :ensure t
     :if (running-on-hosts '("joseki" "tengen"))
     :custom
+    (transmission-host "10.202.140.134")
     (transmission-refresh-modes
      '(transmission-mode
        transmission-files-mode
@@ -1768,10 +1771,12 @@
   (launch-program "transmission-daemon"))
 
 (when (and (running-on-hosts '("hoshi" "tengen"))
-	   (not (running-on-windows)))
+	   (not (running-on-windows))
+	   (string= "exwm" (getenv "DESKTOP_SESSION")))
   (launch-program "discord")
-  ;; (launch-program "spotify --minimized")
-  )
+  (launch-program "spotify --minimized")
+  (launch-program "whatsapp-nativefier-dark")
+  (launch-program "telegram-desktop"))
 
 (when (and (running-on-hosts '("joseki" "hoshi" "tengen"))
 	   (not (running-on-windows)))
