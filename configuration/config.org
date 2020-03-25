@@ -275,7 +275,7 @@
   :bind ("C-c b" . #'org-brain-visualize)
   :config
   (setq org-id-track-globally t)
-  (setq org-id-locations-file "~/.emacs.d/.org-id-locations")
+  (setq org-id-locations-file "~/.emacs.d/org/brain/.org-id-locations")
   (push '("b" "Brain" plain (function org-brain-goto-end)
           "* %i%?" :empty-lines 1)
         org-capture-templates)
