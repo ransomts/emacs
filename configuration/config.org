@@ -173,6 +173,7 @@
      "/home/tsranso/.emacs.d/org/schedule.org" 
      "/home/tsranso/.emacs.d/org/scratch.org" 
      "/home/tsranso/.emacs.d/org/todo.org" 
+     "/home/tsranso/.emacs.d/org/brain/brain.org"
      "/home/tsranso/.emacs.d/org/tsranso-gcal.org"))
   :config
   (require 'org-tempo)
