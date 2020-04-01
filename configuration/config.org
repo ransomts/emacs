@@ -139,6 +139,8 @@
      ))
   :config
   (newsticker-start))
+(setq shr-color-visible-luminance-min 80)
+(setq shr-color-visible-distance-min 8)
     #+END_SRC
 
 *** elisp
@@ -732,9 +734,9 @@
 
   :config
   (setq mu4e-get-mail-command "mbsync -c ~/.mbsyncrc -a"
-	mu4e-html2text-command "w3m -T text/html" ;;using the default mu4e-shr2text
+	;; mu4e-html2text-command "w3m -T text/html" ;; using the default mu4e-shr2text
 	mu4e-view-prefer-html t
-	mu4e-update-interval 1200
+	mu4e-update-interval 300
 	mu4e-headers-auto-update t
 	mu4e-compose-signature-auto-include nil
 	mu4e-compose-format-flowed t)
