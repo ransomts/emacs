@@ -687,6 +687,12 @@
     #+END_SRC
 
 ** External
+*** the silver searcher
+    #+begin_src emacs-lisp
+(use-package ag :ensure t
+  :bind ("C-c f" . #'ag)
+  :custom (ag-highlight-search t))
+    #+end_src
 *** disk usage
 #+begin_src emacs-lisp
 (use-package disk-usage :ensure t)
@@ -1720,7 +1726,7 @@
 
     (start-process-shell-command "Gnome Settings Daemon" nil "/usr/lib/gsd-xsettings")
     (start-process-shell-command "Configure screens" nil "/home/tsranso/.screenlayout/all-screens.sh")
-    (start-process-shell-command "Caps lock control" nil "xmodmap ~/.Xmodmap")
+    ;; (start-process-shell-command "Caps lock control" nil "xmodmap ~/.Xmodmap")
 
     (require 'exwm-randr)
     (setq exwm-randr-workspace-output-plist (workspace-screen-mapping))
@@ -1777,10 +1783,16 @@
 (when (and (running-on-hosts '("hoshi" "tengen"))
 	   (not (running-on-windows))
 	   (string= "exwm" (getenv "DESKTOP_SESSION")))
+  (launch-program "xmodmap /home/tsranso/.Xmodmap")
+  (launch-program "teams")
+  (launch-program "zoom")
   (launch-program "discord")
-  (launch-program "spotify --minimized")
+  (launch-program "spotify")
+  (launch-program "steam")
+  (launch-program "pocket-casts-linux")
   (launch-program "whatsapp-nativefier-dark")
-  (launch-program "telegram-desktop"))
+  (launch-program "telegram-desktop")
+)
 
 (when (and (running-on-hosts '("joseki" "hoshi" "tengen"))
 	   (not (running-on-windows)))
