@@ -126,6 +126,8 @@
       "http://feeds.nytimes.com/nyt/rss/Technology" nil nil nil)
      ("NPR: Technology"
       "http://www.npr.org/rss/rss.php?id=1019" nil nil nil)
+     ("Steam Games"
+      "https://cdn-e.steamprices.com/us/rss/free.xml" nil nil nil)
      ;; ("Carolina Hurricanes News"
      ;;  "https://www.nhl.com/hurricanes/news/rss.xml"
      ;;  nil nil nil)
@@ -177,6 +179,66 @@
      "/home/tsranso/.emacs.d/org/todo.org" 
      "/home/tsranso/.emacs.d/org/brain/brain.org"
      "/home/tsranso/.emacs.d/org/tsranso-gcal.org"))
+  (org-agenda-include-diary t)
+
+  (diary-file "~/.emacs.d/org/schedule.org")
+  (org-agenda-use-time-grid nil)
+  (org-archive-location "~/.emacs.d/org/archive.org::* From %s")
+  (org-capture-after-finalize-hook nil)
+  (org-capture-templates '(("t" "Todo" entry
+			    (file+headline "~/.emacs.d/org/todo.org" "Tasks")
+			    "* TODO %?\nEntered on %T\n%i\n%a")
+			   ("e" "Event" entry
+			    (file "~/.emacs.d/org/schedule.org")
+			    "* %?\nDate %^t")
+			   ("b" "Fix Bug" checkitem
+			    (file+headline "~/.emacs.d/org/todo.org" "Bugs")
+			    "[ ] %?\n%A\nEntered on %T")
+			   ("j" "Journal entry" entry (function org-journal-find-location)
+			    "* %(format-time-string org-journal-time-format)%^{Title}\n%i%?")
+			   ("c" "Clipboard" entry (file+headline "~/.emacs.d/org/todo.org" "Collect")
+			    "* TODO %^{Description}\n\n:PROPERTIES:\n:CREATED:\nAdded from Clipboard: %U\n\n:END:\n\n%x\n")
+			   ("n" "General notes" entry
+			    (file+headline "~/.emacs.d/org/scratch.org" "Notes")
+			    "* Note %?\n%T\n")
+			   ("a" "Appointment" entry (file  "~/.emacs.d/org/ransomtim8078-gcal.org" )
+			    "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")))
+  (org-return-follows-link t)
+  (org-clock-sound t)
+  (org-log-note-clock-out t)
+  (org-clock-in-resume t)
+  (org-clock-out-remove-zero-time-clocks t)
+  (org-clock-out-when-done t)
+  (org-clock-persist t)
+  (org-clock-persist-query-resume nil)
+  (org-src-preserve-indentation t)
+  (org-confirm-babel-evaluate nil)
+  (org-datetree-add-timestamp 'inactive)
+  (org-default-notes-file "~/.emacs.d/org/todo.org")
+  (org-directory "~/.emacs.d/org")
+  (org-hide-leading-stars t)
+  (org-highlight-latex-and-related '(latex))
+  (org-log-done 'time)
+  (org-outline-path-complete-in-steps nil)
+  (org-preview-latex-image-directory "~/.emacs.d/ltxpng/")
+  (org-refile-targets '((org-agenda-files :maxlevel . 2)))
+  (org-refile-use-outline-path 'file)
+  (org-src-fontify-natively t)
+  (org-src-tab-acts-natively t)
+  (org-startup-with-latex-preview t)
+  (org-latex-listings 'minted)
+  (org-latex-packages-alist '(("" "minted")))
+  (org-todo-keyword-faces
+   '(("SOON"
+      :foreground "blue"
+      :background "sky blue"
+      :weight bold)
+     ("DONE"
+      :foreground "darkseagreen4"
+      :background "darkseagreen2"
+      :weight bold)))
+  (org-todo-keywords '((sequence "TODO" "SOON" "DONE")))
+
   :config
   (require 'org-tempo)
   (org-babel-do-load-languages
@@ -199,71 +261,7 @@
      (sqlite . t)))
 
   (require 'org-crypt)
-  (org-crypt-use-before-save-magic)
-
-  (setq diary-file "~/.emacs.d/org/schedule.org"
-	org-agenda-files
-	'("/home/tsranso/.emacs.d/org/SoC-gcal.org"
-	  "/home/tsranso/.emacs.d/org/ransomtim8078-gcal.org"
-	  "/home/tsranso/.emacs.d/org/research.org"
-	  "/home/tsranso/.emacs.d/org/schedule.org"
-	  "/home/tsranso/.emacs.d/org/scratch.org"
-	  "/home/tsranso/.emacs.d/org/todo.org"
-	  "/home/tsranso/.emacs.d/org/tsranso-gcal.org")
-	org-agenda-use-time-grid nil
-	org-archive-location "~/.emacs.d/org/archive.org::* From %s"
-	org-capture-after-finalize-hook nil
-	org-capture-templates '(("t" "Todo" entry
-				 (file+headline "~/.emacs.d/org/todo.org" "Tasks")
-				 "* TODO %?\nEntered on %T\n%i\n%a")
-				("e" "Event" entry
-				 (file "~/.emacs.d/org/schedule.org")
-				 "* %?\nDate %^t")
-				("b" "Fix Bug" checkitem
-				 (file+headline "~/.emacs.d/org/todo.org" "Bugs")
-				 "[ ] %?\n%A\nEntered on %T")
-				("c" "Clipboard" entry (file+headline "~/.emacs.d/org/todo.org" "Collect")
-				 "* TODO %^{Description}\n\n:PROPERTIES:\n:CREATED:\nAdded from Clipboard: %U\n\n:END:\n\n%x\n")
-				("n" "General notes" entry
-				 (file+headline "~/.emacs.d/org/scratch.org" "Notes")
-				 "* Note %?\n%T\n")
-				("a" "Appointment" entry (file  "~/.emacs.d/org/ransomtim8078-gcal.org" )
-				 "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n"))
-	org-return-follows-link t
-	org-clock-sound t
-	org-log-note-clock-out t
-	org-clock-in-resume t
-	org-clock-out-remove-zero-time-clocks t
-	org-clock-out-when-done t
-	org-clock-persist t
-	org-clock-persist-query-resume nil
-	org-src-preserve-indentation t
-	org-confirm-babel-evaluate nil
-	org-datetree-add-timestamp 'inactive
-	org-default-notes-file "~/.emacs.d/org/todo.org"
-	org-directory "~/.emacs.d/org"
-	org-hide-leading-stars t
-	org-highlight-latex-and-related '(latex)
-	org-log-done 'time
-	org-outline-path-complete-in-steps nil
-	org-preview-latex-image-directory "~/.emacs.d/ltxpng/"
-	org-refile-targets '((org-agenda-files :maxlevel . 2))
-	org-refile-use-outline-path 'file
-	org-src-fontify-natively t
-	org-src-tab-acts-natively t
-	org-startup-with-latex-preview t
-	org-latex-listings 'minted
-	org-latex-packages-alist '(("" "minted"))
-	org-todo-keyword-faces
-	'(("SOON"
-	   :foreground "blue"
-	   :background "sky blue"
-	   :weight bold)
-	  ("DONE"
-	   :foreground "darkseagreen4"
-	   :background "darkseagreen2"
-	   :weight bold))
-	org-todo-keywords '((sequence "TODO" "SOON" "DONE"))))
+  (org-crypt-use-before-save-magic))
     #+END_SRC
 
 **** org brain
@@ -352,6 +350,16 @@
   (setq org-journal-dir "~/.emacs.d/org/journal"
 	org-journal-file-type   'yearly
 	org-journal-file-format "Personal-%Y-%m-%d"))
+
+(defun org-journal-find-location ()
+  ;; Open today's journal, but specify a non-nil prefix argument in order to
+  ;; inhibit inserting the heading; org-capture will insert the heading.
+  (org-journal-new-entry t)
+  ;; Position point on the journal's top-level heading so that org-capture
+  ;; will add the new entry as a child entry.
+  (goto-char (point-min)))
+
+(setq org-capture-templates '())
      #+end_src
 
      Bindings available in ~org-journal-mode~, when journaling:
@@ -693,6 +701,21 @@
   :bind ("C-c f" . #'ag)
   :custom (ag-highlight-search t))
     #+end_src
+
+**** helm interface
+    #+begin_src emacs-lisp
+(use-package helm-ag :ensure t
+  :bind ("C-c C-f" . #'helm-ag))
+    #+end_src
+
+*** Python stuff
+
+Python shells can be spawned with the M-x run-python, but I have a little wrapper here to give me an access to python2. Yay legacy code
+    #+begin_src emacs-lisp
+(defun run-python-2.7 ()
+  (interactive)
+    (run-python "/usr/bin/python2.7"))
+    #+end_src
 *** disk usage
 #+begin_src emacs-lisp
 (use-package disk-usage :ensure t)
@@ -734,6 +757,7 @@
   (mu4e-compose-dont-reply-to-self t)
   (mu4e-confirm-quit nil)
   (mu4e-context-policy 'pick-first)
+  (mu4e-use-fancy-chars nil)
 
   ;; (mu4e-compose-in-new-frame t)
 
@@ -742,7 +766,7 @@
   (setq mu4e-get-mail-command "mbsync -c ~/.mbsyncrc -a"
 	;; mu4e-html2text-command "w3m -T text/html" ;; using the default mu4e-shr2text
 	mu4e-view-prefer-html t
-	mu4e-update-interval 300
+	mu4e-update-interval 3000
 	mu4e-headers-auto-update t
 	mu4e-compose-signature-auto-include nil
 	mu4e-compose-format-flowed t)
@@ -759,7 +783,7 @@
   ;; don't save message to Sent Messages, IMAP takes care of this
   (setq mu4e-sent-messages-behavior 'delete)
 
-  (add-hook 'mu4e-view-mode-hook #'visual-line-mode)
+  ;; (add-hook 'mu4e-view-mode-hook #'visual-line-mode)
 
   ;; <tab> to navigate to links, <RET> to open them in browser
   (add-hook 'mu4e-view-mode-hook
@@ -823,9 +847,9 @@
 			 msg '(:from :to :cc :bcc) "ransomtim8078@gmail.com")))
 	:vars '((user-mail-address . "ransomtim8078@gmail.com")
 		(user-full-name . "Tim Ransom")
-		(mu4e-sent-folder . "/ransomtim8078/[ransomtim8078].Sent Mail")
-		(mu4e-drafts-folder . "/ransomtim8078/[ransomtim8078].Drafts")
-		(mu4e-trash-folder . "/ransomtim8078/[ransomtim8078].Trash")
+		(mu4e-sent-folder . "/ransomtim8078/[Gmail]/Sent Mail")
+		(mu4e-drafts-folder . "/ransomtim8078/[Gmail]/Drafts")
+		(mu4e-trash-folder . "/ransomtim8078/[Gmail]/Trash")
 		(mu4e-compose-signature . (concat "Formal Signature\n" "Emacs 26, org-mode 9, mu4e 1.0\n"))
 		(mu4e-compose-format-flowed . t)
 		(smtpmail-queue-dir . "~/.emacs.d/Maildir/ransomtim8078/queue/cur")
@@ -839,13 +863,13 @@
 		(smtpmail-debug-info . t)
 		(smtpmail-debug-verbose . t)
 		(mu4e-maildir-shortcuts . ( ("/ransomtim8078/INBOX"            . ?i)
-					    ("/ransomtim8078/[ransomtim8078].Sent Mail" . ?s)
-					    ("/ransomtim8078/[ransomtim8078].Trash"       . ?t)
-					    ("/ransomtim8078/[ransomtim8078].All Mail"  . ?a)
-					    ("/ransomtim8078/[ransomtim8078].Starred"   . ?r)
-					    ("/ransomtim8078/[ransomtim8078].People/Katie"   . ?k)
-					    ("/ransomtim8078/[ransomtim8078].People/Dad"   . ?f)
-					    ("/ransomtim8078/[ransomtim8078].Drafts"    . ?d)
+					    ("/ransomtim8078/[Gmail]/Sent Mail" . ?s)
+					    ("/ransomtim8078/[Gmail]/Trash"       . ?t)
+					    ("/ransomtim8078/[Gmail]/All Mail"  . ?a)
+					    ("/ransomtim8078/[Gmail]/Starred"   . ?r)
+					    ("/ransomtim8078/People/Katie"   . ?k)
+					    ("/ransomtim8078/People/Dad"   . ?f)
+					    ("/ransomtim8078/[Gmail]/Drafts"    . ?d)
 					    ))))
        (make-mu4e-context
 	:name "Clemson"
@@ -857,10 +881,10 @@
 			 msg '(:from :to :cc :bcc) "tsranso@g.clemson.edu")))
 	:vars '((user-mail-address . "tsranso@g.clemson.edu")
 		(user-full-name . "Tim Ransom")
-		(mu4e-sent-folder . "/tsranso/[tsranso].Sent Mail")
-		(mu4e-drafts-folder . "/tsranso/[tsranso].drafts")
-		(mu4e-trash-folder . "/tsranso/[tsranso].Trash")
-		(mu4e-compose-signature . (concat "Informal Signature\n" "Emacs is awesome!\n"))
+		(mu4e-sent-folder . "/tsranso/[Gmail]/Sent Mail")
+		(mu4e-drafts-folder . "/tsranso/[Gmail]/Drafts")
+		(mu4e-trash-folder . "/tsranso/[Gmail]/Trash")
+		(mu4e-compose-signature . (concat "-Tim Ransom\n"))
 		(mu4e-compose-format-flowed . t)
 		(smtpmail-queue-dir . "~/.emacs.d/Maildir/tsranso/queue/cur")
 		(message-send-mail-function . smtpmail-send-it)
@@ -873,14 +897,24 @@
 		(smtpmail-debug-info . t)
 		(smtpmail-debug-verbose . t)
 		(mu4e-maildir-shortcuts . ( ("/tsranso/INBOX"            . ?i)
-					    ("/tsranso/[tsranso].Sent Mail" . ?s)
-					    ("/tsranso/[tsranso].Trash"     . ?t)
-					    ("/tsranso/[tsranso].All Mail"  . ?a)
-					    ("/tsranso/[tsranso].Starred"   . ?r)
-					    ("/tsranso/[tsranso].drafts"    . ?d)
+					    ("/tsranso/[Gmail]/Sent Mail" . ?s)
+					    ("/tsranso/[Gmail]/Trash"     . ?t)
+					    ("/tsranso/[Gmail]/All Mail"  . ?a)
+					    ("/tsranso/[Gmail]/Starred"   . ?r)
+					    ("/tsranso/[Gmail]/Drafts"    . ?d)
 					    ))))))
     #+END_SRC
 
+**** maildir summary
+     #+begin_src emacs-lisp
+(use-package mu4e-maildirs-extension
+  :ensure t
+  :after mu4e
+  :custom
+  (mu4e-maildirs-extension-hide-empty-maildirs t)
+  :config
+  (mu4e-maildirs-extension))
+     #+end_src
 **** modeline notification
      #+BEGIN_SRC emacs-lisp
 (use-package mu4e-alert 
@@ -1265,7 +1299,7 @@
   ;; (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-fetch) ))
   ;; (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-fetch) ))
   )
-
+(org-gcal-fetch)
 (setq org-agenda-custom-commands
       '(("c" "Simple agenda view"
 	 ((agenda "")
@@ -1609,6 +1643,9 @@
       message-directory "~/.emacs.d/Mail/"
 					;tramp-histfile-override "/dev/null" nil (tramp)
       )
+
+(set-default 'truncate-lines t)
+
 (add-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)
 (global-auto-revert-mode 1)
 (setq bookmark-default-file "~/.emacs.d/org/bookmarks")
