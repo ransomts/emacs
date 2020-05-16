@@ -169,11 +169,11 @@
 	 (("C-c r" . #'org-archive-subtree)
 	  ("C-c C-r" . #'org-archive-subtree))))
   :custom
+  (org-pretty-entities t)
   (org-agenda-files
    
    '("/home/tsranso/.emacs.d/org/SoC-gcal.org" 
      "/home/tsranso/.emacs.d/org/ransomtim8078-gcal.org" 
-     "/home/tsranso/.emacs.d/org/research.org" 
      "/home/tsranso/.emacs.d/org/schedule.org" 
      "/home/tsranso/.emacs.d/org/scratch.org" 
      "/home/tsranso/.emacs.d/org/todo.org" 
@@ -475,7 +475,7 @@
 (use-package org-ref :ensure t :after org
   :config
   (setq org-latex-pdf-process
-	'("latexmk -pdflatex='%latex -shell-escape -interaction nonstopmode' -pdf -output-directory=%o -f %f")
+	'("latexmk -pdflatex='%latex -shell-escape -interaction nonstopmode' -pdf -bibtex -output-directory=%o -f %f")
 	;; org-ref-pdf-directory "./references/"
 	org-ref-bibliography-notes "~/.emacs.d/org/reading.org"
 	org-ref-default-bibliography '("~/Documents/references.bib"))
@@ -584,6 +584,12 @@
 
 (global-set-key (kbd "C-c d") (lambda () (interactive) (dired default-directory)))
     #+END_SRC
+**** dired du
+     #+BEGIN_SRC emacs-lisp
+(use-package dired-du
+  :ensure t
+  :after dired)
+     #+END_SRC
 
 **** dired subtree
 
@@ -614,10 +620,13 @@
      (with-face user-login-name :foreground "blue")
      "@"
      (with-face (if (eq nil host) "localhost" host) :foreground "green")
+     (with-face (if (not (eq nil venv-current-name))
+		    (concat " [" venv-current-name "]") "") :foreground "orange")
      (if (= (user-uid) 0)
 	 (with-face " #" :foreground "red")
        " $")
      " ")))
+
 
 (use-package eshell
   :bind ("C-x e" . #'eshell)
@@ -716,6 +725,24 @@ Python shells can be spawned with the M-x run-python, but I have a little wrappe
   (interactive)
     (run-python "/usr/bin/python2.7"))
     #+end_src
+**** virtual environment
+
+     Use M-x =venv-workon= to activate virtualenvs and M-x =venv-deactivate= deactivate them.
+
+     #+begin_src emacs-lisp
+(use-package virtualenvwrapper
+  :ensure t
+  :after eshell
+  :config
+  (venv-initialize-interactive-shells) ;; if you want interactive shell support
+  (venv-initialize-eshell) ;; if you want eshell support
+  ;; note that setting `venv-location` is not necessary if you
+  ;; use the default location (`~/.virtualenvs`), or if the
+  ;; the environment variable `WORKON_HOME` points to the right place
+  ;; (setq venv-location "/path/to/your/virtualenvs/")
+  )
+     #+end_src
+
 *** disk usage
 #+begin_src emacs-lisp
 (use-package disk-usage :ensure t)
@@ -930,7 +957,9 @@ Python shells can be spawned with the M-x run-python, but I have a little wrappe
 (use-package emojify
   :ensure t
   :config
-  (global-emojify-mode))
+  (global-emojify-mode)
+  :custom
+  (emojify-composed-text-p nil))
     #+END_SRC
 *** dmenu
     #+BEGIN_SRC emacs-lisp
@@ -1603,7 +1632,10 @@ Python shells can be spawned with the M-x run-python, but I have a little wrappe
 (if  (running-on-windows)
     (setq browse-url-browser-function 'eww-browse-url)
   (setq browse-url-browser-function 'browse-url-firefox
-	browse-url-firefox-arguments '("--new-window")))
+	browse-url-firefox-arguments
+	;;'("--new-window")
+	'("")
+	))
    #+END_SRC
 
 ** doc view
