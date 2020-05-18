@@ -1093,7 +1093,7 @@ Python shells can be spawned with the M-x run-python, but I have a little wrappe
   :custom
   (revert-without-query (quote ("$*\\.pdf")))
   :config
-  (pdf-tools-install)
+  (pdf-tools-install :no-query)
   (setq pdf-misc-print-programm "/usr/bin/gtklp"))
     #+END_SRC
 
@@ -1103,7 +1103,8 @@ Python shells can be spawned with the M-x run-python, but I have a little wrappe
   :ensure t
   :unless (or (string= nil (getenv "DESKTOP_SESSION"))
 	      (running-on-hosts '("login001")))
-  :magic ("%EPUB" . nov-mode))
+  :magic ("%EPUB" . nov-mode)
+  :config (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode)))
     #+END_SRC
 
 *** dashboard
@@ -1466,6 +1467,8 @@ Python shells can be spawned with the M-x run-python, but I have a little wrappe
       ("helm" (mode . helm-major-mode))
       ("tramp" (name . "\*tramp\*"))
       ("eshell" (name . "\*eshell"))
+      ("text searches" (or (mode . ag-mode)
+			   (mode . grep-mode)))
       ("gnus" (or
 	       (mode . message-mode)
 	       (mode . bbdb-mode)
@@ -1630,9 +1633,9 @@ Python shells can be spawned with the M-x run-python, but I have a little wrappe
 (if  (running-on-windows)
     (setq browse-url-browser-function 'eww-browse-url)
   (setq browse-url-browser-function 'browse-url-firefox
-	browse-url-firefox-arguments
-	;;'("--new-window")
-	'("")
+	;; browse-url-firefox-arguments
+	;; '("--new-window")
+	;; '("")
 	))
    #+END_SRC
 
