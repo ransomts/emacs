@@ -1316,6 +1316,7 @@ Python shells can be spawned with the M-x run-python, but I have a little wrappe
 
     #+BEGIN_SRC emacs-lisp
 (use-package org-gcal
+  :disabled
   :ensure t
   :config
 
@@ -1328,12 +1329,13 @@ Python shells can be spawned with the M-x run-python, but I have a little wrappe
 
   ;; (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-fetch) ))
   ;; (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-fetch) ))
-  )
-(org-gcal-fetch)
-(setq org-agenda-custom-commands
-      '(("c" "Simple agenda view"
-	 ((agenda "")
-	  (alltodo "")))))
+  (org-gcal-fetch)
+  (org-save-all-org-buffers)
+  (setq org-agenda-custom-commands
+	'(("c" "Simple agenda view"
+	   ((agenda "")
+	    (alltodo ""))))))
+
     #+END_SRC
 
 * Moving around
