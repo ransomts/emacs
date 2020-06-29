@@ -140,7 +140,8 @@
      ("NHL News" "http://www.nhl.com/rss/news.xml" nil nil nil)
      ))
   :config
-  (newsticker-start))
+  (newsticker-start)
+  (newsticker-start-ticker))
 (setq shr-color-visible-luminance-min 80)
 (setq shr-color-visible-distance-min 8)
     #+END_SRC
@@ -254,6 +255,7 @@
      (java . t)
      (lisp . t)
      (makefile . t)
+     (makefile . t)
      (python . t)
      (scheme . t)
      (shell . t)
@@ -267,11 +269,14 @@
 **** org brain
 
 #+BEGIN_SRC emacs-lisp
+
+
 (use-package org-brain
+  ;;  :load-path "packages/org-brain"
   :ensure t
   :init
   (setq org-brain-path "~/.emacs.d/org/brain")
-  :bind ("C-c b" . #'org-brain-visualize)
+  :bind ("C-c b" . #'helm-brain)
   :config
   (setq org-id-track-globally t)
   (setq org-id-locations-file "~/.emacs.d/org/brain/.org-id-locations")
@@ -290,6 +295,11 @@
 
   (setq org-brain-file-from-input-function
 	(lambda (x) (if (cdr x) (car x) my/default-org-brain-file))))
+
+(use-package polymode :ensure t
+  :config
+  (add-hook 'org-brain-visualize-mode-hook #'org-brain-polymode))
+
 #+END_SRC
 **** Journaling
      Thus far I've made it easy to quickly capture ideas and tasks, not so much on
@@ -1023,6 +1033,14 @@ Python shells can be spawned with the M-x run-python, but I have a little wrappe
 (use-package helm-google :ensure t)
      #+END_SRC
 
+**** helm-mu
+     #+BEGIN_SRC emacs-lisp
+(use-package helm-mu :ensure t)
+(define-key mu4e-main-mode-map "s" 'helm-mu)
+(define-key mu4e-headers-mode-map "s" 'helm-mu)
+(define-key mu4e-view-mode-map "s" 'helm-mu)
+     #+END_SRC
+
 **** tramp
 
      Reads in [[file:~/.ssh/config][my ssh config]] and connects me without needing to remember the trmp syntax.
@@ -1094,7 +1112,55 @@ Python shells can be spawned with the M-x run-python, but I have a little wrappe
   (revert-without-query (quote ("$*\\.pdf")))
   :config
   (pdf-tools-install :no-query)
-  (setq pdf-misc-print-programm "/usr/bin/gtklp"))
+  (setq pdf-misc-print-programm "/usr/bin/gtklp")
+  (defun pdf-view--rotate (&optional counterclockwise-p page-p)
+    "Rotate PDF 90 degrees.  Requires pdftk to work.\n
+Clockwise rotation is the default; set COUNTERCLOCKWISE-P to
+non-nil for the other direction.  Rotate the whole document by
+default; set PAGE-P to non-nil to rotate only the current page.
+\nWARNING: overwrites the original file, so be careful!"
+    ;; error out when pdftk is not installed
+    (if (null (executable-find "pdftk"))
+	(error "Rotation requires pdftk")
+      ;; only rotate in pdf-view-mode
+      (when (eq major-mode 'pdf-view-mode)
+	(let* ((rotate (if counterclockwise-p "left" "right"))
+	       (file   (format "\"%s\"" (pdf-view-buffer-file-name)))
+	       (page   (pdf-view-current-page))
+	       (pages  (cond ((not page-p)                        ; whole doc?
+			      (format "1-end%s" rotate))
+			     ((= page 1)                          ; first page?
+			      (format "%d%s %d-end"
+				      page rotate (1+ page)))
+			     ((= page (pdf-info-number-of-pages)) ; last page?
+			      (format "1-%d %d%s"
+				      (1- page) page rotate))
+			     (t                                   ; interior page?
+			      (format "1-%d %d%s %d-end"
+				      (1- page) page rotate (1+ page))))))
+	  ;; empty string if it worked
+	  (if (string= "" (shell-command-to-string
+			   (format (concat "pdftk %s cat %s "
+					   "output %s.NEW "
+					   "&& mv %s.NEW %s")
+				   file pages file file file)))
+	      (pdf-view-revert-buffer nil t)
+	    (error "Rotation error!"))))))
+  (defun pdf-view-rotate-clockwise (&optional arg)
+    "Rotate PDF page 90 degrees clockwise.  With prefix ARG, rotate
+entire document."
+    (interactive "P")
+    (pdf-view--rotate nil (not arg)))
+
+  (defun pdf-view-rotate-counterclockwise (&optional arg)
+    "Rotate PDF page 90 degrees counterclockwise.  With prefix ARG,
+rotate entire document."
+    (interactive "P")
+    (pdf-view--rotate :counterclockwise (not arg)))
+
+  (define-key pdf-view-mode-map (kbd "R") 'pdf-view-rotate-clockwise)
+
+  )
     #+END_SRC
 
 *** epub
