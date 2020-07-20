@@ -13,3 +13,9 @@
 [submodule "packages/mu"]
 	path = packages/mu
 	url = https://github.com/djcb/mu.git
+[submodule "packages/emacs-application-framework"]
+	path = packages/emacs-application-framework
+	url = https://github.com/manateelazycat/emacs-application-framework.git
+[submodule "y"]
+	path = packages/org-roam
+	url = https://github.com/org-roam/org-roam.git
