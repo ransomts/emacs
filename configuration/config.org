@@ -253,6 +253,7 @@
      (gnuplot . t)
      (haskell . t)
      (java . t)
+     (latex . t)
      (lisp . t)
      (makefile . t)
      (makefile . t)
@@ -466,6 +467,15 @@
 		 ("\\paragraph{%s}" . "\\paragraph*{%s}")
 		 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
      #+END_SRC
+
+**** MLA latex class
+     #+begin_src emacs-lisp
+(with-eval-after-load 'ox-latex
+  (add-to-list 'org-latex-classes
+	       '("mla"
+		 "\\documentclass{mla}")))
+     #+end_src
+
 **** org-noter
      #+BEGIN_SRC emacs-lisp
 (use-package org-noter
@@ -535,7 +545,13 @@
   (erc-log-channels-directory "~/.emacs.d/erc_log")
   (erc-log-mode t)
   (erc-rename-buffers t)
-  (erc-autojoin-channels-alist '(("freenode.net" "#emacs")))
+  (erc-autojoin-channels-alist '(("freenode.net"
+				  "#emacs"
+				  "##linux"
+				  "##categorytheory"
+				  "##math"
+				  "#latex"
+				  "#orgmode")))
   (erc-log-write-after-insert t)
   (erc-log-write-after-send t)
   (erc-modules
@@ -693,6 +709,14 @@
 
 ;; (add-hook 'eshell-mode-hook 'eshell-load-bash-aliases)
     #+END_SRC
+
+*** vterm
+     eshell doesn't handle python venvs well atm
+     #+begin_src emacs-lisp
+(use-package vterm
+  :ensure t
+  :bind ("C-x v" . #'vterm))
+    #+end_src
 
 *** tramp
     #+BEGIN_SRC emacs-lisp
@@ -1195,6 +1219,7 @@ rotate entire document."
     #+BEGIN_SRC emacs-lisp
 (when (>= (string-to-number emacs-version) 24.4)
   (use-package transmission
+    :disabled
     :ensure t
     :if (running-on-hosts '("joseki" "tengen"))
     :custom
@@ -1523,18 +1548,19 @@ rotate entire document."
       ("magit" (name . "magit\*"))
       ("subversion" (name . "\*svn"))
       ("customize" (mode . Custom))
-      ("man pages" (mode . Man-mode))
+      ("latex" (mode . latex-mode))
       ("process bufs" (mode . comint-mode))
-      ("PDF" (or (mode . PDFView-mode)
-		 (mode . PDFView)))
+      ("PDF" (mode . pdf-view-mode))
       ("compilations" (mode . Compilation))
       ;; ("transmission" (or
       ;; (mode . Transmission)
       ;; (mode . Transmission-Info)
       ;; (mode . Transmission-Files))
       ("helm" (mode . helm-major-mode))
+      ("compilation" (mode . compilation-mode))
+      ("C files" (mode . c-mode))
       ("tramp" (name . "\*tramp\*"))
-      ("eshell" (name . "\*eshell"))
+      ("command lines" (or (name . "\*eshell") (name . "vterm\*")))
       ("text searches" (or (mode . ag-mode)
 			   (mode . grep-mode)))
       ("gnus" (or
@@ -1546,7 +1572,8 @@ rotate entire document."
 	       (mode . gnus-article-mode)
 	       (name . "^\\.bbdb$")
 	       (name . "^\\.newsrc-dribble")))
-      ("help" (or (name . "\*Help\*")
+      ("help" (or (mode . Man-mode)
+		  (name . "\*Help\*")
 		  (name . "\*Apropos\*")
 		  (name . "\*info\*"))))))
   (ibuffer-expert t)
