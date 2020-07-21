@@ -1705,6 +1705,9 @@ rotate entire document."
 	;; '("--new-window")
 	;; '("")
 	))
+(setq browse-url-browser-function 'eaf-open-browser)
+(defalias 'browse-web #'eaf-open-browser)
+
    #+END_SRC
 
 ** doc view
@@ -1966,3 +1969,37 @@ rotate entire document."
 (when (running-on-hosts '("tengen" "joseki" "atari" "hoshi" "tsranso-ThinkPad-T430s"))
   (server-start))
    #+END_SRC
+* eaf
+
+  #+begin_src emacs-lisp
+(use-package eaf
+  :load-path "~/.emacs.d/packages/emacs-application-framework"
+  :custom
+  (eaf-find-alternate-file-in-dired t)
+  (eaf-browser-default-search-engine 'duckduckgo)
+  :config
+  (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key take_photo "p" eaf-camera-keybinding)
+  (eaf-setq eaf-browser-dark-mode "true")
+  (eaf-setq eaf-pdf-dark-mode "true"))
+
+
+  #+end_src
+* org roam
+
+  #+begin_src emacs-lisp
+(use-package org-roam
+  :ensure t
+  :hook
+  (after-init . org-roam-mode)
+  :custom
+  (org-roam-directory "~/.emacs.d/org/roam/")
+  :bind (:map org-roam-mode-map
+              (("C-c n l" . org-roam)
+               ("C-c n f" . org-roam-find-file)
+               ("C-c n g" . org-roam-graph-show))
+              :map org-mode-map
+              (("C-c n i" . org-roam-insert))
+              (("C-c n I" . org-roam-insert-immediate))))
+  #+end_src
