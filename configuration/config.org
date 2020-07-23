@@ -819,7 +819,7 @@ Python shells can be spawned with the M-x run-python, but I have a little wrappe
   (mu4e-confirm-quit nil)
   (mu4e-context-policy 'pick-first)
   (mu4e-use-fancy-chars nil)
-
+  (mu4e-headers-results-limit -1)
   ;; (mu4e-compose-in-new-frame t)
 
 
@@ -1948,7 +1948,8 @@ rotate entire document."
 
 (when (and (running-on-hosts '("tengen"))
 	   (not (running-on-windows)))
-  (launch-program "transmission-daemon"))
+;;  (launch-program "transmission-daemon")
+)
 
 (when (and (running-on-hosts '("hoshi" "tengen"))
 	   (not (running-on-windows))
