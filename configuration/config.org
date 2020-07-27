@@ -3,13 +3,13 @@
 
 * Add load path
 
-  Here we start off with some black magic. Lexical bindings let me use a higher order functions when elisp's dynamic bindings don't. 
-  #+BEGIN_SRC emacs-lisp
+Here we start off with some black magic. Lexical bindings let me use a higher order functions when elisp's dynamic bindings don't. 
+#+BEGIN_SRC emacs-lisp
 ;; -*- lexical-binding: t -*-
-  #+END_SRC
+#+END_SRC
 
-  Just a couple of functions to help sort what machine and network the config is being loaded on. So long as the emacs version is >24 I think this should be sufficient to use filter packages and settings between setups.
-  #+BEGIN_SRC emacs-lisp
+Just a couple of functions to help sort what machine and network the config is being loaded on. So long as the emacs version is >24 I think this should be sufficient to use filter packages and settings between setups.
+#+BEGIN_SRC emacs-lisp
 (defun running-on-hosts (hosts)
   (cl-member
    (car (split-string ; split the hostname on '.' for complex hostnames
@@ -23,10 +23,10 @@
 
 (defun running-on-windows ()
   (string= system-type "windows-nt"))
-  #+END_SRC
+#+END_SRC
 
-  And these are the functions to determine the workspace mappings to physical screens.
-  #+BEGIN_SRC emacs-lisp
+And these are the functions to determine the workspace mappings to physical screens.
+#+BEGIN_SRC emacs-lisp
 (defun workspace-string-mappings (x y)
   (if (= x 0) y
     (if (<= x y) x (% (- x (% (+ 10 y) y)) y))))
@@ -51,26 +51,26 @@
 (defun workspace-screen-mapping ()
   (flatten (cl-loop for workspace in '(1 2 3 4 5 6 7 8 9 0)
 		    collect (list workspace (number-to-monitor (workspace-string-mappings workspace (number-of-screens)))))))
-  #+END_SRC
+#+END_SRC
 
-  I use syncthing to move some of the 'live' files emacs uses between machines. If I'm on a machine that hasn't had these folders made, create them.
-  #+BEGIN_SRC emacs-lisp
+I use syncthing to move some of the 'live' files emacs uses between machines. If I'm on a machine that hasn't had these folders made, create them.
+#+BEGIN_SRC emacs-lisp
 (mapc (lambda (dir) (make-directory (concat user-emacs-directory dir) t))
       '("org" "emms" "gnus" ".sx" "hackernews"))
-  #+END_SRC
+#+END_SRC
 
-  One last bootstrap, gotta load up use-package for good load times. This also adds any directories that might not be available through the usual methods like dired+.
-  #+BEGIN_SRC emacs-lisp
+One last bootstrap, gotta load up use-package for good load times. This also adds any directories that might not be available through the usual methods like dired+.
+#+BEGIN_SRC emacs-lisp
 (let ((default-directory  "~/.emacs.d/packages/"))
   (normal-top-level-add-subdirs-to-load-path))
 
 (require 'use-package)
-  #+END_SRC
+#+END_SRC
 
 * Packages
 ** Built In
 *** rss with newsticker
-    #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package newsticker
   :init
   (defun tim/browse-nt-text ()
@@ -144,10 +144,10 @@
   (newsticker-start-ticker))
 (setq shr-color-visible-luminance-min 80)
 (setq shr-color-visible-distance-min 8)
-    #+END_SRC
+#+END_SRC
 
 *** elisp
-    #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package paredit
   :ensure t
   :hook elisp-mode)
@@ -157,9 +157,9 @@
   (("C-x C-e" . pp-eval-last-sexp)
    ("<C-M-backspace>" . backward-kill-sexp))
   :config (enable-paredit-mode))
-    #+END_SRC
+#+END_SRC
 *** org
-    #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package org
   :bind
   (("C-c a" . #'org-agenda)
@@ -267,7 +267,7 @@
 
   (require 'org-crypt)
   (org-crypt-use-before-save-magic))
-    #+END_SRC
+#+END_SRC
 
 **** org brain
 
@@ -305,51 +305,51 @@
 
 #+END_SRC
 **** Journaling
-     Thus far I've made it easy to quickly capture ideas and tasks, not so much on
-     the analysis phase:
+Thus far I've made it easy to quickly capture ideas and tasks, not so much on
+the analysis phase:
 
-     - What was accomplished today?
-     - What are some notably bad habits? Good habits?
-     - What are some future steps?
+        - What was accomplished today?
+        - What are some notably bad habits? Good habits?
+        - What are some future steps?
 
-     Rather than overloading the capture mechanism for such thoughts, let's employ
-     ~org-journal~ ---journal entries are stored in files such as ~journal/20190407~,
-     where the file name is simply the date, or only one file per year as I've set it
-     up below.  Each entry is the week day, along with the date, then each child tree
-     is an actual entry with a personal title preceded by the time the entry was
-     made.  Unlike capture and its agenda support, journal ensures entries are
-     maintained in chronological order with calendar support.
+          Rather than overloading the capture mechanism for such thoughts, let's employ
+          ~org-journal~ ---journal entries are stored in files such as ~journal/20190407~,
+          where the file name is simply the date, or only one file per year as I've set it
+          up below.  Each entry is the week day, along with the date, then each child tree
+          is an actual entry with a personal title preceded by the time the entry was
+          made.  Unlike capture and its agenda support, journal ensures entries are
+          maintained in chronological order with calendar support.
 
-     Since org files are plain text files, an entry can be written anywhere and later
-     ported to the journal.
+          Since org files are plain text files, an entry can be written anywhere and later
+          ported to the journal.
 
-     The separation of concerns is to emphasise the capture stage as being quick and
-     relatively mindless, whereas the journaling stage as being mindful.  Even though
-     we may utilise capture to provide quick support for including journal entries, I
-     have set my journal to be on a yearly basis ---one file per year--- since I want
-     to be able to look at previous entries when making the current entry; after all,
-     it's hard to compare and contrast easily unless there's multiple entries opened
-     already.
+          The separation of concerns is to emphasise the capture stage as being quick and
+          relatively mindless, whereas the journaling stage as being mindful.  Even though
+          we may utilise capture to provide quick support for including journal entries, I
+          have set my journal to be on a yearly basis ---one file per year--- since I want
+          to be able to look at previous entries when making the current entry; after all,
+          it's hard to compare and contrast easily unless there's multiple entries opened
+          already.
 
-     As such, ideally at the end of the day, I can review what has happened, and what
-     has not, and why this is the case, and what I intend to do about it, and what
-     problems were encountered and how they were solved ---in case the problem is
-     encountered again in the future.  *Consequently, if I encounter previously
-     confronted situations, problems,* *all I have to do is reread my journal to get an
-     idea of how to progress.* Read more about [[https://www.google.com/search?q=on+the+importance+of+reviwing+your+day+daily&oq=on+the+importance+of+reviwing+your+day+daily&aqs=chrome..69i57.367j0j7&sourceid=chrome&ie=UTF-8][the importance of reviewing your day on
-     a daily basis]].
+          As such, ideally at the end of the day, I can review what has happened, and what
+          has not, and why this is the case, and what I intend to do about it, and what
+          problems were encountered and how they were solved ---in case the problem is
+          encountered again in the future.  *Consequently, if I encounter previously
+          confronted situations, problems,* *all I have to do is reread my journal to get an
+          idea of how to progress.* Read more about [[https://www.google.com/search?q=on+the+importance+of+reviwing+your+day+daily&oq=on+the+importance+of+reviwing+your+day+daily&aqs=chrome..69i57.367j0j7&sourceid=chrome&ie=UTF-8][the importance of reviewing your day on
+          a daily basis]].
 
-     Moreover, by journaling with Org on a daily basis, it can be relatively easy to
-     produce a report on what has been happening recently, at work for example. I'd
-     like to have multiple journals, for work and for personal life, as such I will
-     utilise a prefix argument to obtain my work specific entries.
+          Moreover, by journaling with Org on a daily basis, it can be relatively easy to
+          produce a report on what has been happening recently, at work for example. I'd
+          like to have multiple journals, for work and for personal life, as such I will
+          utilise a prefix argument to obtain my work specific entries.
 
-     Anyhow, the setup:
-     #+begin_src emacs-lisp
+          Anyhow, the setup:
+          #+begin_src emacs-lisp
 (defun my/org-journal-new-entry (prefix)
   "Open today’s journal file and start a new entry.
 
-	 With a prefix, we use the work journal; otherwise the personal journal."
+                 With a prefix, we use the work journal; otherwise the personal journal."
   (interactive "P")
   (-let [org-journal-file-format (if prefix "Work-%Y-%m-%d" org-journal-file-format)]
     (org-journal-new-entry nil)
@@ -373,25 +373,25 @@
   (goto-char (point-min)))
 
 (setq org-capture-templates '())
-     #+end_src
+          #+end_src
 
-     Bindings available in ~org-journal-mode~, when journaling:
-     - ~C-c C-j~: Insert a new entry into the current journal file.
-       - Note that keys for ~org-journal-new-entry~ shadow those for ~org-goto~.
-     - ~C-c C-s~: Search the journal for a string.
-       - Note that keys for ~org-journal-search~ shadow those for ~org-schedule~.
+          Bindings available in ~org-journal-mode~, when journaling:
+          - ~C-c C-j~: Insert a new entry into the current journal file.
+            - Note that keys for ~org-journal-new-entry~ shadow those for ~org-goto~.
+          - ~C-c C-s~: Search the journal for a string.
+            - Note that keys for ~org-journal-search~ shadow those for ~org-schedule~.
 
-     All journal entries are registered in the Emacs Calendar.  To see available
-     journal entries do ~M-x calendar~.  Bindings available in the calendar-mode:
+              All journal entries are registered in the Emacs Calendar.  To see available
+              journal entries do ~M-x calendar~.  Bindings available in the calendar-mode:
 
-     - ~j~: View an entry in a new buffer.
-     - ~i j~: ‘I’nsert a new ‘j’ournal entry into the day’s file.
-     - ~f w/m/y/f/F~: ‘F’ind, search, in all entries of the current week, month, year, all of time,
-       of in all entries in the future.
+              - ~j~: View an entry in a new buffer.
+              - ~i j~: ‘I’nsert a new ‘j’ournal entry into the day’s file.
+              - ~f w/m/y/f/F~: ‘F’ind, search, in all entries of the current week, month, year, all of time,
+                of in all entries in the future.
 
 **** Pomodoro
 
-     #+begin_src emacs-lisp
+#+begin_src emacs-lisp
 ;; Tasks get a 25 minute count down timer
 (setq org-timer-default-timer 25)
 
@@ -406,13 +406,13 @@
 	    (unless (s-prefix? "0:00" (org-timer-value-string))
 	      (message-box "The basic 25 minutes on this difficult task are not up; don't give up hope."))
 	    (org-timer-stop)))
-     #+end_src
+#+end_src
 
 **** update gnome memo with active clock
 
-     Requires gnome desktop with [[https://extensions.gnome.org/extension/974/short-memo/][short-memo]] installed, and the [[https://chrome.google.com/webstore/detail/gnome-shell-integration/gphhapmejobijbbhgpjhcjognlahblep][google chrome gnome integration extension]].
+Requires gnome desktop with [[https://extensions.gnome.org/extension/974/short-memo/][short-memo]] installed, and the [[https://chrome.google.com/webstore/detail/gnome-shell-integration/gphhapmejobijbbhgpjhcjognlahblep][google chrome gnome integration extension]].
 
-     #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (add-hook
  'org-mode-hook
  (lambda ()
@@ -438,7 +438,7 @@
      (current-task-to-status))
    (advice-add #'org-clock-in :around #'my-org-clock-message)
    (advice-add #'org-clock-out :around #'my-org-clock-message)))
-     #+END_SRC
+#+END_SRC
 **** geiser for scheme babel
 
 #+BEGIN_SRC emacs-lisp
@@ -447,17 +447,17 @@
   (geiser-active-implementations '(mit)))
 #+END_SRC
 **** org exports
-     #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package ox-hugo
   :ensure t
   :after ox)
 
 (use-package ox-beamer
   :after ox)
-     #+END_SRC
+#+END_SRC
 
 **** ACM latex class
-     #+begin_src emacs-lisp
+#+begin_src emacs-lisp
 (with-eval-after-load 'ox-latex
   (add-to-list 'org-latex-classes
 	       '("acmart"
@@ -467,11 +467,11 @@
 		 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
 		 ("\\paragraph{%s}" . "\\paragraph*{%s}")
 		 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
-     #+end_src
+#+end_src
 
 **** IEEE latex class
 
-     #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (with-eval-after-load 'ox-latex
   (add-to-list 'org-latex-classes
 	       '("IEEEtran"
@@ -481,18 +481,18 @@
 		 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
 		 ("\\paragraph{%s}" . "\\paragraph*{%s}")
 		 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
-     #+END_SRC
+#+END_SRC
 
 **** MLA latex class
-     #+begin_src emacs-lisp
+#+begin_src emacs-lisp
 (with-eval-after-load 'ox-latex
   (add-to-list 'org-latex-classes
 	       '("mla"
 		 "\\documentclass{mla}")))
-     #+end_src
+#+end_src
 
 **** org-noter
-     #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package org-noter
   :ensure t
   :custom
@@ -500,13 +500,13 @@
   (org-noter-always-create-frame nil)
   (org-noter-default-notes-file-names '("~/.emacs.d/org/reading.org"))
   (org-noter-notes-search-path '("~/.emacs.d/org/")))
-     #+END_SRC
+#+END_SRC
 
 **** org-ref
 
-     This needs the [[file:~/Documents/references.bib][references.bib]] file to be generated by zotero. Just export the entire library as bibtex there.
+This needs the [[file:~/Documents/references.bib][references.bib]] file to be generated by zotero. Just export the entire library as bibtex there.
 
-     #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package org-ref :ensure t :after org
   :config
   (setq org-latex-pdf-process
@@ -529,26 +529,26 @@
 	  (org-open-file pdf-file)
 	(message "No PDF found for %s" key))))
   (setq org-ref-open-pdf-function 'my/org-ref-open-pdf-at-point))
-     #+END_SRC
+#+END_SRC
 
 **** async src blocks
-     #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package ob-async
   :ensure t
   :after org)
-     #+END_SRC
+#+END_SRC
 
 **** bullets
-     #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package org-bullets
   :ensure t
   :hook (org-mode . org-bullets-mode))
-     #+END_SRC
+#+END_SRC
 
 *** erc
 
-    IRC is a really valuable resource that is being used less and less. Having people to answer random technical questions is so nice when working on something and nobody around can help.
-    #+BEGIN_SRC emacs-lisp
+IRC is a really valuable resource that is being used less and less. Having people to answer random technical questions is so nice when working on something and nobody around can help.
+#+BEGIN_SRC emacs-lisp
 (use-package erc
   :custom
   (erc-autojoin-channels-alist (quote (("freenode.net"))))
@@ -603,10 +603,10 @@
   :config
   (setq erc-twitch-networks (quote ("irc.chat.twitch.tv")))
   (erc-twitch-mode))
-    #+END_SRC
+#+END_SRC
 
 *** dired
-    #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defun ransom/open-home ()
   (interactive)
   (dired (getenv "HOME")))
@@ -624,27 +624,27 @@
   (dired-recursive-deletes 'always))
 
 (global-set-key (kbd "C-c d") (lambda () (interactive) (dired default-directory)))
-    #+END_SRC
+#+END_SRC
 **** dired du
-     #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package dired-du
   :ensure t
   :after dired)
-     #+END_SRC
+#+END_SRC
 
 **** dired subtree
 
-     #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package dired-subtree
   :ensure t
   :after dired
   :config
   (bind-key "<tab>" #'dired-subtree-toggle dired-mode-map)
   (bind-key "<backtab>" #'dired-subtree-cycle dired-mode-map))
-     #+END_SRC
+#+END_SRC
 
 *** eshell
-    #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defmacro with-face (str &rest properties)
   `(propertize ,str 'face (list ,@properties)))
 
@@ -723,18 +723,18 @@
     (if (get-buffer "bash-errors")(kill-buffer "bash-errors"))))
 
 ;; (add-hook 'eshell-mode-hook 'eshell-load-bash-aliases)
-    #+END_SRC
+#+END_SRC
 
 *** vterm
-     eshell doesn't handle python venvs well atm
-     #+begin_src emacs-lisp
+eshell doesn't handle python venvs well atm
+#+begin_src emacs-lisp
 (use-package vterm
   :ensure t
   :bind ("C-x v" . #'vterm))
-    #+end_src
+#+end_src
 
 *** tramp
-    #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (require 'tramp)
 (add-to-list 'tramp-remote-path "/home/tsranso/bin")
 (add-to-list 'tramp-remote-path "/home/tsranso/.local/bin")
@@ -750,35 +750,35 @@
 ;; not sure why we have this? just cargo-culting from an answer I saw
 ;; online.
 (setq tramp-verbose 1)
-    #+END_SRC
+#+END_SRC
 
 ** External
 *** the silver searcher
-    #+begin_src emacs-lisp
+#+begin_src emacs-lisp
 (use-package ag :ensure t
   :bind ("C-c f" . #'ag)
   :custom (ag-highlight-search t))
-    #+end_src
+#+end_src
 
 **** helm interface
-    #+begin_src emacs-lisp
+#+begin_src emacs-lisp
 (use-package helm-ag :ensure t
   :bind ("C-c C-f" . #'helm-ag))
-    #+end_src
+#+end_src
 
 *** Python stuff
 
 Python shells can be spawned with the M-x run-python, but I have a little wrapper here to give me an access to python2. Yay legacy code
-    #+begin_src emacs-lisp
+#+begin_src emacs-lisp
 (defun run-python-2.7 ()
   (interactive)
-    (run-python "/usr/bin/python2.7"))
-    #+end_src
+  (run-python "/usr/bin/python2.7"))
+#+end_src
 **** virtual environment
 
-     Use M-x =venv-workon= to activate virtualenvs and M-x =venv-deactivate= deactivate them.
+Use M-x =venv-workon= to activate virtualenvs and M-x =venv-deactivate= deactivate them.
 
-     #+begin_src emacs-lisp
+#+begin_src emacs-lisp
 (use-package virtualenvwrapper
   :ensure t
   :after eshell
@@ -790,7 +790,7 @@ Python shells can be spawned with the M-x run-python, but I have a little wrappe
   ;; the environment variable `WORKON_HOME` points to the right place
   ;; (setq venv-location "/path/to/your/virtualenvs/")
   )
-     #+end_src
+#+end_src
 
 *** disk usage
 #+begin_src emacs-lisp
@@ -802,7 +802,7 @@ Python shells can be spawned with the M-x run-python, but I have a little wrappe
 #+END_SRC
 
 *** Package updater
-    #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package auto-package-update
   :ensure t
   :custom
@@ -811,11 +811,11 @@ Python shells can be spawned with the M-x run-python, but I have a little wrappe
   (auto-package-update-interval 90)
   :config
   (auto-package-update-maybe))
-    #+END_SRC
+#+END_SRC
 *** mu4e
 
-    Requires a few things installed - w3m, isync, and the [[file:~/.emacs.d/org/dotfiles.org][dotfiles]] to be tangled
-    #+BEGIN_SRC emacs-lisp
+Requires a few things installed - w3m, isync, and the [[file:~/.emacs.d/org/dotfiles.org][dotfiles]] to be tangled
+#+BEGIN_SRC emacs-lisp
 (use-package org-mime :ensure t)
 
 (use-package w3m :ensure t
@@ -979,10 +979,10 @@ Python shells can be spawned with the M-x run-python, but I have a little wrappe
 					    ("/tsranso/[Gmail]/Starred"   . ?r)
 					    ("/tsranso/[Gmail]/Drafts"    . ?d)
 					    ))))))
-    #+END_SRC
+#+END_SRC
 
 **** maildir summary
-     #+begin_src emacs-lisp
+#+begin_src emacs-lisp
 (use-package mu4e-maildirs-extension
   :ensure t
   :after mu4e
@@ -990,9 +990,9 @@ Python shells can be spawned with the M-x run-python, but I have a little wrappe
   (mu4e-maildirs-extension-hide-empty-maildirs t)
   :config
   (mu4e-maildirs-extension))
-     #+end_src
+#+end_src
 **** modeline notification
-     #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package mu4e-alert 
   :ensure t
   :after mu4e
@@ -1000,43 +1000,43 @@ Python shells can be spawned with the M-x run-python, but I have a little wrappe
 	 ;; (after-init . mu4e-alert-enable-notifications)
 	 )
   :config (mu4e-alert-set-default-style 'libnotify))
-     #+END_SRC
+#+END_SRC
 *** emoji support
-    #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package emojify
   :ensure t
   :config
   (global-emojify-mode)
   :custom
   (emojify-composed-text-p nil))
-    #+END_SRC
+#+END_SRC
 *** dmenu
-    #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package dmenu
   :ensure t
   :bind (("s-x" . #'dmenu)))
-    #+END_SRC
+#+END_SRC
 
 *** Dad-joke
 
-    This is top tier package-age here.
-    #+BEGIN_SRC emacs-lisp
+This is top tier package-age here.
+#+BEGIN_SRC emacs-lisp
 (use-package dad-joke :ensure t)
-    #+END_SRC
+#+END_SRC
 
 *** Theme
 
-    I really like themes that have light and dark modes. The material theme fits that and has been my theme of choice for a few years.
-    #+BEGIN_SRC emacs-lisp
+I really like themes that have light and dark modes. The material theme fits that and has been my theme of choice for a few years.
+#+BEGIN_SRC emacs-lisp
 (use-package material-theme
   :unless (running-on-hosts '("login001"))
   :ensure t
   :config
   (load-theme 'material t))
-    #+END_SRC
+#+END_SRC
 
-    Switch between the light and dark modes on sunrise and sunset. Lets me know what the sun is doing even when I spend all day inside :)
-    #+BEGIN_SRC emacs-lisp
+Switch between the light and dark modes on sunrise and sunset. Lets me know what the sun is doing even when I spend all day inside :)
+#+BEGIN_SRC emacs-lisp
 (use-package theme-changer
   :unless (running-on-hosts '("login001"))
   :ensure t
@@ -1045,12 +1045,12 @@ Python shells can be spawned with the M-x run-python, but I have a little wrappe
   (calendar-location-name "Clemson, SC")
   (calendar-longitude -82.84)
   :config (change-theme 'material-light 'material))
-    #+END_SRC
+#+END_SRC
 
 *** helm
 
-    Helm is really a game changer for emacs. More over, it's the helm extensions that can really turn something tedious to easy.
-    #+BEGIN_SRC emacs-lisp
+Helm is really a game changer for emacs. More over, it's the helm extensions that can really turn something tedious to easy.
+#+BEGIN_SRC emacs-lisp
 (when (>= (string-to-number emacs-version) 24.4)
   (use-package helm
     :ensure t
@@ -1066,49 +1066,49 @@ Python shells can be spawned with the M-x run-python, but I have a little wrappe
 	   ("C-c g" . #'helm-google-suggest))
     :config
     (helm-mode t)))
-    #+END_SRC
+#+END_SRC
 **** helm-google
-     #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package helm-google :ensure t)
-     #+END_SRC
+#+END_SRC
 
 **** helm-mu
-     #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package helm-mu :ensure t)
 (define-key mu4e-main-mode-map "s" 'helm-mu)
 (define-key mu4e-headers-mode-map "s" 'helm-mu)
 (define-key mu4e-view-mode-map "s" 'helm-mu)
-     #+END_SRC
+#+END_SRC
 
 **** tramp
 
-     Reads in [[file:~/.ssh/config][my ssh config]] and connects me without needing to remember the trmp syntax.
-     #+BEGIN_SRC emacs-lisp
+Reads in [[file:~/.ssh/config][my ssh config]] and connects me without needing to remember the trmp syntax.
+#+BEGIN_SRC emacs-lisp
 (when (>= (string-to-number emacs-version) 24.4)
   (use-package helm-tramp
     :unless (running-on-hosts '("login001"))
     :ensure t
     :requires helm))
-     #+END_SRC
+#+END_SRC
 
 **** bbdb
 
-     This seems to be the most accepted way to manage contact info with emacs. It works well with mail and gnus though so it's okay with me.
-     #+BEGIN_SRC emacs-lisp
+This seems to be the most accepted way to manage contact info with emacs. It works well with mail and gnus though so it's okay with me.
+#+BEGIN_SRC emacs-lisp
 (when (>= (string-to-number emacs-version) 24.4)
   (use-package helm-bbdb
     :unless (running-on-hosts '("login001"))
     :ensure t
     :requires helm
     :bind (("<f5>" . #'helm-bbdb))))
-     #+END_SRC
+#+END_SRC
 
 **** dictionary
 
-     Every computer used for writing should have a dictionary available by keystroke.
+Every computer used for writing should have a dictionary available by keystroke.
 
-     Also remember that =C-w= in a helm session inserts the word at point.
-     #+BEGIN_SRC emacs-lisp
+Also remember that =C-w= in a helm session inserts the word at point.
+#+BEGIN_SRC emacs-lisp
 (when (>= (string-to-number emacs-version) 24.4)
   (use-package helm-dictionary
     :unless (running-on-hosts '("login001"))
@@ -1123,12 +1123,12 @@ Python shells can be spawned with the M-x run-python, but I have a little wrappe
        ("Oxford English Dictionary" . "www.oed.com/search?searchType=dictionary&q=%s")
        ("Merriam-Webster" . "https://www.merriam-webster.com/dictionary/%s")))
     (helm-dictionary-use-full-frame nil)))
-     #+END_SRC
+#+END_SRC
 
 *** magit
 
-    Great way to interact with git. Not much config needed, just a global keybinding to pop open the status.
-    #+BEGIN_SRC emacs-lisp
+Great way to interact with git. Not much config needed, just a global keybinding to pop open the status.
+#+BEGIN_SRC emacs-lisp
 (when (>= (string-to-number emacs-version) 25.1)
   (use-package magit
     :ensure t
@@ -1138,10 +1138,10 @@ Python shells can be spawned with the M-x run-python, but I have a little wrappe
     (remove-hook 'server-switch-hook 'magit-commit-diff)))
 
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
-    #+END_SRC
+#+END_SRC
 
 *** pdf
-    #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package pdf-tools
   :ensure t
   :unless (running-on-hosts '("login001"))
@@ -1200,23 +1200,23 @@ rotate entire document."
   (define-key pdf-view-mode-map (kbd "R") 'pdf-view-rotate-clockwise)
 
   )
-    #+END_SRC
+#+END_SRC
 
 *** epub
-    #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package nov
   :ensure t
   :unless (or (string= nil (getenv "DESKTOP_SESSION"))
 	      (running-on-hosts '("login001")))
   :magic ("%EPUB" . nov-mode)
   :config (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode)))
-    #+END_SRC
+#+END_SRC
 
 *** dashboard
 
-    This dashboard pairs really well with exwm but has been a bit of a pain to set up.
-    For now I'm still choosing an org-mode scratch buffer but this is a todo.
-    #+BEGIN_SRC emacs-lisp
+This dashboard pairs really well with exwm but has been a bit of a pain to set up.
+For now I'm still choosing an org-mode scratch buffer but this is a todo.
+#+BEGIN_SRC emacs-lisp
 (use-package dashboard
   :ensure t
   ;; :if (getenv "DESKTOP_SESSION")
@@ -1228,10 +1228,10 @@ rotate entire document."
 		     (agenda . 5)
 		     (bookmarks . 5))))
 ;; todo: make (todos . 5) source
-    #+END_SRC
+#+END_SRC
 
 *** transmission
-    #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (when (>= (string-to-number emacs-version) 24.4)
   (use-package transmission
     :disabled
@@ -1244,19 +1244,19 @@ rotate entire document."
        transmission-files-mode
        transmission-info-mode
        transmission-peers-mode))))
-    #+END_SRC
+#+END_SRC
 
 *** spotify
-    This just controls spotify, searching and account specific stuff still needs done through the desktop application.
+This just controls spotify, searching and account specific stuff still needs done through the desktop application.
 
-    #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package spotify :ensure t
   :config
   (spotify-enable-song-notifications))
-    #+END_SRC
+#+END_SRC
 
 
-    This one lets us search and control playback
+This one lets us search and control playback
 #+BEGIN_SRC emacs-lisp
 (use-package helm-spotify-plus :ensure t
   :bind
@@ -1270,23 +1270,23 @@ rotate entire document."
 
 *** hackernews
 
-    #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package hackernews
   :ensure t
   :bind ("C-c h" . #'hackernews))
-    #+END_SRC
+#+END_SRC
 
 *** stack overflow
 
-    #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package sx
   :ensure t
   :bind ("C-c x" . #'sx-tab-all-questions))
-    #+END_SRC
+#+END_SRC
 
 *** wikipedia
 
-    #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package wiki-summary
   :defer 1
   :bind ("C-c w" . wiki-summary)
@@ -1304,10 +1304,10 @@ rotate entire document."
       (pop-to-buffer buf))))
 
 (advice-add 'wiki-summary/format-summary-in-buffer :override #'my/format-summary-in-buffer)
-    #+END_SRC
+#+END_SRC
 
 *** emms
-    #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package emms
   :disabled
   :if (running-on-hosts '("joseki" "tengen"))
@@ -1317,7 +1317,7 @@ rotate entire document."
 			 emms-info-mpd emms-info-cueinfo
 			 emms-info-ogginfo))
   (emms-source-file-default-directory "~/Music/"))
-    #+END_SRC
+#+END_SRC
 
 **** emms mediainfo
 #+begin_src emacs-lisp
@@ -1327,7 +1327,7 @@ rotate entire document."
 #+end_src
 *** bbdb
 
-    #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package bbdb
   :ensure t
   :custom
@@ -1347,21 +1347,21 @@ rotate entire document."
    bbdb-use-pop-up t
    bbdb-electric-p t
    bbdb-popup-target-lines  1))
-    #+END_SRC
+#+END_SRC
 
 *** slime
 
-    Everybody who wants to dive into lisp should use slime. Even if just for learning differences between the lisps, slime is the way to go for lisp dev.
-    #+BEGIN_SRC emacs-lisp
+Everybody who wants to dive into lisp should use slime. Even if just for learning differences between the lisps, slime is the way to go for lisp dev.
+#+BEGIN_SRC emacs-lisp
 (use-package slime
   :ensure t
   :custom
   (inferior-lisp-program "sbcl")
   (slime-contribs '(slime-fancy)))
-    #+END_SRC
+#+END_SRC
 
 *** space mode line
-    #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package spaceline
   :ensure t)
 
@@ -1373,10 +1373,10 @@ rotate entire document."
   (spaceline-toggle-org-clock-on)
   (spaceline-toggle-minor-modes-off)
   (spaceline-toggle-version-control-off))
-    #+END_SRC
+#+END_SRC
 
 *** space mode line
-    #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package spaceline
   :ensure t)
 
@@ -1388,39 +1388,39 @@ rotate entire document."
   (spaceline-toggle-org-clock-on)
   (spaceline-toggle-minor-modes-off)
   (spaceline-toggle-version-control-off))
-    #+END_SRC
+#+END_SRC
 
 *** cmake
 
-    #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package cmake-mode :ensure t)
-    #+END_SRC
+#+END_SRC
 
 *** gnuplot
 
-    #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package gnuplot :ensure t)
-    #+END_SRC
+#+END_SRC
 
 *** deadgrep
 
-    #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package deadgrep
   :disabled
   ;; :ensure t
   :bind ("C-c g" . #'deadgrep))
-    #+END_SRC
+#+END_SRC
 *** telegram
 
-    #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package deadgrep
   :disabled
   ;; :ensure t
   :bind ("C-c g" . #'deadgrep))
-    #+END_SRC
+#+END_SRC
 *** Google Calendar
 
-    #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package org-gcal
   :disabled
   :ensure t
@@ -1442,12 +1442,12 @@ rotate entire document."
 	   ((agenda "")
 	    (alltodo ""))))))
 
-    #+END_SRC
+#+END_SRC
 
 * Moving around
 
-  Here are just about my only modifications to ordinary bindings. Mostly just convienience and intution things.
-  #+BEGIN_SRC emacs-lisp
+Here are just about my only modifications to ordinary bindings. Mostly just convienience and intution things.
+#+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-c u")   #'org-babel-detangle)
 (global-set-key (kbd "M-o")     #'other-window)
 (global-set-key (kbd "M-h")     #'backward-kill-word)                   
@@ -1460,42 +1460,42 @@ rotate entire document."
 		  (split-window-vertically)                             
 		  (other-window 1)))
 (global-hl-line-mode t)
-  #+END_SRC
+#+END_SRC
 
-  Flashes the cursor when a long jump is acted
-  #+BEGIN_SRC emacs-lisp
+Flashes the cursor when a long jump is acted
+#+BEGIN_SRC emacs-lisp
 (use-package beacon
   :if (display-graphic-p)
   :ensure t
   :config
   (beacon-mode 1))
-  #+END_SRC
+#+END_SRC
 
 ** focus follows mouse
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (setq mouse-autoselect-window t
       focus-follows-mouse t)
-   #+END_SRC
+#+END_SRC
 
 ** which key
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package which-key
   :ensure t
   :custom (which-key-idle-delay 3.0)
   :config (which-key-mode))
-   #+END_SRC
+#+END_SRC
 
 ** smartparens
 
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package smartparens
   :ensure t
   :hook (prog-mode . turn-off-smartparens-strict-mode))
-   #+END_SRC
+#+END_SRC
 
 ** Hide show minor mode
 
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package hs-minor-mode
   :hook prog-mode
   :bind (:map hs-minor-mode-map
@@ -1505,13 +1505,13 @@ rotate entire document."
 	      ("C-c b s" . hs-show-block)
 	      ("C-c C-b h" . hs-hide-block)
 	      ("C-c C-b s" . hs-show-block)))
-   #+END_SRC
+#+END_SRC
 
 * Buffer Management
 
 ** ibuffer
 
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package ibuffer
   :ensure t
   :bind ("C-x C-b" . #'ibuffer)
@@ -1575,7 +1575,7 @@ rotate entire document."
       ("compilation" (mode . compilation-mode))
       ("C files" (mode . c-mode))
       ("tramp" (name . "\*tramp\*"))
-      ("command lines" (or (name . "\*eshell") (name . "vterm\*")))
+      ("command lines" (or (name . "\*eshell") (name . "vterm\*") (name . "Vterm\*")))
       ("text searches" (or (mode . ag-mode)
 			   (mode . grep-mode)))
       ("gnus" (or
@@ -1601,21 +1601,21 @@ rotate entire document."
 	   " "
 	   (mode 16 16 :left :elide)
 	   " " filename-and-process))))
-   #+END_SRC
+#+END_SRC
 
 *** ibuffer hooks
 
-    #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (add-hook 'ibuffer-mode-hook
 	  (lambda ()
 	    (ibuffer-auto-mode 1)
 	    (ibuffer-switch-to-saved-filter-groups "exwm")))
-    #+END_SRC
+#+END_SRC
 
 ** transpose windows
 
-   Transposing is surprisingly not a built in function. Here's something that lets me move the current buffer around in the frame.
-   #+BEGIN_SRC emacs-lisp
+Transposing is surprisingly not a built in function. Here's something that lets me move the current buffer around in the frame.
+#+BEGIN_SRC emacs-lisp
 (defun transpose-windows (arg)
   "Transpose the buffers shown in two windows."
   (interactive "p")
@@ -1629,12 +1629,12 @@ rotate entire document."
       (setq arg (if (plusp arg) (1- arg) (1+ arg))))))
 
 (global-set-key (kbd "C-x t") #'transpose-windows)
-   #+END_SRC
+#+END_SRC
 
 ** toggle frame split
 
-   Likewise switching from vertical to horizantal (and back). Really should be built it.
-   #+BEGIN_SRC emacs-lisp
+Likewise switching from vertical to horizantal (and back). Really should be built it.
+#+BEGIN_SRC emacs-lisp
 (defun toggle-frame-split ()
   "If the frame is split vertically, split it horizontally or vice versa.
      Assumes that the frame is only split into two."
@@ -1648,11 +1648,11 @@ rotate entire document."
     (switch-to-buffer nil)))
 
 (global-set-key (kbd "C-x |") 'toggle-frame-split)
-   #+END_SRC
+#+END_SRC
 
 ** edit current buffer as root
 
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defun edit-as-su (&optional arg)
   "Edit currently visited file as root.
 
@@ -1666,30 +1666,30 @@ rotate entire document."
     (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
 
 (global-set-key (kbd "C-c o") #'edit-as-su)
-   #+END_SRC
+#+END_SRC
 
 * general emacs settings
 ** asynchronous
-   Gotta use the few async operations we have
-   #+BEGIN_SRC emacs-lisp
+Gotta use the few async operations we have
+#+BEGIN_SRC emacs-lisp
 (use-package async
   :ensure t
   :config
   (dired-async-mode 1)
   (async-bytecomp-package-mode 1))
-   #+END_SRC
+#+END_SRC
 
 ** time and date
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (setq calendar-mark-diary-entries-flag t
       display-time-24hr-format t
       display-time-default-load-average nil)
 
 (display-time-mode t)
-   #+END_SRC
+#+END_SRC
 
 ** window behavior
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 ;; (setq 
 ;;       use-dialog-box nil
 ;;       line-number-mode t
@@ -1700,27 +1700,27 @@ rotate entire document."
 (tool-bar-mode 0)
 (menu-bar-mode 0)
 (scroll-bar-mode 0)
-   #+END_SRC
+#+END_SRC
 
-   #+RESULTS:
+#+RESULTS:
 
 ** cursor behavior
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (setq x-stretch-cursor t
       sentence-end-double-space nil
       tab-width 4)
 
 (show-paren-mode t)
-   #+END_SRC
+#+END_SRC
 
 ** trash behavior
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (setq delete-by-moving-to-trash t
       trash-directory "/home/tsranso/.local/share/Trash/files/")
-   #+END_SRC
+#+END_SRC
 
 ** initialization
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (setq 
 					;initial-buffer-choice (lambda nil (get-buffer "*dashboard*"))
  initial-buffer-choice (lambda nil (get-buffer "*scratch*"))
@@ -1729,17 +1729,17 @@ rotate entire document."
 				 "
 
      "))
-   #+END_SRC
+#+END_SRC
 
 ** proced
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (setq proced-auto-update-flag t
       proced-auto-update-interval 2
       proced-filter 'user)
-   #+END_SRC
+#+END_SRC
 
 ** browser
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (if  (running-on-windows)
     (setq browse-url-browser-function 'eww-browse-url)
   (setq browse-url-browser-function 'browse-url-firefox
@@ -1750,16 +1750,16 @@ rotate entire document."
 (setq browse-url-browser-function 'eaf-open-browser)
 (defalias 'browse-web #'eaf-open-browser)
 
-   #+END_SRC
+#+END_SRC
 
 ** doc view
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (setq doc-view-continuous t
       doc-view-resolution 300)
-   #+END_SRC
+#+END_SRC
 
 ** file backup info
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (setq
  backup-by-copying t      ; don't clobber symlinks
  backup-directory-alist
@@ -1771,10 +1771,10 @@ rotate entire document."
  version-control t)       ; use versioned backups
 
 (recentf-mode 1)
-   #+END_SRC
+#+END_SRC
 
 ** misc
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "<f6>")    #'calc)
 (global-set-key (kbd "<f7>")    #'calendar)
 ;; (global-set-key (kbd "C-c C-c") #'compile)
@@ -1798,17 +1798,17 @@ rotate entire document."
 (global-auto-revert-mode 1)
 (setq bookmark-default-file "~/.emacs.d/org/bookmarks")
 (setq bbdb-file "~/.emacs.d/org/bbdb")
-   #+END_SRC
+#+END_SRC
 
-   These are things that have popped up in my [[file:customize.el][customize.el]] that I probably added through the customize interface rather than use-package.
-   #+BEGIN_SRC emacs-lisp
+These are things that have popped up in my [[file:customize.el][customize.el]] that I probably added through the customize interface rather than use-package.
+#+BEGIN_SRC emacs-lisp
 (setq helm-completion-style 'emacs
       epa-pinentry-mode 'loopback)
-   #+END_SRC
+#+END_SRC
 
 * exwm
 
-  #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defun launch-program-with-sudo (command)
   (interactive (list (read-shell-command "(with sudo) $ ")))
   (start-process-shell-command command nil (concat "sudo " command)))
@@ -1945,12 +1945,12 @@ rotate entire document."
 
     (exwm-randr-enable)
     (exwm-enable)))
-  #+END_SRC
+#+END_SRC
 
 ** Autostart programs
 
-   I use this config across several machines, depending which machine and what network it's connected to I want different autostart applications.
-   #+BEGIN_SRC emacs-lisp :noweb yes
+I use this config across several machines, depending which machine and what network it's connected to I want different autostart applications.
+#+BEGIN_SRC emacs-lisp :noweb yes
 (when (running-on-hosts '("joseki"))
   (display-battery-mode t)
   ;; (start-process "" nil "xrdb" "-merge" "/home/tsranso/.config/urxvt/conf")
@@ -1963,8 +1963,8 @@ rotate entire document."
 
 (when (and (running-on-hosts '("tengen"))
 	   (not (running-on-windows)))
-;;  (launch-program "transmission-daemon")
-)
+  ;;  (launch-program "transmission-daemon")
+  )
 
 (when (and (running-on-hosts '("hoshi" "tengen"))
 	   (not (running-on-windows))
@@ -1978,7 +1978,7 @@ rotate entire document."
   (launch-program "pocket-casts-linux")
   (launch-program "whatsapp-nativefier-dark")
   (launch-program "telegram-desktop")
-)
+  )
 
 (when (and (running-on-hosts '("joseki" "hoshi" "tengen"))
 	   (not (running-on-windows)))
@@ -1996,25 +1996,25 @@ rotate entire document."
 	   (not (running-on-windows)))
   (launch-program "unclutter"))
 
-   #+END_SRC
+#+END_SRC
 
 ** system monitoring
 
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package symon
   :ensure t
   :bind ("s-h" . symon-mode)
   :config (symon-mode))
-   #+END_SRC
+#+END_SRC
 ** emacs server
 
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (when (running-on-hosts '("tengen" "joseki" "atari" "hoshi" "tsranso-ThinkPad-T430s"))
   (server-start))
-   #+END_SRC
+#+END_SRC
 * eaf
 
-  #+begin_src emacs-lisp
+#+begin_src emacs-lisp
 (use-package eaf
   :load-path "~/.emacs.d/packages/emacs-application-framework"
   :custom
@@ -2028,10 +2028,10 @@ rotate entire document."
   (eaf-setq eaf-pdf-dark-mode "true"))
 
 
-  #+end_src
+#+end_src
 * org roam
 
-  #+begin_src emacs-lisp
+#+begin_src emacs-lisp
 (use-package org-roam
   :ensure t
   :hook
@@ -2045,4 +2045,4 @@ rotate entire document."
               :map org-mode-map
               (("C-c n i" . org-roam-insert))
               (("C-c n I" . org-roam-insert-immediate))))
-  #+end_src
+#+end_src
