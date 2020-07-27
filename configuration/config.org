@@ -183,6 +183,7 @@
   (org-agenda-include-diary t)
 
   (diary-file "~/.emacs.d/org/schedule.org")
+  (org-hide-emphasis-markers t)
   (org-agenda-use-time-grid nil)
   (org-archive-location "~/.emacs.d/org/archive.org::* From %s")
   (org-capture-after-finalize-hook nil)
@@ -216,6 +217,7 @@
   (org-confirm-babel-evaluate nil)
   (org-datetree-add-timestamp 'inactive)
   (org-default-notes-file "~/.emacs.d/org/todo.org")
+  (org-startup-indented t)
   (org-directory "~/.emacs.d/org")
   (org-hide-leading-stars t)
   (org-highlight-latex-and-related '(latex))
