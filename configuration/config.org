@@ -280,24 +280,23 @@ One last bootstrap, gotta load up use-package for good load times. This also add
   :init
   (setq org-brain-path "~/.emacs.d/org/brain")
   :bind ("C-c b" . #'helm-brain)
+  :custom
+  (org-brain-file-from-input-function
+	(lambda (x) (if (cdr x) (car x) my/default-org-brain-file)))
+  (my/default-org-brain-file "brain")
+  (org-brain-headline-entry-name-format-string "%2$s")
+  (org-brain-file-entries-use-title nil)
+  (org-brain-include-file-entries nil)
+  (org-brain-include-file-entries nil
+        org-brain-file-entries-use-title nil)
+  (org-brain-title-max-length 12)
+  (org-brain-visualize-default-choices 'all)
+  (org-id-locations-file "~/.emacs.d/org/brain/.org-id-locations")
+  (org-id-track-globally t)
   :config
-  (setq org-id-track-globally t)
-  (setq org-id-locations-file "~/.emacs.d/org/brain/.org-id-locations")
   (push '("b" "Brain" plain (function org-brain-goto-end)
           "* %i%?" :empty-lines 1)
-        org-capture-templates)
-  (setq org-brain-visualize-default-choices 'all)
-  (setq org-brain-title-max-length 12)
-  (setq org-brain-include-file-entries nil
-        org-brain-file-entries-use-title nil)
-  (setq org-brain-include-file-entries nil)
-  (setq org-brain-file-entries-use-title nil)
-  (setq org-brain-headline-entry-name-format-string "%2$s")
-
-  (setq my/default-org-brain-file "brain")
-
-  (setq org-brain-file-from-input-function
-	(lambda (x) (if (cdr x) (car x) my/default-org-brain-file))))
+        org-capture-templates))
 
 (use-package polymode :ensure t
   :config
@@ -359,10 +358,10 @@ the analysis phase:
   ;; C-u C-c j ⇒ Work journal ;; C-c C-j ⇒ Personal journal
   :ensure t
   :bind (("C-c j" . my/org-journal-new-entry))
-  :config
-  (setq org-journal-dir "~/.emacs.d/org/journal"
-	org-journal-file-type   'yearly
-	org-journal-file-format "Personal-%Y-%m-%d"))
+  :custom
+  (org-journal-dir "~/.emacs.d/org/journal")
+  (org-journal-file-type   'yearly)
+  (org-journal-file-format "Personal-%Y-%m-%d"))
 
 (defun org-journal-find-location ()
   ;; Open today's journal, but specify a non-nil prefix argument in order to
@@ -508,17 +507,16 @@ This needs the [[file:~/Documents/references.bib][references.bib]] file to be ge
 
 #+BEGIN_SRC emacs-lisp
 (use-package org-ref :ensure t :after org
+  :custom
+  (org-latex-pdf-process
+   '("latexmk -pdflatex='%latex -shell-escape -interaction nonstopmode' -pdf -bibtex -output-directory=%o -f %f")
+   ;; org-ref-pdf-directory "./references/"
+   org-ref-bibliography-notes "~/.emacs.d/org/reading.org"
+   org-ref-default-bibliography '("~/Documents/references.bib"))
+  (bibtex-completion-pdf-field "file")
+  (bibtex-completion-bibliography '("~/Documents/references.bib"))
+  (org-ref-open-pdf-function 'my/org-ref-open-pdf-at-point)
   :config
-  (setq org-latex-pdf-process
-	'("latexmk -pdflatex='%latex -shell-escape -interaction nonstopmode' -pdf -bibtex -output-directory=%o -f %f")
-	;; org-ref-pdf-directory "./references/"
-	org-ref-bibliography-notes "~/.emacs.d/org/reading.org"
-	org-ref-default-bibliography '("~/Documents/references.bib"))
-
-  (setq bibtex-completion-pdf-field "file")
-  (setq bibtex-completion-bibliography '("~/Documents/references.bib"))
-  
-  
   (defun my/org-ref-open-pdf-at-point ()
     "Open the pdf for bibtex key under point if it exists."
     (interactive)
@@ -527,8 +525,7 @@ This needs the [[file:~/Documents/references.bib][references.bib]] file to be ge
 	   (pdf-file (car (bibtex-completion-find-pdf key))))
       (if (file-exists-p pdf-file)
 	  (org-open-file pdf-file)
-	(message "No PDF found for %s" key))))
-  (setq org-ref-open-pdf-function 'my/org-ref-open-pdf-at-point))
+	(message "No PDF found for %s" key)))))
 #+END_SRC
 
 **** async src blocks
@@ -600,8 +597,9 @@ IRC is a really valuable resource that is being used less and less. Having peopl
 (use-package erc-twitch
   :disabled
   :after erc
+  :custom
+  (erc-twitch-networks (quote ("irc.chat.twitch.tv")))
   :config
-  (setq erc-twitch-networks (quote ("irc.chat.twitch.tv")))
   (erc-twitch-mode))
 #+END_SRC
 
@@ -820,8 +818,8 @@ Requires a few things installed - w3m, isync, and the [[file:~/.emacs.d/org/dotf
 
 (use-package w3m :ensure t
   :disabled
-  :config
-  (setq w3m-default-desplay-inline-images t))
+  :customize
+  (w3m-default-desplay-inline-images t))
 
 (use-package mu4e
   :bind ("C-M-m" . #'mu4e)
@@ -836,28 +834,28 @@ Requires a few things installed - w3m, isync, and the [[file:~/.emacs.d/org/dotf
   (mu4e-use-fancy-chars nil)
   (mu4e-headers-results-limit -1)
   ;; (mu4e-compose-in-new-frame t)
-
+  (mu4e-get-mail-command "mbsync -c ~/.mbsyncrc -a")
+  ;; mu4e-html2text-command "w3m -T text/html" ;; using the default mu4e-shr2text
+  (mu4e-view-prefer-html t)
+  (mu4e-update-interval 3000)
+  (mu4e-headers-auto-update t)
+  (mu4e-compose-signature-auto-include nil)
+  (mu4e-compose-format-flowed t)
+  ;; enable inline images
+  (mu4e-view-show-images t)
+  ;; don't save message to Sent Messages, IMAP takes care of this
+  (mu4e-sent-messages-behavior 'delete)
 
   :config
-  (setq mu4e-get-mail-command "mbsync -c ~/.mbsyncrc -a"
-	;; mu4e-html2text-command "w3m -T text/html" ;; using the default mu4e-shr2text
-	mu4e-view-prefer-html t
-	mu4e-update-interval 3000
-	mu4e-headers-auto-update t
-	mu4e-compose-signature-auto-include nil
-	mu4e-compose-format-flowed t)
+  
   ;; to view selected message in the browser, no signin, just html mail
   (add-to-list 'mu4e-view-actions
 	       '("ViewInBrowser" . mu4e-action-view-in-browser) t)
 
-  ;; enable inline images
-  (setq mu4e-view-show-images t)
   ;; use imagemagick, if available
   (when (fboundp 'imagemagick-register-types)
     (imagemagick-register-types))
 
-  ;; don't save message to Sent Messages, IMAP takes care of this
-  (setq mu4e-sent-messages-behavior 'delete)
 
   ;; (add-hook 'mu4e-view-mode-hook #'visual-line-mode)
 
@@ -1338,15 +1336,15 @@ This one lets us search and control playback
       (read-string "Enter message: ")
       (string-to-int
        (replace-regexp-in-string "[() -]" "" phone-number)))))
+   (bbdb-offer-save 1)
+   (bbdb-use-pop-up t)
+   (bbdb-electric-p t)
+   (bbdb-popup-target-lines  1)
   :config
   (bbdb-initialize 'gnus 'message)
   (bbdb-insinuate-message)
   (add-hook 'gnus-startup-hook 'bbdb-insinuate-gnus)
-  (setq
-   bbdb-offer-save 1
-   bbdb-use-pop-up t
-   bbdb-electric-p t
-   bbdb-popup-target-lines  1))
+  )
 #+END_SRC
 
 *** slime
@@ -1515,6 +1513,17 @@ Flashes the cursor when a long jump is acted
 (use-package ibuffer
   :ensure t
   :bind ("C-x C-b" . #'ibuffer)
+  :custom
+  (mp/ibuffer-collapsed-groups (list "helm" "tramp" "process bufs"))
+  (ibuffer-formats
+   '((mark modified read-only " "
+	   (name 18 18 :left :elide)
+	   " "
+	   (size-h 9 -1 :right)
+	   " "
+	   (mode 16 16 :left :elide)
+	   " "
+	   filename-and-process)))
   :config
   ;; Use human readable Size column instead of original one
   (define-ibuffer-column size-h
@@ -1524,19 +1533,6 @@ Flashes the cursor when a long jump is acted
      ((> (buffer-size) 100000) (format "%7.0fk" (/ (buffer-size) 1000.0)))
      ((> (buffer-size) 1000) (format "%7.1fk" (/ (buffer-size) 1000.0)))
      (t (format "%8d" (buffer-size)))))
-
-  ;; Modify the default ibuffer-formats
-  (setq ibuffer-formats
-	'((mark modified read-only " "
-		(name 18 18 :left :elide)
-		" "
-		(size-h 9 -1 :right)
-		" "
-		(mode 16 16 :left :elide)
-		" "
-		filename-and-process)))
-
-  (setq mp/ibuffer-collapsed-groups (list "helm" "tramp" "process bufs"))
 
   (defadvice ibuffer (after collapse-helm)
     (dolist (group mp/ibuffer-collapsed-groups)
