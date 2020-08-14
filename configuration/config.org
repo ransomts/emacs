@@ -174,6 +174,7 @@ One last bootstrap, gotta load up use-package for good load times. This also add
   (org-agenda-files
    
    '("/home/tsranso/.emacs.d/org/SoC-gcal.org" 
+     "/home/tsranso/.emacs.d/org/reading.org"
      "/home/tsranso/.emacs.d/org/ransomtim8078-gcal.org" 
      "/home/tsranso/.emacs.d/org/schedule.org" 
      "/home/tsranso/.emacs.d/org/scratch.org" 
@@ -495,6 +496,7 @@ Requires gnome desktop with [[https://extensions.gnome.org/extension/974/short-m
 (use-package org-noter
   :ensure t
   :custom
+  (org-noter-notes-window-location 'other-frame)
   (org-noter-auto-save-last-location t)
   (org-noter-always-create-frame nil)
   (org-noter-default-notes-file-names '("~/.emacs.d/org/reading.org"))
