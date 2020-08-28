@@ -261,6 +261,13 @@ One last bootstrap, gotta load up use-package for good load times. This also add
   (require 'org-crypt)
   (org-crypt-use-before-save-magic))
 #+END_SRC
+**** org krita
+
+#+begin_src emacs-lisp
+(use-package org-krita
+  :disabled
+  :load-path "packages/org-krita/")
+#+end_src
 
 **** org brain
 
