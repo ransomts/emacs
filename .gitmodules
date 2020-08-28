@@ -19,3 +19,6 @@
 [submodule "y"]
 	path = packages/org-roam
 	url = https://github.com/org-roam/org-roam.git
+[submodule "packages/org-krita"]
+	path = packages/org-krita
+	url = https://github.com/lepisma/org-krita.git
