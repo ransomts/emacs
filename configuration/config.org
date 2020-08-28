@@ -170,17 +170,9 @@ One last bootstrap, gotta load up use-package for good load times. This also add
 	 (("C-c r" . #'org-archive-subtree)
 	  ("C-c C-r" . #'org-archive-subtree))))
   :custom
+  ;; (org-agenda-inhibit-startup t)
   (org-pretty-entities t)
-  (org-agenda-files
-   
-   '("/home/tsranso/.emacs.d/org/SoC-gcal.org" 
-     "/home/tsranso/.emacs.d/org/reading.org"
-     "/home/tsranso/.emacs.d/org/ransomtim8078-gcal.org" 
-     "/home/tsranso/.emacs.d/org/schedule.org" 
-     "/home/tsranso/.emacs.d/org/scratch.org" 
-     "/home/tsranso/.emacs.d/org/todo.org" 
-     "/home/tsranso/.emacs.d/org/brain/brain.org"
-     "/home/tsranso/.emacs.d/org/tsranso-gcal.org"))
+  (org-agenda-files '("~/.emacs.d/org/schedule.org" "~/.emacs.d/org/roam"))
   (org-agenda-include-diary t)
 
   (diary-file "~/.emacs.d/org/schedule.org")
@@ -276,6 +268,7 @@ One last bootstrap, gotta load up use-package for good load times. This also add
 
 
 (use-package org-brain
+  :disabled
   ;;  :load-path "packages/org-brain"
   :ensure t
   :init
@@ -300,6 +293,7 @@ One last bootstrap, gotta load up use-package for good load times. This also add
         org-capture-templates))
 
 (use-package polymode :ensure t
+  :disabled
   :config
   (add-hook 'org-brain-visualize-mode-hook #'org-brain-polymode))
 
@@ -499,6 +493,7 @@ Requires gnome desktop with [[https://extensions.gnome.org/extension/974/short-m
   (org-noter-notes-window-location 'other-frame)
   (org-noter-auto-save-last-location t)
   (org-noter-always-create-frame nil)
+  (org-noter-hide-other nil)
   (org-noter-default-notes-file-names '("~/.emacs.d/org/reading.org"))
   (org-noter-notes-search-path '("~/.emacs.d/org/")))
 #+END_SRC
@@ -511,10 +506,10 @@ This needs the [[file:~/Documents/references.bib][references.bib]] file to be ge
 (use-package org-ref :ensure t :after org
   :custom
   (org-latex-pdf-process
-   '("latexmk -pdflatex='%latex -shell-escape -interaction nonstopmode' -pdf -bibtex -output-directory=%o -f %f")
-   ;; org-ref-pdf-directory "./references/"
-   org-ref-bibliography-notes "~/.emacs.d/org/reading.org"
-   org-ref-default-bibliography '("~/Documents/references.bib"))
+   '("latexmk -pdflatex='%latex -shell-escape -interaction nonstopmode' -pdf -bibtex -output-directory=%o -f %f"))
+  ;; org-ref-pdf-directory "./references/"
+  (org-ref-bibliography-notes "~/.emacs.d/org/reading.org")
+  (org-ref-default-bibliography '("~/Documents/references.bib"))
   (bibtex-completion-pdf-field "file")
   (bibtex-completion-bibliography '("~/Documents/references.bib"))
   (org-ref-open-pdf-function 'my/org-ref-open-pdf-at-point)
@@ -537,13 +532,12 @@ This needs the [[file:~/Documents/references.bib][references.bib]] file to be ge
   :after org)
 #+END_SRC
 
-**** bullets
+**** org superstar
 #+BEGIN_SRC emacs-lisp
-(use-package org-bullets
+(use-package org-superstar
   :ensure t
-  :hook (org-mode . org-bullets-mode))
+  :hook (org-mode . org-superstar-mode))
 #+END_SRC
-
 *** erc
 
 IRC is a really valuable resource that is being used less and less. Having people to answer random technical questions is so nice when working on something and nobody around can help.
@@ -1234,11 +1228,10 @@ For now I'm still choosing an org-mode scratch buffer but this is a todo.
 #+BEGIN_SRC emacs-lisp
 (when (>= (string-to-number emacs-version) 24.4)
   (use-package transmission
-    :disabled
     :ensure t
     :if (running-on-hosts '("joseki" "tengen"))
     :custom
-    (transmission-host "10.202.140.134")
+    (transmission-host "10.202.140.105")
     (transmission-refresh-modes
      '(transmission-mode
        transmission-files-mode
@@ -1309,14 +1302,26 @@ This one lets us search and control playback
 *** emms
 #+BEGIN_SRC emacs-lisp
 (use-package emms
-  :disabled
-  :if (running-on-hosts '("joseki" "tengen"))
+  :if (running-on-hosts '("tengen"))
   :ensure t
+  :bind ("C-c p" . emms-smart-browse)
   :custom
-  (emms-info-functions '(emms-info-mediainfo
-			 emms-info-mpd emms-info-cueinfo
-			 emms-info-ogginfo))
-  (emms-source-file-default-directory "~/Music/"))
+  ;; (emms-info-functions '(emms-info-mediainfo emms-info-functions emms-info-metaflac
+	;;		 emms-info-mpd emms-info-cueinfo
+	;;		 emms-info-ogginfo))
+  (emms-info-functions '(emms-info-mpd))
+  (emms-player-list '(emms-player-mpd))
+  (emms-source-file-default-directory "~/Music/")
+  (emms-player-mpd-server-name "localhost")
+  (emms-player-mpd-server-port "6600")
+  :config
+  (require 'emms-player-mpd)
+  ;;(require 'emms-setup)
+  ;;(emms-all)
+  ;;(emms-default-players)
+  (require 'emms-lyrics)
+  ;;(emms-lyrics 0)
+)
 #+END_SRC
 
 **** emms mediainfo
@@ -1442,71 +1447,7 @@ Everybody who wants to dive into lisp should use slime. Even if just for learnin
 	   ((agenda "")
 	    (alltodo ""))))))
 
-#+END_SRC
-
-* Moving around
-
-Here are just about my only modifications to ordinary bindings. Mostly just convienience and intution things.
-#+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-c u")   #'org-babel-detangle)
-(global-set-key (kbd "M-o")     #'other-window)
-(global-set-key (kbd "M-h")     #'backward-kill-word)                   
-(global-set-key (kbd "C-x k")   #'kill-this-buffer)                     
-(global-set-key (kbd "C-x C-k") #'kill-this-buffer)                     
-(global-set-key (kbd "C-h")     #'delete-backward-char)                 
-(global-set-key (kbd "C-x 2")                                           
-		(lambda ()                                              
-		  (interactive)                                         
-		  (split-window-vertically)                             
-		  (other-window 1)))
-(global-hl-line-mode t)
-#+END_SRC
-
-Flashes the cursor when a long jump is acted
-#+BEGIN_SRC emacs-lisp
-(use-package beacon
-  :if (display-graphic-p)
-  :ensure t
-  :config
-  (beacon-mode 1))
-#+END_SRC
-
-** focus follows mouse
-#+BEGIN_SRC emacs-lisp
-(setq mouse-autoselect-window t
-      focus-follows-mouse t)
-#+END_SRC
-
-** which key
-#+BEGIN_SRC emacs-lisp
-(use-package which-key
-  :ensure t
-  :custom (which-key-idle-delay 3.0)
-  :config (which-key-mode))
-#+END_SRC
-
-** smartparens
-
-#+BEGIN_SRC emacs-lisp
-(use-package smartparens
-  :ensure t
-  :hook (prog-mode . turn-off-smartparens-strict-mode))
-#+END_SRC
-
-** Hide show minor mode
-
-#+BEGIN_SRC emacs-lisp
-(use-package hs-minor-mode
-  :hook prog-mode
-  :bind (:map hs-minor-mode-map
-	      ("C-c b h" . hs-hide-block)
-	      ("C-c s" . hs-show-block)
-	      ("C-c h" . hs-hide-block)
-	      ("C-c b s" . hs-show-block)
-	      ("C-c C-b h" . hs-hide-block)
-	      ("C-c C-b s" . hs-show-block)))
-#+END_SRC
-
+#+END
 * Buffer Management
 
 ** ibuffer
@@ -1565,10 +1506,10 @@ Flashes the cursor when a long jump is acted
       ("process bufs" (mode . comint-mode))
       ("PDF" (mode . pdf-view-mode))
       ("compilations" (mode . Compilation))
-      ;; ("transmission" (or
-      ;; (mode . Transmission)
-      ;; (mode . Transmission-Info)
-      ;; (mode . Transmission-Files))
+      ("transmission" (or
+		       (mode . Transmission)
+		       (mode . Transmission-Info)
+		       (mode . Transmission-Files))
       ("helm" (mode . helm-major-mode))
       ("compilation" (mode . compilation-mode))
       ("C files" (mode . c-mode))
@@ -1598,7 +1539,7 @@ Flashes the cursor when a long jump is acted
 	   (size-h 9 -1 :right)
 	   " "
 	   (mode 16 16 :left :elide)
-	   " " filename-and-process))))
+	   " " filename-and-process)))))
 #+END_SRC
 
 *** ibuffer hooks
@@ -1745,8 +1686,8 @@ Gotta use the few async operations we have
 	;; '("--new-window")
 	;; '("")
 	))
-(setq browse-url-browser-function 'eaf-open-browser)
-(defalias 'browse-web #'eaf-open-browser)
+(setq browse-url-browser-function 'browse-url-firefox)
+(defalias 'browse-web #'browse-url-firefox)
 
 #+END_SRC
 
@@ -2014,6 +1955,7 @@ I use this config across several machines, depending which machine and what netw
 
 #+begin_src emacs-lisp
 (use-package eaf
+  :disabled
   :load-path "~/.emacs.d/packages/emacs-application-framework"
   :custom
   (eaf-find-alternate-file-in-dired t)
@@ -2037,10 +1979,102 @@ I use this config across several machines, depending which machine and what netw
   :custom
   (org-roam-directory "~/.emacs.d/org/roam/")
   :bind (:map org-roam-mode-map
-              (("C-c n l" . org-roam)
-               ("C-c n f" . org-roam-find-file)
-               ("C-c n g" . org-roam-graph-show))
+              (("C-z l" . org-roam)
+               ("C-z f" . org-roam-find-file)
+               ("C-z g" . org-roam-graph))
               :map org-mode-map
-              (("C-c n i" . org-roam-insert))
-              (("C-c n I" . org-roam-insert-immediate))))
+              (("C-z i" . org-roam-insert))
+              (("C-z I" . org-roam-insert-immediate))))
+
+(use-package org-roam-protocol
+  :after org-protocol)
+
+(use-package org-roam-bibtex
+  :disabled
+  :ensure t
+  :after (org-roam)
+  :hook (org-roam-mode . org-roam-bibtex-mode)
+  :config
+  (setq org-roam-bibtex-preformat-keywords
+	'("=key=" "title" "url" "file" "author-or-editor" "keywords"))
+  (setq orb-templates
+        '(("r" "ref" plain (function org-roam-capture--get-point)
+           ""
+           :file-name "${slug}"
+           :head "#+TITLE: ${=key=}: ${title}\n#+ROAM_KEY: ${ref}
+
+- tags ::
+- keywords :: ${keywords}
+
+\n* ${title}\n  :PROPERTIES:\n  :Custom_ID: ${=key=}\n  :URL: ${url}\n  :AUTHOR: ${author-or-editor}\n  :NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n  :NOTER_PAGE: \n  :END:\n\n"
+
+           :unnarrowed t))))
 #+end_src
+* Moving around
+
+Here are just about my only modifications to ordinary bindings. Mostly just convienience and intution things.
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-c u")   #'org-babel-detangle)
+(global-set-key (kbd "M-o")     #'other-window)
+(global-set-key (kbd "M-h")     #'backward-kill-word)
+(global-set-key (kbd "C-x k")   #'kill-this-buffer)
+(global-set-key (kbd "C-x C-k") #'kill-this-buffer)
+(global-set-key (kbd "C-h")     #'delete-backward-char)
+(global-set-key (kbd "C-x 2")
+		(lambda ()
+		  (interactive)
+		  (split-window-vertically)
+		  (other-window 1)))
+(global-hl-line-mode t)
+#+END_SRC
+
+#+begin_src emacs-lisp
+(when (fboundp 'windmove-default-keybindings)
+  (windmove-default-keybindings))
+#+end_src
+
+Flashes the cursor when a long jump is acted
+#+BEGIN_SRC emacs-lisp
+(use-package beacon
+  :if (display-graphic-p)
+  :ensure t
+  :config
+  (beacon-mode 1))
+#+END_SRC
+
+** focus follows mouse
+#+BEGIN_SRC emacs-lisp
+(setq mouse-autoselect-window t
+      focus-follows-mouse t)
+#+END_SRC
+
+** which key
+#+BEGIN_SRC emacs-lisp
+(use-package which-key
+  :ensure t
+  :custom (which-key-idle-delay 3.0)
+  :config (which-key-mode))
+#+END_SRC
+
+** smartparens
+
+#+BEGIN_SRC emacs-lisp
+(use-package smartparens
+  :ensure t
+  :hook (prog-mode . turn-off-smartparens-strict-mode))
+#+END_SRC
+
+** Hide show minor mode
+
+#+BEGIN_SRC emacs-lisp
+(use-package hs-minor-mode
+  :hook prog-mode
+  :bind (:map hs-minor-mode-map
+	      ("C-c b h" . hs-hide-block)
+	      ("C-c s" . hs-show-block)
+	      ("C-c h" . hs-hide-block)
+	      ("C-c b s" . hs-show-block)
+	      ("C-c C-b h" . hs-hide-block)
+	      ("C-c C-b s" . hs-show-block)))
+#+END_SRC
+
