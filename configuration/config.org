@@ -825,6 +825,7 @@ Requires a few things installed - w3m, isync, and the [[file:~/.emacs.d/org/dotf
   (w3m-default-desplay-inline-images t))
 
 (use-package mu4e
+  :if (running-on-hosts '("joseki" "atari" "tengen"))
   :bind ("C-M-m" . #'mu4e)
   :custom
   (mu4e-maildir (expand-file-name "~/.emacs.d/Maildir"))
