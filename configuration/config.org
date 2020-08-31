@@ -890,27 +890,7 @@ Requires a few things installed - w3m, isync, and the [[file:~/.emacs.d/org/dotf
 	      (org-mu4e-compose-org-mode)
 	      (use-hard-newlines -1)
 	      (flyspell-mode)))
-  (mu4e-update-mail-and-index t))
-
-(require 'smtpmail)
-
-;;set up queue for offline email
-;;use mu mkdir  ~/Maildir/acc/queue to set up first
-(setq smtpmail-queue-mail nil)  ;; start in normal mode
-
-
-(setq message-kill-buffer-on-exit t)
-
-(use-package org-mu4e
-  :load-path "packages/mu/mu4e")
-
-;; convert org mode to HTML automatically
-(setq org-mu4e-convert-to-html t)
-
-;;from vxlabs config
-;; show full addresses in view message (instead of just names)
-;; toggle per name with M-RET
-(setq mu4e-view-show-addresses 't)
+  (mu4e-update-mail-and-index t)
 
 ;; mu4e-context
 (setq mu4e-contexts
@@ -980,7 +960,29 @@ Requires a few things installed - w3m, isync, and the [[file:~/.emacs.d/org/dotf
 					    ("/tsranso/[Gmail]/All Mail"  . ?a)
 					    ("/tsranso/[Gmail]/Starred"   . ?r)
 					    ("/tsranso/[Gmail]/Drafts"    . ?d)
-					    ))))))
+					    )))))))
+
+(require 'smtpmail)
+
+;;set up queue for offline email
+;;use mu mkdir  ~/Maildir/acc/queue to set up first
+(setq smtpmail-queue-mail nil)  ;; start in normal mode
+
+
+(setq message-kill-buffer-on-exit t)
+
+(use-package org-mu4e
+  :load-path "packages/mu/mu4e")
+
+;; convert org mode to HTML automatically
+(setq org-mu4e-convert-to-html t)
+
+;;from vxlabs config
+;; show full addresses in view message (instead of just names)
+;; toggle per name with M-RET
+(setq mu4e-view-show-addresses 't)
+
+
 #+END_SRC
 
 **** maildir summary
