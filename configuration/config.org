@@ -519,7 +519,7 @@ This needs the [[file:~/Documents/references.bib][references.bib]] file to be ge
   (org-ref-default-bibliography '("~/Documents/references.bib"))
   (bibtex-completion-pdf-field "file")
   (bibtex-completion-bibliography '("~/Documents/references.bib"))
-  (org-ref-open-pdf-function 'my/org-ref-open-pdf-at-point)
+  (org-ref-open-pdf-function #'org-ref-open-pdf-at-point)
   :config
   (defun my/org-ref-open-pdf-at-point ()
     "Open the pdf for bibtex key under point if it exists."
@@ -1223,6 +1223,10 @@ For now I'm still choosing an org-mode scratch buffer but this is a todo.
 #+BEGIN_SRC emacs-lisp
 (use-package dashboard
   :ensure t
+  :bind (:map dashboard-mode-map
+	      ("v" .  #'vterm)
+	      ("e" . #'eshell)
+	      ("d" . #'dired))
   ;; :if (getenv "DESKTOP_SESSION")
   :config
   (dashboard-setup-startup-hook)
