@@ -1980,6 +1980,13 @@ I use this config across several machines, depending which machine and what netw
   :hook
   (after-init . org-roam-mode)
   :custom
+  (org-roam-capture-templates
+   '(("n" "note" plain (function org-roam--capture-get-point)
+      "%?"
+      ;; :file-name "%(format-time-string \"%y%m%d\" (current-time) t)-${slug}"
+      :file-name "${slug}"
+      :head "#+TITLE: ${title}\n#+CREATED: %(org-insert-time-stamp (current-time) t t)\n#+MODIFIED: %(org-insert-time-stamp (current-time) t t)\n\n- tags :: "
+      :unnarrowed t t)))
   (org-roam-directory "~/.emacs.d/org/roam/")
   :bind (:map org-roam-mode-map
               (("C-z l" . org-roam)
