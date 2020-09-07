@@ -494,6 +494,23 @@ Requires gnome desktop with [[https://extensions.gnome.org/extension/974/short-m
 		 "\\documentclass{mla}")))
 #+end_src
 
+
+**** org-pdftools
+
+Looks neat but requires org 9.4, currently at 9.3.6
+#+begin_src emacs-lisp
+(use-package org-pdftools
+  :disabled
+  :hook (org-load . org-pdftools-setup-link))
+
+(use-package org-noter-pdftools
+  :disabled
+  :after org-noter
+  :config
+  (with-eval-after-load 'pdf-annot
+    (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
+#+end_src
+
 **** org-noter
 #+BEGIN_SRC emacs-lisp
 (use-package org-noter
