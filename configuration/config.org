@@ -171,6 +171,8 @@ One last bootstrap, gotta load up use-package for good load times. This also add
 	  ("C-c C-r" . #'org-archive-subtree))))
   :custom
   ;; (org-agenda-inhibit-startup t)
+  (org-image-actual-width '(650))
+  (org-startup-with-inline-images t)
   (org-pretty-entities t)
   (org-agenda-files '("~/.emacs.d/org/schedule.org" "~/.emacs.d/org/roam"))
   (org-agenda-include-diary t)
@@ -234,7 +236,8 @@ One last bootstrap, gotta load up use-package for good load times. This also add
       :background "darkseagreen2"
       :weight bold)))
   (org-todo-keywords '((sequence "TODO" "SOON" "DONE")))
-
+  :hook
+       (before-save . zp/org-set-last-modified)
   :config
   (require 'org-tempo)
   (org-babel-do-load-languages
@@ -242,6 +245,7 @@ One last bootstrap, gotta load up use-package for good load times. This also add
    '(
      (awk . t)
      (C . t)
+     (calc . t)
      (ditaa . t)
      (dot . t)
      (emacs-lisp . t)
@@ -250,7 +254,6 @@ One last bootstrap, gotta load up use-package for good load times. This also add
      (java . t)
      (latex . t)
      (lisp . t)
-     (makefile . t)
      (makefile . t)
      (python . t)
      (scheme . t)
@@ -265,7 +268,6 @@ One last bootstrap, gotta load up use-package for good load times. This also add
 
 #+begin_src emacs-lisp
 (use-package org-krita
-  :disabled
   :load-path "packages/org-krita/")
 #+end_src
 
@@ -519,7 +521,7 @@ This needs the [[file:~/Documents/references.bib][references.bib]] file to be ge
   (org-ref-default-bibliography '("~/Documents/references.bib"))
   (bibtex-completion-pdf-field "file")
   (bibtex-completion-bibliography '("~/Documents/references.bib"))
-  (org-ref-open-pdf-function #'org-ref-open-pdf-at-point)
+  (org-ref-open-pdf-function #'my/org-ref-open-pdf-at-point)
   :config
   (defun my/org-ref-open-pdf-at-point ()
     "Open the pdf for bibtex key under point if it exists."
@@ -1220,8 +1222,10 @@ rotate entire document."
 
 This dashboard pairs really well with exwm but has been a bit of a pain to set up.
 For now I'm still choosing an org-mode scratch buffer but this is a todo.
+This POS is too hard to extend
 #+BEGIN_SRC emacs-lisp
 (use-package dashboard
+  :disabled
   :ensure t
   :bind (:map dashboard-mode-map
 	      ("v" .  #'vterm)
@@ -1985,8 +1989,8 @@ I use this config across several machines, depending which machine and what netw
       "%?"
       ;; :file-name "%(format-time-string \"%y%m%d\" (current-time) t)-${slug}"
       :file-name "${slug}"
-      :head "#+TITLE: ${title}\n#+CREATED: %(org-insert-time-stamp (current-time) t t)\n#+MODIFIED: %(org-insert-time-stamp (current-time) t t)\n\n- tags :: "
-      :unnarrowed t t)))
+      :head "#+TITLE: ${title}\n#+CREATED: %(org-insert-time-stamp (current-time) t t)\n#+MODIFIED: %(org-insert-time-stamp (current-time) t t)\n#+ROAM_ALIAS: \n\n- tags :: "
+      :unnarrowed t)))
   (org-roam-directory "~/.emacs.d/org/roam/")
   :bind (:map org-roam-mode-map
               (("C-z l" . org-roam)
@@ -2019,7 +2023,73 @@ I use this config across several machines, depending which machine and what netw
 \n* ${title}\n  :PROPERTIES:\n  :Custom_ID: ${=key=}\n  :URL: ${url}\n  :AUTHOR: ${author-or-editor}\n  :NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n  :NOTER_PAGE: \n  :END:\n\n"
 
            :unnarrowed t))))
+
+(use-package org-roam-server
+  :ensure t
+  :config
+  (setq org-roam-server-host "127.0.0.1"
+        org-roam-server-port 9090
+        org-roam-server-authenticate nil
+        org-roam-server-export-inline-images t
+        org-roam-server-serve-files nil
+        org-roam-server-served-file-extensions '("pdf" "mp4" "ogv")
+        org-roam-server-network-poll t
+        org-roam-server-network-arrows nil
+        org-roam-server-network-label-truncate t
+        org-roam-server-network-label-truncate-length 60
+        org-roam-server-network-label-wrap-length 20))
 #+end_src
+
+#+begin_src emacs-lisp
+(defun zp/org-find-time-file-property (property &optional anywhere)
+    "Return the position of the time file PROPERTY if it exists.
+When ANYWHERE is non-nil, search beyond the preamble."
+    (save-excursion
+      (goto-char (point-min))
+      (let ((first-heading
+             (save-excursion
+               (re-search-forward org-outline-regexp-bol nil t))))
+        (when (re-search-forward (format "^#\\+%s:" property)
+                                 (if anywhere nil first-heading)
+                                 t)
+          (point)))))
+
+  (defun zp/org-has-time-file-property-p (property &optional anywhere)
+    "Return the position of time file PROPERTY if it is defined.
+As a special case, return -1 if the time file PROPERTY exists but
+is not defined."
+    (when-let ((pos (zp/org-find-time-file-property property anywhere)))
+      (save-excursion
+        (goto-char pos)
+        (if (and (looking-at-p " ")
+                 (progn (forward-char)
+                        (org-at-timestamp-p 'lax)))
+            pos
+          -1))))
+
+  (defun zp/org-set-time-file-property (property &optional anywhere pos)
+    "Set the time file PROPERTY in the preamble.
+When ANYWHERE is non-nil, search beyond the preamble.
+If the position of the file PROPERTY has already been computed,
+it can be passed in POS."
+    (when-let ((pos (or pos
+                        (zp/org-find-time-file-property property))))
+      (save-excursion
+        (goto-char pos)
+        (if (looking-at-p " ")
+            (forward-char)
+          (insert " "))
+        (delete-region (point) (line-end-position))
+        (let* ((now (format-time-string "[%Y-%m-%d %a %H:%M]")))
+          (insert now)))))
+
+  (defun zp/org-set-last-modified ()
+    "Update the LAST_MODIFIED file property in the preamble."
+    (when (derived-mode-p 'org-mode)
+      (zp/org-set-time-file-property "LAST_MODIFIED")))
+#+end_src
+
+
 * Moving around
 
 Here are just about my only modifications to ordinary bindings. Mostly just convienience and intution things.
