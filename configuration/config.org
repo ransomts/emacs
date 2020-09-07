@@ -169,7 +169,42 @@ One last bootstrap, gotta load up use-package for good load times. This also add
    (:map org-mode-map
 	 (("C-c r" . #'org-archive-subtree)
 	  ("C-c C-r" . #'org-archive-subtree))))
+  ;; :custom-face ; can I remove the inactive background?
+  ;; (org-level-1 ((,class (:inherit outline-1
+  ;; 				  :weight bold
+  ;; 				  :box (:style released-button)
+  ;; 				  :height 1.3))))
   :custom
+  (org-export-global-macros
+   '(
+     ("bgcolor" . "@@html:<div style=\"background-color: $1;\">$2</div>@@")
+     ("clearpage" . "@@latex:\\clearpage@@@@odt:<text:p text:style-name=\"PageBreak\"/>@@")
+     ("color" . "@@html:<span style=\"color: $1\">$2</span>@@@@latex:\\textcolor{$1}{$2}@@@@odt:<text:span text:style-name=\"$1\">$2</text:span>@@")
+     ("fixme" . "@@html:<span class=\"fixme\">FIXME</span>@@")
+     ("highlight" . "@@html:<span style=\"background-color: $1;\">$2</span>@@")
+     ("hl" . "{{{highlight(#FFFF00,$1)}}}")
+     ("loremipsum" . "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.")
+     ("newline" . "@@latex:\\hspace{0pt}\\@@ @@html:<br>@@")
+     ("kbd" . "@@html:<kbd>@@$1@@html:</kbd>@@")
+     ("dvipng-when-odt" . "(eval (if (org-export-derived-backend-p org-export-current-backend 'odt) \"#+OPTIONS: tex:dvipng\" ))")
+     ("if-latex-else" . "(eval (if (org-export-derived-backend-p org-export-current-backend 'latex) \"$1\" \"$2\"))")
+     ("style" . "(eval (concat \"#+HTML_HEAD_EXTRA: <style></style>\"))")
+     ("image" . "\\includegraphics{$1}")
+     ("begin_info" . "@@html:<div class=\"info\"><p>@@")
+     ("end_info" . "@@html:</p></div>@@")
+     ("BeginMiniPage" . "@<div style=\"border:1px solid #aaaaaa;padding:10px;width:780px;margin-left:auto;margin-right:auto;\">")
+     ("EndMiniPage" . "@</div>")
+     ("begin_note" . "@@html:<div class=\"note\"><p>@@")
+     ("end_note" . "@@html:</p></div>@@")
+     ("begin_panel" . "@@html:<div class=\"panel\"><p>@@")
+     ("end_panel" . "@@html:</p></div>@@")
+     ("begin_tip" . "@@html:<div class=\"tip\"><p>@@")
+     ("end_tip" . "@@html:</p></div>@@")
+     ("begin_warning" . "@@html:<div class=\"warning\"><p>@@")
+     ("end_warning" . "@@html:</p></div>@@")
+     ("toc" . "#+toc: headlines $1")
+     ("twitter-share-link-button" . "@@html:<script src=\"http://platform.twitter.com/widgets.js\"></script><a href=\"https://twitter.com/share\" class=\"twitter-share-button\" data-via=\"$1\">Tweet</a>@@")
+     ))
   ;; (org-agenda-inhibit-startup t)
   (org-image-actual-width '(650))
   (org-startup-with-inline-images t)
@@ -237,7 +272,7 @@ One last bootstrap, gotta load up use-package for good load times. This also add
       :weight bold)))
   (org-todo-keywords '((sequence "TODO" "SOON" "DONE")))
   :hook
-       (before-save . zp/org-set-last-modified)
+  (before-save . zp/org-set-last-modified)
   :config
   (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
   (require 'org-tempo)
@@ -1086,6 +1121,7 @@ Switch between the light and dark modes on sunrise and sunset. Lets me know what
 #+BEGIN_SRC emacs-lisp
 (use-package theme-changer
   :unless (running-on-hosts '("login001"))
+  :load-path "~/.emacs.d/packages/theme-changer"
   :ensure t
   :custom
   (calendar-latitude 34.67)
@@ -1421,21 +1457,6 @@ Everybody who wants to dive into lisp should use slime. Even if just for learnin
   :custom
   (inferior-lisp-program "sbcl")
   (slime-contribs '(slime-fancy)))
-#+END_SRC
-
-*** space mode line
-#+BEGIN_SRC emacs-lisp
-(use-package spaceline
-  :ensure t)
-
-(use-package spaceline-config
-  :ensure spaceline
-  :config
-  (spaceline-helm-mode 1)
-  (spaceline-emacs-theme)
-  (spaceline-toggle-org-clock-on)
-  (spaceline-toggle-minor-modes-off)
-  (spaceline-toggle-version-control-off))
 #+END_SRC
 
 *** space mode line
@@ -2129,7 +2150,6 @@ it can be passed in POS."
     (when (derived-mode-p 'org-mode)
       (zp/org-set-time-file-property "LAST_MODIFIED")))
 #+end_src
-
 
 * Moving around
 
