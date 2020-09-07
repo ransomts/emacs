@@ -173,10 +173,10 @@ One last bootstrap, gotta load up use-package for good load times. This also add
   ;; (org-agenda-inhibit-startup t)
   (org-image-actual-width '(650))
   (org-startup-with-inline-images t)
+  (org-tags-column 5)
   (org-pretty-entities t)
   (org-agenda-files '("~/.emacs.d/org/schedule.org" "~/.emacs.d/org/roam"))
   (org-agenda-include-diary t)
-
   (diary-file "~/.emacs.d/org/schedule.org")
   (org-hide-emphasis-markers t)
   (org-agenda-use-time-grid nil)
@@ -239,6 +239,7 @@ One last bootstrap, gotta load up use-package for good load times. This also add
   :hook
        (before-save . zp/org-set-last-modified)
   :config
+  (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
   (require 'org-tempo)
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -562,7 +563,30 @@ This needs the [[file:~/Documents/references.bib][references.bib]] file to be ge
 #+BEGIN_SRC emacs-lisp
 (use-package org-superstar
   :ensure t
-  :hook (org-mode . org-superstar-mode))
+  :hook (org-mode . org-superstar-mode)
+  :config
+;;; Titles and Sections
+  ;; hide #+TITLE:
+  (setq org-hidden-keywords '(title))
+  ;; set basic title font
+  (set-face-attribute 'org-level-8 nil :weight 'bold :inherit 'default)
+  ;; Low levels are unimportant => no scaling
+  (set-face-attribute 'org-level-7 nil :inherit 'org-level-8)
+  (set-face-attribute 'org-level-6 nil :inherit 'org-level-8)
+  (set-face-attribute 'org-level-5 nil :inherit 'org-level-8)
+  (set-face-attribute 'org-level-4 nil :inherit 'org-level-8)
+  ;; Top ones get scaled the same as in LaTeX (\large, \Large, \LARGE)
+  (set-face-attribute 'org-level-3 nil :inherit 'org-level-8 :height 1.2) ;\large
+  (set-face-attribute 'org-level-2 nil :inherit 'org-level-8 :height 1.44) ;\Large
+  (set-face-attribute 'org-level-1 nil :inherit 'org-level-8 :height 1.728) ;\LARGE
+  ;; Only use the first 4 styles and do not cycle.
+  (setq org-cycle-level-faces nil)
+  (setq org-n-level-faces 4)
+  ;; Document Title, (\huge)
+  (set-face-attribute 'org-document-title nil
+                      :height 2.074
+                      :foreground 'unspecified
+                      :inherit 'org-level-8))
 #+END_SRC
 *** erc
 
