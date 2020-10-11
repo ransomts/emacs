@@ -218,7 +218,7 @@ One last bootstrap, gotta load up use-package for good load times. This also add
   (org-archive-location "~/.emacs.d/org/archive.org::* From %s")
   (org-capture-after-finalize-hook nil)
   (org-capture-templates '(("t" "Todo" entry
-			    (file+headline "~/.emacs.d/org/todo.org" "Tasks")
+			    (file+headline "~/.emacs.d/org/schedule.org" "Tasks")
 			    "* TODO %?\nEntered on %T\n%i\n%a")
 			   ("e" "Event" entry
 			    (file "~/.emacs.d/org/schedule.org")
@@ -238,6 +238,15 @@ One last bootstrap, gotta load up use-package for good load times. This also add
   (org-return-follows-link t)
   (org-clock-sound t)
   (org-log-note-clock-out t)
+  ;; (org-log-note-headings '((done        . "CLOSING NOTE %t")
+  ;;                          (state       . "State %-12s from %-12S %t")
+  ;;                          (note        . "Note taken on %t")
+  ;;                          (reschedule  . "Schedule changed on %t: %S -> %s")
+  ;;                          (delschedule . "Not scheduled, was %S on %t")
+  ;;                          (redeadline  . "Deadline changed on %t: %S -> %s")
+  ;;                          (deldeadline . "Removed deadline, was %S on %t")
+  ;;                          (refile      . "Refiled on %t")
+  ;;                          (clock-out   . "")))
   (org-clock-in-resume t)
   (org-clock-out-remove-zero-time-clocks t)
   (org-clock-out-when-done t)
@@ -252,6 +261,9 @@ One last bootstrap, gotta load up use-package for good load times. This also add
   (org-hide-leading-stars t)
   (org-highlight-latex-and-related '(latex))
   (org-log-done 'time)
+  (org-log-into-drawer t)
+  (org-log-redeadline nil)
+  (org-log-reschedule nil)
   (org-outline-path-complete-in-steps nil)
   (org-preview-latex-image-directory "~/.emacs.d/ltxpng/")
   (org-refile-targets '((org-agenda-files :maxlevel . 2)))
@@ -270,7 +282,18 @@ One last bootstrap, gotta load up use-package for good load times. This also add
       :foreground "darkseagreen4"
       :background "darkseagreen2"
       :weight bold)))
-  (org-todo-keywords '((sequence "TODO" "SOON" "DONE")))
+  ;; (org-todo-keywords '((sequence "TODO" "SOON" "DONE")))
+  (org-todo-keywords
+   '((sequence "TODO(t)"
+	       "NEXT(n)"
+	       "STARTED(s)"
+	       "WAITING(w@/!)"
+	       "SOMEDAY(S!)"
+	       "|"
+	       "DONE(d!/!)"
+	       "CANCELLED(c@/!)")))
+  (org-global-properties '(("LOGGING" . "TODO(!) WAIT(!) DONE(!) CANCELED(!)")))
+;;     '((sequence "TODO(t)" "SOON" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELED(c@)")))
   :hook
   (before-save . zp/org-set-last-modified)
   :config
@@ -572,10 +595,41 @@ This needs the [[file:~/Documents/references.bib][references.bib]] file to be ge
   ;; org-ref-pdf-directory "./references/"
   (org-ref-bibliography-notes "~/.emacs.d/org/reading.org")
   (org-ref-default-bibliography '("~/Documents/references.bib"))
-  (bibtex-completion-pdf-field "file")
   (bibtex-completion-bibliography '("~/Documents/references.bib"))
+  (bibtex-completion-pdf-field "file")
   (org-ref-open-pdf-function #'my/org-ref-open-pdf-at-point)
+;;  (org-ref-notes-function #'my/org-ref-notes-function-one-file)
+  (org-ref-note-title-format
+   "** TODO %y - %t
+ :PROPERTIES:
+  :Custom_ID: %k
+  :AUTHOR: %9a
+  :NOTER_DOCUMENT: %F
+  :JOURNAL: %j
+  :YEAR: %y
+  :VOLUME: %v
+  :PAGES: %p
+  :DOI: %D
+  :URL: %U
+ :END:
+")
   :config
+  ;; (defun  my/org-ref-notes-function-one-file ()
+  ;;   "Open the pdf for bibtex key under point if it exists."
+  ;;   (interactive)
+  ;;   (let* ((results (org-ref-get-bibtex-key-and-file))
+  ;;          (key (car results))
+  ;; 	   (pdf-file (car (bibtex-completion-find-pdf key))))
+
+  ;;     (if (file-exists-p pdf-file)
+  ;;         (progn
+  ;;           (find-file-other-window pdf-file)
+  ;;           (org-noter))
+  ;;       (message "no pdf found for %s" key))))
+
+  ;; (add-to-list 'org-ref-helm-user-candidates
+  ;;              '("Org-Noter notes" . org-ref-noter-at-point))
+
   (defun my/org-ref-open-pdf-at-point ()
     "Open the pdf for bibtex key under point if it exists."
     (interactive)
@@ -583,8 +637,10 @@ This needs the [[file:~/Documents/references.bib][references.bib]] file to be ge
 	   (key (car results))
 	   (pdf-file (car (bibtex-completion-find-pdf key))))
       (if (file-exists-p pdf-file)
-	  (org-open-file pdf-file)
-	(message "No PDF found for %s" key)))))
+	  ;; (org-open-file pdf-file)
+	  (find-file pdf-file)
+	(message "No PDF found for %s" key))))
+  :bind ("C-x p" . #'helm-bibtex))
 #+END_SRC
 
 **** async src blocks
@@ -707,7 +763,8 @@ IRC is a really valuable resource that is being used less and less. Having peopl
 **** dired du
 #+BEGIN_SRC emacs-lisp
 (use-package dired-du
-  :ensure t
+  :disabled
+  ;; :ensure t
   :after dired)
 #+END_SRC
 
@@ -873,7 +930,7 @@ Use M-x =venv-workon= to activate virtualenvs and M-x =venv-deactivate= deactiva
 
 *** disk usage
 #+begin_src emacs-lisp
-(use-package disk-usage :ensure t)
+(use-package disk-usage :disabled) ;; :ensure t)
 #+end_src
 *** haskell mode
 #+BEGIN_SRC emacs-lisp
@@ -1755,8 +1812,8 @@ Gotta use the few async operations we have
 	;; '("--new-window")
 	;; '("")
 	))
-(setq browse-url-browser-function 'browse-url-firefox)
-(defalias 'browse-web #'browse-url-firefox)
+;;(setq browse-url-browser-function 'browse-url-firefox)
+;;(defalias 'browse-web #'browse-url-firefox)
 
 #+END_SRC
 
@@ -2062,6 +2119,10 @@ I use this config across several machines, depending which machine and what netw
               (("C-z i" . org-roam-insert))
               (("C-z I" . org-roam-insert-immediate))))
 
+(require 'org-protocol)
+(use-package org-protocol)
+
+
 (use-package org-roam-protocol
   :after org-protocol)
 
@@ -2099,7 +2160,8 @@ I use this config across several machines, depending which machine and what netw
         org-roam-server-network-arrows nil
         org-roam-server-network-label-truncate t
         org-roam-server-network-label-truncate-length 60
-        org-roam-server-network-label-wrap-length 20))
+        org-roam-server-network-label-wrap-length 20)
+  (org-roam-server-mode))
 #+end_src
 
 #+begin_src emacs-lisp

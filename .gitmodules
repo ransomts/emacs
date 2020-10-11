@@ -22,3 +22,6 @@
 [submodule "packages/org-krita"]
 	path = packages/org-krita
 	url = https://github.com/lepisma/org-krita.git
+[submodule "packages/theme-changer"]
+	path = packages/theme-changer
+	url = https://github.com/cnsunyour/theme-changer.git
