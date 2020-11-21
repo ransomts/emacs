@@ -34,7 +34,7 @@ And these are the functions to determine the workspace mappings to physical scre
 (defun number-to-monitor (x)
   (let ((y (- x 1))
 	(host (shell-command-to-string "hostname")))
-    (cond ((string= host "tengen\n")
+    (cond ((string= host "wampus\n")
 	   (nth y
 		'("HDMI-A-0" "DisplayPort-0" "DisplayPort-3" "DisplayPort-1" "DisplayPort-4" "DVI-D-0")
 		))
@@ -158,6 +158,7 @@ One last bootstrap, gotta load up use-package for good load times. This also add
    ("<C-M-backspace>" . backward-kill-sexp))
   :config (enable-paredit-mode))
 #+END_SRC
+
 *** org
 #+BEGIN_SRC emacs-lisp
 (use-package org
@@ -268,7 +269,8 @@ One last bootstrap, gotta load up use-package for good load times. This also add
   (org-preview-latex-image-directory "~/.emacs.d/ltxpng/")
   (org-refile-targets '((org-agenda-files :maxlevel . 2)))
   (org-refile-use-outline-path 'file)
-  (org-src-fontify-natively t)
+;;  (org-src-fontify-natively t)
+;;  (org-fontify-whole-heading-line t)
   (org-src-tab-acts-natively t)
   (org-startup-with-latex-preview t)
   (org-latex-listings 'minted)
@@ -932,6 +934,7 @@ Use M-x =venv-workon= to activate virtualenvs and M-x =venv-deactivate= deactiva
 #+begin_src emacs-lisp
 (use-package disk-usage :disabled) ;; :ensure t)
 #+end_src
+
 *** haskell mode
 #+BEGIN_SRC emacs-lisp
 (use-package haskell-mode :ensure t)
@@ -948,6 +951,7 @@ Use M-x =venv-workon= to activate virtualenvs and M-x =venv-deactivate= deactiva
   :config
   (auto-package-update-maybe))
 #+END_SRC
+
 *** mu4e
 
 Requires a few things installed - w3m, isync, and the [[file:~/.emacs.d/org/dotfiles.org][dotfiles]] to be tangled
@@ -960,7 +964,7 @@ Requires a few things installed - w3m, isync, and the [[file:~/.emacs.d/org/dotf
   (w3m-default-desplay-inline-images t))
 
 (use-package mu4e
-  :if (running-on-hosts '("joseki" "atari" "tengen"))
+  :if (running-on-hosts '("joseki" "atari" "wampus"))
   :bind ("C-M-m" . #'mu4e)
   :custom
   (mu4e-maildir (expand-file-name "~/.emacs.d/Maildir"))
@@ -1120,6 +1124,16 @@ Requires a few things installed - w3m, isync, and the [[file:~/.emacs.d/org/dotf
 
 #+END_SRC
 
+**** conversation
+Show a complete thread in a single buffer
+
+#+begin_src emacs-lisp
+(use-package mu4e-conversation
+  :ensure t
+  :config
+  (global-mu4e-conversation-mode))
+#+end_src
+
 **** maildir summary
 #+begin_src emacs-lisp
 (use-package mu4e-maildirs-extension
@@ -1130,6 +1144,7 @@ Requires a few things installed - w3m, isync, and the [[file:~/.emacs.d/org/dotf
   :config
   (mu4e-maildirs-extension))
 #+end_src
+
 **** modeline notification
 #+BEGIN_SRC emacs-lisp
 (use-package mu4e-alert 
@@ -1140,6 +1155,7 @@ Requires a few things installed - w3m, isync, and the [[file:~/.emacs.d/org/dotf
 	 )
   :config (mu4e-alert-set-default-style 'libnotify))
 #+END_SRC
+
 *** emoji support
 #+BEGIN_SRC emacs-lisp
 (use-package emojify
@@ -1149,6 +1165,7 @@ Requires a few things installed - w3m, isync, and the [[file:~/.emacs.d/org/dotf
   :custom
   (emojify-composed-text-p nil))
 #+END_SRC
+
 *** dmenu
 #+BEGIN_SRC emacs-lisp
 (use-package dmenu
@@ -1172,6 +1189,12 @@ I really like themes that have light and dark modes. The material theme fits tha
   :ensure t
   :config
   (load-theme 'material t))
+
+(use-package doom-themes :ensure t)
+
+(add-to-list 'custom-theme-load-path "/home/tsranso/.emacs.d/packages/")
+(load-theme 'doom-material t)
+(load-theme 'material t)
 #+END_SRC
 
 Switch between the light and dark modes on sunrise and sunset. Lets me know what the sun is doing even when I spend all day inside :)
@@ -1256,7 +1279,7 @@ Also remember that =C-w= in a helm session inserts the word at point.
     :ensure t
     :bind (("<f8>" . #'helm-dictionary))
     :custom
-    (helm-dictionary-browser-function 'browse-url-firefox)
+    ;; (helm-dictionary-browser-function 'browse-url-firefox)
     (helm-dictionary-database "/usr/share/dict/words")
     (helm-dictionary-online-dicts
      '(("wiktionary" . "http://en.wiktionary.org/wiki/%s")
@@ -1381,9 +1404,9 @@ This POS is too hard to extend
 (when (>= (string-to-number emacs-version) 24.4)
   (use-package transmission
     :ensure t
-    :if (running-on-hosts '("joseki" "tengen"))
+    :if (running-on-hosts '("joseki" "wampus"))
     :custom
-    (transmission-host "10.202.140.105")
+    (transmission-host "10.202.140.100")
     (transmission-refresh-modes
      '(transmission-mode
        transmission-files-mode
@@ -1454,7 +1477,7 @@ This one lets us search and control playback
 *** emms
 #+BEGIN_SRC emacs-lisp
 (use-package emms
-  :if (running-on-hosts '("tengen"))
+  :if (running-on-hosts '("wampus"))
   :ensure t
   :bind ("C-c p" . emms-smart-browse)
   :custom
@@ -1553,7 +1576,6 @@ Everybody who wants to dive into lisp should use slime. Even if just for learnin
 #+END_SRC
 
 *** Google Calendar
-
 #+BEGIN_SRC emacs-lisp
 (use-package org-gcal
   :disabled
@@ -1576,6 +1598,7 @@ Everybody who wants to dive into lisp should use slime. Even if just for learnin
 	   ((agenda "")
 	    (alltodo ""))))))
 #+END_SRC
+
 * Buffer Management
 ** ibuffer
 
@@ -1807,11 +1830,12 @@ Gotta use the few async operations we have
 #+BEGIN_SRC emacs-lisp
 (if  (running-on-windows)
     (setq browse-url-browser-function 'eww-browse-url)
-  (setq browse-url-browser-function 'browse-url-firefox
+  ;; (setq browse-url-browser-function 'browse-url-firefox
 	;; browse-url-firefox-arguments
 	;; '("--new-window")
 	;; '("")
-	))
+;;	)
+)
 ;;(setq browse-url-browser-function 'browse-url-firefox)
 ;;(defalias 'browse-web #'browse-url-firefox)
 
@@ -2026,12 +2050,12 @@ I use this config across several machines, depending which machine and what netw
     (launch-program "spotify --minimized")
     (launch-program "transmission-daemon")))
 
-(when (and (running-on-hosts '("tengen"))
+(when (and (running-on-hosts '("wampus"))
 	   (not (running-on-windows)))
   ;;  (launch-program "transmission-daemon")
   )
 
-(when (and (running-on-hosts '("hoshi" "tengen"))
+(when (and (running-on-hosts '("hoshi" "wampus"))
 	   (not (running-on-windows))
 	   (string= "exwm" (getenv "DESKTOP_SESSION")))
   (launch-program "xmodmap /home/tsranso/.Xmodmap")
@@ -2045,14 +2069,14 @@ I use this config across several machines, depending which machine and what netw
   (launch-program "telegram-desktop")
   )
 
-(when (and (running-on-hosts '("joseki" "hoshi" "tengen"))
+(when (and (running-on-hosts '("joseki" "hoshi" "wampus"))
 	   (not (running-on-windows)))
   ;; (launch-program "redshift" "-l" "34.67:-82.84")
   (launch-program "setxkbmap dvorak")
   (launch-program "xmodmap /home/tsranso/.Xmodmap")
   (launch-program "blueman-applet"))
 
-;; (when (not (running-on-hosts '("atari" "login*" "marcher" "tengen" "ivy*" "node*")))
+;; (when (not (running-on-hosts '("atari" "login*" "marcher" "wampus" "ivy*" "node*")))
 ;;   (launch-program "xautolock"
 ;; 		  "-time 10"
 ;; 		  "-locker lock.sh"))
@@ -2074,7 +2098,7 @@ I use this config across several machines, depending which machine and what netw
 ** emacs server
 
 #+BEGIN_SRC emacs-lisp
-(when (running-on-hosts '("tengen" "joseki" "atari" "hoshi" "tsranso-ThinkPad-T430s"))
+(when (running-on-hosts '("wampus" "joseki" "atari" "hoshi" "tsranso-ThinkPad-T430s"))
   (server-start))
 #+END_SRC
 * eaf
@@ -2095,6 +2119,7 @@ I use this config across several machines, depending which machine and what netw
 
 
 #+end_src
+
 * org roam
 
 #+begin_src emacs-lisp
