@@ -325,6 +325,7 @@ One last bootstrap, gotta load up use-package for good load times. This also add
   (require 'org-crypt)
   (org-crypt-use-before-save-magic))
 #+END_SRC
+
 **** org krita
 
 #+begin_src emacs-lisp
@@ -368,6 +369,7 @@ One last bootstrap, gotta load up use-package for good load times. This also add
   (add-hook 'org-brain-visualize-mode-hook #'org-brain-polymode))
 
 #+END_SRC
+
 **** Journaling
 Thus far I've made it easy to quickly capture ideas and tasks, not so much on
 the analysis phase:
@@ -503,6 +505,7 @@ Requires gnome desktop with [[https://extensions.gnome.org/extension/974/short-m
    (advice-add #'org-clock-in :around #'my-org-clock-message)
    (advice-add #'org-clock-out :around #'my-org-clock-message)))
 #+END_SRC
+
 **** geiser for scheme babel
 
 #+BEGIN_SRC emacs-lisp
@@ -510,6 +513,7 @@ Requires gnome desktop with [[https://extensions.gnome.org/extension/974/short-m
   :custom
   (geiser-active-implementations '(mit)))
 #+END_SRC
+
 **** org exports
 #+BEGIN_SRC emacs-lisp
 (use-package ox-hugo
@@ -554,7 +558,6 @@ Requires gnome desktop with [[https://extensions.gnome.org/extension/974/short-m
 	       '("mla"
 		 "\\documentclass{mla}")))
 #+end_src
-
 
 **** org-pdftools
 
@@ -681,6 +684,7 @@ This needs the [[file:~/Documents/references.bib][references.bib]] file to be ge
                       :foreground 'unspecified
                       :inherit 'org-level-8))
 #+END_SRC
+
 *** erc
 
 IRC is a really valuable resource that is being used less and less. Having people to answer random technical questions is so nice when working on something and nobody around can help.
@@ -762,6 +766,7 @@ IRC is a really valuable resource that is being used less and less. Having peopl
 
 (global-set-key (kbd "C-c d") (lambda () (interactive) (dired default-directory)))
 #+END_SRC
+
 **** dired du
 #+BEGIN_SRC emacs-lisp
 (use-package dired-du
@@ -912,6 +917,7 @@ Python shells can be spawned with the M-x run-python, but I have a little wrappe
   (interactive)
   (run-python "/usr/bin/python2.7"))
 #+end_src
+
 **** virtual environment
 
 Use M-x =venv-workon= to activate virtualenvs and M-x =venv-deactivate= deactivate them.
@@ -1230,7 +1236,9 @@ Helm is really a game changer for emacs. More over, it's the helm extensions tha
     :config
     (helm-mode t)))
 #+END_SRC
+
 **** helm-google
+
 #+BEGIN_SRC emacs-lisp
 (use-package helm-google :ensure t)
 #+END_SRC
@@ -1423,7 +1431,6 @@ This just controls spotify, searching and account specific stuff still needs don
   (spotify-enable-song-notifications))
 #+END_SRC
 
-
 This one lets us search and control playback
 #+BEGIN_SRC emacs-lisp
 (use-package helm-spotify-plus :ensure t
@@ -1505,6 +1512,7 @@ This one lets us search and control playback
   :after emms
   :ensure t)
 #+end_src
+
 *** bbdb
 
 #+BEGIN_SRC emacs-lisp
@@ -2095,12 +2103,14 @@ I use this config across several machines, depending which machine and what netw
   :bind ("s-h" . symon-mode)
   :config (symon-mode))
 #+END_SRC
+
 ** emacs server
 
 #+BEGIN_SRC emacs-lisp
 (when (running-on-hosts '("wampus" "joseki" "atari" "hoshi" "tsranso-ThinkPad-T430s"))
   (server-start))
 #+END_SRC
+
 * eaf
 
 #+begin_src emacs-lisp
