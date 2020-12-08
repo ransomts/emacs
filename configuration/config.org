@@ -211,18 +211,18 @@ One last bootstrap, gotta load up use-package for good load times. This also add
   (org-startup-with-inline-images t)
   (org-tags-column 5)
   (org-pretty-entities t)
-  (org-agenda-files '("~/.emacs.d/org/schedule.org" "~/.emacs.d/org/roam"))
+  (org-agenda-files '("~/.emacs.d/org/calendars/" "~/.emacs.d/org/roam"))
   (org-agenda-include-diary t)
-  (diary-file "~/.emacs.d/org/schedule.org")
+  (diary-file "~/.emacs.d/org/calendars/schedule.org")
   (org-hide-emphasis-markers t)
   (org-agenda-use-time-grid nil)
   (org-archive-location "~/.emacs.d/org/archive.org::* From %s")
   (org-capture-after-finalize-hook nil)
   (org-capture-templates '(("t" "Todo" entry
-			    (file+headline "~/.emacs.d/org/schedule.org" "Tasks")
+			    (file+headline "~/.emacs.d/org/calendars/schedule.org" "Tasks")
 			    "* TODO %?\nEntered on %T\n%i\n%a")
 			   ("e" "Event" entry
-			    (file "~/.emacs.d/org/schedule.org")
+			    (file "~/.emacs.d/org/calendars/schedule.org")
 			    "* %?\nDate %^t")
 			   ("b" "Fix Bug" checkitem
 			    (file+headline "~/.emacs.d/org/todo.org" "Bugs")
@@ -234,7 +234,7 @@ One last bootstrap, gotta load up use-package for good load times. This also add
 			   ("n" "General notes" entry
 			    (file+headline "~/.emacs.d/org/scratch.org" "Notes")
 			    "* Note %?\n%T\n")
-			   ("a" "Appointment" entry (file  "~/.emacs.d/org/ransomtim8078-gcal.org" )
+			   ("a" "Appointment" entry (file  "~/.emacs.d/org/calendars/ransomtim8078.org")
 			    "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")))
   (org-return-follows-link t)
   (org-clock-sound t)
@@ -1195,12 +1195,6 @@ I really like themes that have light and dark modes. The material theme fits tha
   :ensure t
   :config
   (load-theme 'material t))
-
-(use-package doom-themes :ensure t)
-
-(add-to-list 'custom-theme-load-path "/home/tsranso/.emacs.d/packages/")
-(load-theme 'doom-material t)
-(load-theme 'material t)
 #+END_SRC
 
 Switch between the light and dark modes on sunrise and sunset. Lets me know what the sun is doing even when I spend all day inside :)
@@ -1585,17 +1579,21 @@ Everybody who wants to dive into lisp should use slime. Even if just for learnin
 
 *** Google Calendar
 #+BEGIN_SRC emacs-lisp
+(use-package persist :ensure t)
+
 (use-package org-gcal
-  :disabled
+
   :ensure t
   :config
-
   (setq org-gcal-client-id "819418314073-8pnmvge9jmpu6jf2hktbuo8m5gakuoeu.apps.googleusercontent.com"
 	org-gcal-client-secret "lMo_aNdgaa-_dFWmzrBVi5VO"
-	org-gcal-file-alist '(("ransomtim8078@gmail.com" .  "~/.emacs.d/org/ransomtim8078-gcal.org")
-			      ("tsranso@g.clemson.edu" .  "~/.emacs.d/org/tsranso-gcal.org")
-			      ("g.clemson.edu_h14th1n5kst3v1eq1mifc91bcg@group.calendar.google.com" . "~/.emacs.d/org/schedule.org")
-			      ("socclemson@gmail.com" . "~/.emacs.d/org/SoC-gcal.org")))
+	org-gcal-recurring-events-mode 'nested
+	org-gcal-token-file "/home/tsranso/.emacs.d/org/calendars/.org-gcal-token"
+	org-gcal-file-alist '(("ransomtim8078@gmail.com" .  "~/.emacs.d/org/calendars/ransomtim8078.org")
+			      ("tsranso@g.clemson.edu" .  "~/.emacs.d/org/calendars/class.org")
+			      ;; ("nhl_7_%43arolina+%48urricanes#sports@group.v.calendar.google.com" . "~/.emacs.d/org/calendars/hurricanes.org")
+			      ;; ("socclemson@gmail.com" . "~/.emacs.d/org/calendars/SoC-gcal.org")
+			      ))
 
   ;; (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-fetch) ))
   ;; (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-fetch) ))

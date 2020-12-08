@@ -38,3 +38,4 @@ quicklisp
 /Maildir/
 configuration/customize.el
 /newsticker/
+/org-roam.db
