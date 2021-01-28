@@ -1130,6 +1130,11 @@ Requires a few things installed - w3m, isync, and the [[file:~/.emacs.d/org/dotf
 
 #+END_SRC
 
+**** mu4e dashboard
+#+begin_src emacs-lisp
+(use-package mu4e-dashboard
+  :load-path "~/.emacs.d/packages/mu4e-dashboard")
+#+end_src
 **** conversation
 Show a complete thread in a single buffer
 
@@ -1373,8 +1378,8 @@ rotate entire document."
   :ensure t
   :unless (or (string= nil (getenv "DESKTOP_SESSION"))
 	      (running-on-hosts '("login001")))
-  :magic ("%EPUB" . nov-mode)
-  :config (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode)))
+  :magic ("%EPUB" . nov-mode))
+(add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
 #+END_SRC
 
 *** dashboard
@@ -2141,7 +2146,7 @@ I use this config across several machines, depending which machine and what netw
       "%?"
       ;; :file-name "%(format-time-string \"%y%m%d\" (current-time) t)-${slug}"
       :file-name "${slug}"
-      :head "#+TITLE: ${title}\n#+CREATED: %(org-insert-time-stamp (current-time) t t)\n#+MODIFIED: %(org-insert-time-stamp (current-time) t t)\n#+ROAM_ALIAS: \n\n- tags :: "
+      :head "#+TITLE: ${title}\n#+CREATED: %(org-insert-time-stamp (current-time) t t)\n#+MODIFIED: %(org-insert-time-stamp (current-time) t t)\n#+ROAM_ALIAS: \n#+roam_tags: \n- roam links :: \n- source :: \n\n"
       :unnarrowed t)))
   (org-roam-directory "~/.emacs.d/org/roam/")
   :bind (:map org-roam-mode-map
@@ -2166,19 +2171,26 @@ I use this config across several machines, depending which machine and what netw
   :hook (org-roam-mode . org-roam-bibtex-mode)
   :config
   (setq org-roam-bibtex-preformat-keywords
-	'("=key=" "title" "url" "file" "author-or-editor" "keywords"))
+	'("citekey" "title" "url" "file" "author-or-editor" "keywords"))
   (setq orb-templates
-        '(("r" "ref" plain (function org-roam-capture--get-point)
-           ""
-           :file-name "${slug}"
-           :head "#+TITLE: ${=key=}: ${title}\n#+ROAM_KEY: ${ref}
+	'(("r" "ref" plain (function org-roam-capture--get-point) ""
+           :file-name "${citekey}"
+           :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}\n"
+           :unnarrowed t)))
 
-- tags ::
-- keywords :: ${keywords}
+;; (setq orb-templates
+;;         `(("r" "ref" plain (function org-roam-capture--get-point)
+;;            ""
+;;            :file-name "${slug}"
+;;            :head "#+TITLE: ${=key=}: ${title}\n#+ROAM_KEY: ${ref}
 
-\n* ${title}\n  :PROPERTIES:\n  :Custom_ID: ${=key=}\n  :URL: ${url}\n  :AUTHOR: ${author-or-editor}\n  :NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n  :NOTER_PAGE: \n  :END:\n\n"
+;; - tags ::
+;; - keywords :: ${keywords}
 
-           :unnarrowed t))))
+;; \n* ${title}\n  :PROPERTIES:\n  :Custom_ID: ${=key=}\n  :URL: ${url}\n  :AUTHOR: ${author-or-editor}\n  :NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n  :NOTER_PAGE: \n  :END:\n\n"
+
+;;            :unnarrowed t)))
+)
 
 (use-package org-roam-server
   :ensure t
@@ -2188,7 +2200,7 @@ I use this config across several machines, depending which machine and what netw
         org-roam-server-authenticate nil
         org-roam-server-export-inline-images t
         org-roam-server-serve-files nil
-        org-roam-server-served-file-extensions '("pdf" "mp4" "ogv")
+        org-roam-server-served-file-extensions '("pdf" "mp4" "ogv" "png")
         org-roam-server-network-poll t
         org-roam-server-network-arrows nil
         org-roam-server-network-label-truncate t
@@ -2314,3 +2326,15 @@ Flashes the cursor when a long jump is acted
 	      ("C-c C-b s" . hs-show-block)))
 #+END_SRC
 
+* calibre
+
+#+begin_src emacs-lisp
+(use-package calibredb
+  :ensure t
+  :init
+  (autoload 'calibredb "calibredb")
+  :config
+  (setq calibredb-root-dir "/home/tsranso/Documents/calibre")
+  (setq calibredb-db-dir (expand-file-name "metadata.db" calibredb-root-dir))
+  (setq calibredb-library-alist '(("/home/tsranso/Documents/calibre"))))
+#+end_src
