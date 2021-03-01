@@ -82,62 +82,8 @@ One last bootstrap, gotta load up use-package for good load times. This also add
 	 ("t" . tim/browse-nt-text))
   :custom
   (newsticker-url-list
-   '(("National Hurricane Center GIS Data (Atlantic)"
-      "https://www.nhc.noaa.gov/gis-at.xml" nil nil nil)
-     ("PHD Comics"
-      "http://phdcomics.com/gradfeed.php" nil nil nil)
-     ("Poorly Drawn Lines"
-      "http://www.poorlydrawnlines.com/feed/" nil nil nil)
-     ("Saturday Morning Breakfast Cereal"
-      "http://www.smbc-comics.com/rss.php" nil nil nil)
-     ("xkcd.com"
-      "https://xkcd.com/rss.xml" nil nil nil)
-     ("Things in Squares"
-      "http://www.thingsinsquares.com/feed/" nil nil nil)
-     ("News | TOP500 Supercomputer Sites"
-      "https://www.top500.org/news/feeds/rss/" nil nil nil)
-     ("Scott the Woz"
-      "https://www.youtube.com/feeds/videos.xml?channel_id=UC4rqhyiTs7XyuODcECvuiiQ" nil nil nil)
-     ("Bon Appetit"
-      "https://www.youtube.com/feeds/videos.xml?channel_id=UCbpMy0Fg74eXXkvxJrtEn3w" nil nil nil)
-     ("Game Grumps"
-      "https://www.youtube.com/feeds/videos.xml?channel_id=UC9CuvdOVfMPvKCiwdGKL3cQ" nil nil nil)
-     ("r/emacs"
-      "https://reddit-top-rss.herokuapp.com/?subreddit=emacs&threshold=50&view=rss"  nil nil nil)
-     ("NPR news"
-      "https://www.npr.org/rss/rss.php?id=1001" nil nil nil)
-     ("BBC News - Americas: World Edition"
-      "http://newsrss.bbc.co.uk/rss/newsonline_world_edition/americas/rss.xml" nil nil nil)
-     ("NPR Topics: Education"
-      "http://www.npr.org/rss/rss.php?id=1013" nil nil nil)
-     ("U.S. Department of Education"
-      "https://www.ed.gov/feed" nil nil nil)
-     ("AP Top Science News"
-      "http://hosted.ap.org/lineups/SCIENCEHEADS-rss_2.0.xml?SITE=OHLIM&SECTION=HOME" nil nil nil)
-     ("ScienceDaily Headlines"
-      "http://feeds.sciencedaily.com/sciencedaily" nil nil nil)
-     ("news@nature.com"
-      "http://feeds.nature.com/nature/rss/current" nil nil nil)
-     ("NASA Image of the Day"
-      "https://www.nasa.gov/rss/dyn/lg_image_of_the_day.rss" nil nil nil)
-     ("Wired Top Stories"
-      "http://feeds.wired.com/wired/index" nil nil nil)
-     ("New York Times - Technology"
-      "http://feeds.nytimes.com/nyt/rss/Technology" nil nil nil)
-     ("NPR: Technology"
-      "http://www.npr.org/rss/rss.php?id=1019" nil nil nil)
-     ("Steam Games"
-      "https://cdn-e.steamprices.com/us/rss/free.xml" nil nil nil)
-     ;; ("Carolina Hurricanes News"
-     ;;  "https://www.nhl.com/hurricanes/news/rss.xml"
-     ;;  nil nil nil)
-     ;; ("Blue Jackets News"
-     ;;  "https://www.nhl.com/bluejackets/news/rss.xml"
-     ;;  nil nil nil)
-     ;; ("Flyers News"
-     ;;  "https://www.nhl.com/flyers/news/rss.xml"
-     ;;  nil nil nil)
-     ("NHL News" "http://www.nhl.com/rss/news.xml" nil nil nil)
+   '(("freshrss"
+      "http://sasquatch/i/?c=feed&a=add&url_rss=%s" nil nil)
      ))
   :config
   (newsticker-start)
@@ -324,7 +270,29 @@ One last bootstrap, gotta load up use-package for good load times. This also add
 
   (require 'org-crypt)
   (org-crypt-use-before-save-magic))
+
+(use-package org-alert :ensure t
+  :custom
+  (org-alert-interval 120)
+  (alert-default-style 'message)
+  :config (org-alert-enable))
 #+END_SRC
+**** extra org blocks
+#+begin_src emacs-lisp
+(use-package org-special-block-extras
+  :ensure t
+  :hook (org-mode . org-special-block-extras-mode)
+  :custom
+    (org-special-block-extras--docs-libraries
+     '("~/.emacs.d/org/roam/org_mode_extra_blocks.org")
+     "The places where I keep my ‘#+documentation’")
+    ;; (org-special-block-extras-fancy-links
+    ;; nil "Disable this feature.")
+  :config
+  ;; Use short names like ‘defblock’ instead of the fully qualified name
+  ;; ‘org-special-block-extras--defblock’
+    (org-special-block-extras-short-names))
+#+end_src
 
 **** org krita
 
@@ -540,15 +508,16 @@ Requires gnome desktop with [[https://extensions.gnome.org/extension/974/short-m
 **** IEEE latex class
 
 #+BEGIN_SRC emacs-lisp
-(with-eval-after-load 'ox-latex
-  (add-to-list 'org-latex-classes
-	       '("IEEEtran"
-		 "\\documentclass[11pt]{IEEEtran}"
-		 ("\\section{%s}" . "\\section*{%s}")
-		 ("\\subsection{%s}" . "\\subsection*{%s}")
-		 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-		 ("\\paragraph{%s}" . "\\paragraph*{%s}")
-		 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+;; (with-eval-after-load 'ox-latex
+;;   (add-to-list 'org-latex-classes
+;; 	       '("IEEEtran"
+;; 		 "\\documentclass[11pt]{IEEEtran}"
+;; 		 ("\\section{%s}" . "\\section*{%s}")
+;; 		 ("\\subsection{%s}" . "\\subsection*{%s}")
+;; 		 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+;; 		 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+;; 		 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+;;   (setq org-latex-default-class 'IEEEtran))
 #+END_SRC
 
 **** MLA latex class
@@ -873,7 +842,10 @@ eshell doesn't handle python venvs well atm
 #+begin_src emacs-lisp
 (use-package vterm
   :ensure t
-  :bind ("C-x v" . #'vterm))
+  :bind ("C-x v" . #'vterm)
+  :custom
+  (vterm-kill-buffer-on-exit t)
+  (vterm-always-compile-module t))
 #+end_src
 
 *** tramp
@@ -973,6 +945,7 @@ Requires a few things installed - w3m, isync, and the [[file:~/.emacs.d/org/dotf
   :if (running-on-hosts '("joseki" "atari" "wampus"))
   :bind ("C-M-m" . #'mu4e)
   :custom
+  (mu4e-index-lazy-check t)
   (mu4e-maildir (expand-file-name "~/.emacs.d/Maildir"))
   (mu4e-attachment-dir "~/Downloads")
   (mu4e-change-filenames-when-moving t)
@@ -986,7 +959,7 @@ Requires a few things installed - w3m, isync, and the [[file:~/.emacs.d/org/dotf
   (mu4e-get-mail-command "mbsync -c ~/.mbsyncrc -a")
   ;; mu4e-html2text-command "w3m -T text/html" ;; using the default mu4e-shr2text
   (mu4e-view-prefer-html t)
-  (mu4e-update-interval 3000)
+  (mu4e-update-interval 450)
   (mu4e-headers-auto-update t)
   (mu4e-compose-signature-auto-include nil)
   (mu4e-compose-format-flowed t)
@@ -1863,7 +1836,7 @@ Gotta use the few async operations we have
 (setq
  backup-by-copying t      ; don't clobber symlinks
  backup-directory-alist
-					;'(("." . (if (file-directory-p "/var/emacs/") "/var/emacs/" "/tmp/")))    ; don't litter my fs tree
+ ;; '(("." . (if (file-directory-p "/var/emacs/") "/var/emacs/" "/tmp/")))    ; don't litter my fs tree
  '(("." . "/tmp/"))    ; don't litter my fs tree
  delete-old-versions t
  kept-new-versions 6
@@ -2080,12 +2053,12 @@ I use this config across several machines, depending which machine and what netw
   (launch-program "telegram-desktop")
   )
 
-(when (and (running-on-hosts '("joseki" "hoshi" "wampus"))
-	   (not (running-on-windows)))
+;; (when (and (running-on-hosts '("joseki" "hoshi" "wampus"))
+;;	   (not (running-on-windows)))
   ;; (launch-program "redshift" "-l" "34.67:-82.84")
-  (launch-program "setxkbmap dvorak")
-  (launch-program "xmodmap /home/tsranso/.Xmodmap")
-  (launch-program "blueman-applet"))
+  ;; (launch-program "setxkbmap dvorak")
+  ;; (launch-program "xmodmap /home/tsranso/.Xmodmap")
+  ;; (launch-program "blueman-applet"))
 
 ;; (when (not (running-on-hosts '("atari" "login*" "marcher" "wampus" "ivy*" "node*")))
 ;;   (launch-program "xautolock"
