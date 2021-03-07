@@ -277,6 +277,22 @@ One last bootstrap, gotta load up use-package for good load times. This also add
   (alert-default-style 'message)
   :config (org-alert-enable))
 #+END_SRC
+
+**** transclusion
+#+begin_src emacs-lisp
+(use-package org-transclusion
+  :load-path "~/.emacs.d/packages/org-transclusion")
+
+(use-package org-transclusion
+  :after org-roam
+  :load-path "~/.emacs.d/packages/org-transclusion"
+  :hook ((org-mode . org-transclusion-mode))
+  ;; :custom
+  ;; (org-transclusion-activate-persistent-message nil)
+  )
+
+#+end_src
+
 **** extra org blocks
 #+begin_src emacs-lisp
 (use-package org-special-block-extras
@@ -1108,6 +1124,7 @@ Requires a few things installed - w3m, isync, and the [[file:~/.emacs.d/org/dotf
 **** mu4e dashboard
 #+begin_src emacs-lisp
 (use-package mu4e-dashboard
+  :disabled
   :load-path "~/.emacs.d/packages/mu4e-dashboard")
 #+end_src
 **** conversation
@@ -1115,6 +1132,7 @@ Show a complete thread in a single buffer
 
 #+begin_src emacs-lisp
 (use-package mu4e-conversation
+  :disabled
   :ensure t
   :config
   (global-mu4e-conversation-mode))
@@ -1294,7 +1312,7 @@ Great way to interact with git. Not much config needed, just a global keybinding
   :magic ("%PDF" . pdf-view-mode)
   :custom
   (revert-without-query (quote ("$*\\.pdf")))
-  (org-file-apps ((auto-mode . emacs)
+  (org-file-apps '((auto-mode . emacs)
 		  (directory . emacs)
 		  ("\\.mm\\'" . default)
 		  ("\\.x?html?\\'" . default)
@@ -2116,8 +2134,8 @@ I use this config across several machines, depending which machine and what netw
 #+begin_src emacs-lisp
 (use-package org-roam
   :ensure t
-  :hook
-  (after-init . org-roam-mode)
+;;  :hook
+;;  (after-init . org-roam-mode)
   :custom
   (org-roam-capture-templates
    '(("n" "note" plain (function org-roam--capture-get-point)
