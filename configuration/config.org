@@ -508,17 +508,18 @@ Requires gnome desktop with [[https://extensions.gnome.org/extension/974/short-m
 **** IEEE latex class
 
 #+BEGIN_SRC emacs-lisp
-;; (with-eval-after-load 'ox-latex
-;;   (add-to-list 'org-latex-classes
-;; 	       '("IEEEtran"
-;; 		 "\\documentclass[11pt]{IEEEtran}"
-;; 		 ("\\section{%s}" . "\\section*{%s}")
-;; 		 ("\\subsection{%s}" . "\\subsection*{%s}")
-;; 		 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-;; 		 ("\\paragraph{%s}" . "\\paragraph*{%s}")
-;; 		 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-;;   (setq org-latex-default-class 'IEEEtran))
+(require 'ox-latex)
+  (add-to-list 'org-latex-classes
+	       '("IEEEtran"
+		 "\\documentclass[11pt]{IEEEtran}"
+		 ("\\section{%s}" . "\\section*{%s}")
+		 ("\\subsection{%s}" . "\\subsection*{%s}")
+		 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+		 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+		 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+  (setq org-latex-default-class "IEEEtran")
 #+END_SRC
+
 
 **** MLA latex class
 #+begin_src emacs-lisp
@@ -548,6 +549,7 @@ Looks neat but requires org 9.4, currently at 9.3.6
 #+BEGIN_SRC emacs-lisp
 (use-package org-noter
   :ensure t
+  :after (:any org pdf-view)
   :custom
   (org-noter-notes-window-location 'other-frame)
   (org-noter-auto-save-last-location t)
@@ -1292,6 +1294,11 @@ Great way to interact with git. Not much config needed, just a global keybinding
   :magic ("%PDF" . pdf-view-mode)
   :custom
   (revert-without-query (quote ("$*\\.pdf")))
+  (org-file-apps ((auto-mode . emacs)
+		  (directory . emacs)
+		  ("\\.mm\\'" . default)
+		  ("\\.x?html?\\'" . default)
+		  ("\\.pdf\\'" . emacs)))
   :config
   (pdf-tools-install :no-query)
   (setq pdf-misc-print-programm "/usr/bin/gtklp")
@@ -1340,9 +1347,7 @@ rotate entire document."
     (interactive "P")
     (pdf-view--rotate :counterclockwise (not arg)))
 
-  (define-key pdf-view-mode-map (kbd "R") 'pdf-view-rotate-clockwise)
-
-  )
+  (define-key pdf-view-mode-map (kbd "R") 'pdf-view-rotate-clockwise))
 #+END_SRC
 
 *** epub
