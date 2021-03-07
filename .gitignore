@@ -39,3 +39,6 @@ quicklisp
 configuration/customize.el
 /newsticker/
 /org-roam.db
+/persist/
+/.org-generic-id-locations
+/session.*
