@@ -286,11 +286,11 @@ One last bootstrap, gotta load up use-package for good load times. This also add
 (use-package org-transclusion
   :after org-roam
   :load-path "~/.emacs.d/packages/org-transclusion"
-  :hook ((org-mode . org-transclusion-mode))
-  ;; :custom
-  ;; (org-transclusion-activate-persistent-message nil)
-  )
-
+;;  :hook ((org-mode . org-transclusion-mode))
+  :bind ("<f12>" . #'org-transclusion-mode)
+  :custom
+  (org-transclusion-activate-persistent-message nil)
+  (org-transclusion-include-first-section t))
 #+end_src
 
 **** extra org blocks
